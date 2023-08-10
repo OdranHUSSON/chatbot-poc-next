@@ -13,34 +13,39 @@ export const useChat = (apiKeyApp: string) => {
     const [loading, setLoading] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (typeof window !== 'undefined') {
-			const savedChatHistory = localStorage.getItem('chatHistory');
-			if (savedChatHistory) {
-				try {
-					setChatHistory(JSON.parse(savedChatHistory));
-				} catch (error) {
-					console.error("Failed to parse chat history:", error);
-				}
-			}
+		async function fetchChatHistory() {
+			const response = await fetch('/api/chatDatabase');
+			const messages = await response.json();
+			setChatHistory(messages);
 		}
-	}, []); 
 
-    useEffect(() => {
-        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-    }, [chatHistory]);
+		fetchChatHistory();
+	}, []);
 
-    const clearChatHistory = () => {
-        localStorage.removeItem('chatHistory');
-        setChatHistory([]);
-    }
+	const clearChatHistory = async () => {
+		await fetch('/api/chatDatabase', { method: 'DELETE' });
+		setChatHistory([]);
+	}
 
-    const addUserMessageToChatHistory = (message: string) => {
-        setChatHistory(prev => [...prev, { type: 'user', message }]);
-    };
-    
-    const addBotMessageToChatHistory = (message: string) => {
-        setChatHistory(prev => [...prev, { type: 'bot', message }]);
-    };    
+	const addUserMessageToChatHistory = async (message: string) => {
+		await fetch('/api/chatDatabase', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ type: 'user', message })
+		});
+		setChatHistory(prev => [...prev, { type: 'user', message }]);
+	};
+
+	const addBotMessageToChatHistory = async (message: string) => {
+		await fetch('/api/chatDatabase', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ type: 'bot', message })
+		});
+		setChatHistory(prev => [...prev, { type: 'bot', message }]);
+	};
+
+	
 
     const handleChat = async () => {
         const apiKey = apiKeyApp;

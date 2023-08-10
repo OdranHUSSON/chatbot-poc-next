@@ -9,17 +9,17 @@ COPY package*.json ./
 COPY next*.json ./
 COPY next.config.js ./
 
-# Install Next.js and other dependencies
-RUN npm install
-
 # Copy the rest of the application to the container
 COPY . .
 
-# Build the application for production
-RUN npm run build
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
 
 # Expose port 3000 for the application
 EXPOSE 3000
+
+# Set the entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
 
 # Command to run the application using Next.js's production server
 CMD ["npm", "run", "dev"]

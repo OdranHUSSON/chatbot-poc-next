@@ -20,7 +20,12 @@ import {
 	useColorModeValue,
 } from '@chakra-ui/react';
 
-const ChatHistory = ({ chatHistory, handleCopy }) => {
+interface ChatHistoryProps {
+	chatHistory: Array<{ type: 'user' | 'bot'; message: string }>;
+	handleCopy: (text: string) => void;
+}  
+
+const ChatHistory: React.FC<ChatHistoryProps> = ({ chatHistory, handleCopy }) => {
 		const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
 		const brandColor = useColorModeValue('brand.500', 'white');
 		const gray = useColorModeValue('gray.500', 'white');
@@ -42,6 +47,7 @@ const ChatHistory = ({ chatHistory, handleCopy }) => {
 			},
 	}));
 
+// @ts-ignore
 const MarkdownComponents = () => {
 			const classes = useStyles();
 
@@ -50,6 +56,7 @@ const MarkdownComponents = () => {
 					h2: ({ ...props }) => <Typography variant="h4" gutterBottom {...props} className={classes.markdownContent} />,
 					h3: ({ ...props }) => <Typography variant="h5" gutterBottom {...props} className={classes.markdownContent} />,
 					p: ({ ...props }) => <Typography paragraph {...props} className={classes.markdownContent} />,
+					// @ts-ignore
 				table: ({ children, ...props }) => (
 							<Paper className={classes.markdownContent}  style={{ overflow: 'hidden' }}>
 									<Table className={classes.markdownContent}  {...props}>{children}</Table>
@@ -57,6 +64,7 @@ const MarkdownComponents = () => {
 				),
 					th: ({ ...props }) => <TableCell className={classes.markdownContent}  {...props} />,
 					td: ({ ...props }) => <TableCell className={classes.markdownContent}  {...props} />,
+					// @ts-ignore
 				code: ({ inline, language, children, ...props }) => {
 							// Check if children is empty or undefined
 						if (!children || (typeof children === 'string' && !children.trim())) {
@@ -68,8 +76,10 @@ const MarkdownComponents = () => {
 						}
 
 						if (inline) {
+							// @ts-ignore
 								return <code sx={{
 										padding: 0.5,
+										// @ts-ignore
 										background: theme => theme.palette.grey[200],
 										borderRadius: 1,
 										color: "#000",
