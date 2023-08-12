@@ -1,4 +1,4 @@
-import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr } from '@chakra-ui/react';
+import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr, Spinner } from '@chakra-ui/react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } from 'react-icons/md';
 import ReactMarkdown from "react-markdown";
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -70,9 +70,9 @@ const ChatHistory = ({ chatHistory }: any) => {
 			  <Icon as={chat.type === 'user' ? MdPerson : MdAutoAwesome} w="20px" h="20px" color={chat.type === 'user' ? brandColor : 'white'} />
 			</Flex>
 			<Flex p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px" w="100%" zIndex={2}>
-			  <Text color={textColor} fontWeight="600" fontSize={{ base: 'sm', md: 'md' }} lineHeight={{ base: '24px', md: '26px' }}>
-				<ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>
-			  </Text>
+				<Text color={textColor} fontWeight="600" fontSize={{ base: 'sm', md: 'md' }} lineHeight={{ base: '24px', md: '26px' }}>
+				{chat.message === '<Loading>' ? <Spinner size="sm" /> : <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>}
+				</Text>
 			  <Flex ms="auto" alignItems="center">
 				{chat.type === 'user' && (
 				  <Icon cursor="pointer" as={MdEdit} w="20px" h="20px" color={gray} ml={3} />
