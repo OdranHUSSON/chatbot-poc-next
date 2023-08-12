@@ -79,44 +79,56 @@ export const handleCommands = (
 };
 
 
-export async function handleCommitCommand(
-	args: string[],
-	addBotMessageToChatHistory: (message: string) => Promise<string>,
-	updateMessageById: (id: string, message: string) => Promise<void> // Change the return type to Promise<void>
+async function processCommandWithLoading(
+    args: string[],
+    messageHandler: (message: string) => Promise<string>,
+    updateMessageHandler: (id: string, message: string) => Promise<void>,
+    processFunction: (args: string[]) => Promise<string>
 ) {
-	let commitMessage = "Generate a short commit message with one emoji at the beginning for the following changes " + args.join(' ');
+    const id = await messageHandler("<Loading>");
 
-	const id = await addBotMessageToChatHistory("<Loading>"); // Await here to get the id
+    try {
+        const result = await processFunction(args);
+        await updateMessageHandler(id, result);
+    } catch (error) {
+        console.error(error);
+        await updateMessageHandler(id, 'Error processing command');
+    }
+}
 
-	try {
-		const completion = await handleChatGPTCommand(commitMessage, apiKey);
-		await updateMessageById(id, "Here's your commit command with the personalized commit message : \n\n```sh \n\n" + 'git commit -m "' + completion + '"\n\n ```'); // Await the update
-	} catch (error) {
-		console.error(error);
-		await updateMessageById(id, 'Error generating commit message'); // Await the update
-	}
+
+
+export async function handleCommitCommand(
+    args: string[],
+    addBotMessageToChatHistory: (message: string) => Promise<string>,
+    updateMessageById: (id: string, message: string) => Promise<void>
+) {
+    await processCommandWithLoading(
+        args,
+        addBotMessageToChatHistory,
+        updateMessageById,
+        async (args) => {
+            const commitMessage = "Generate a short commit message with one emoji at the beginning for the following changes " + args.join(' ');
+            return "Here's your commit command with the personalized commit message :\n\n```sh\n\ngit commit -m \"" + (await handleChatGPTCommand(commitMessage, apiKey)) + "\"\n\n```";
+        }
+    );
 }
 
 export async function chatGPT(
-	args: string[],
-	addBotMessageToChatHistory: (message: string) => Promise<string>,
-	updateMessageById: (id: string, message: string) => Promise<void> // Change the return type to Promise<void>
+    args: string[],
+    addBotMessageToChatHistory: (message: string) => Promise<string>,
+    updateMessageById: (id: string, message: string) => Promise<void>
 ) {
-	let message = args.join(' ');
-
-	const id = await addBotMessageToChatHistory("<Loading>"); // Await here to get the id
-
-	try {
-		const completion = await handleChatGPTCommand(message, apiKey);
-		await updateMessageById(id, completion); // Await the update
-	} catch (error) {
-		console.error(error);
-		await updateMessageById(id, 'Error generating commit message'); // Await the update
-	}
+    await processCommandWithLoading(
+        args,
+        addBotMessageToChatHistory,
+        updateMessageById,
+        async (args) => {
+            const message = args.join(' ');
+            return await handleChatGPTCommand(message, apiKey);
+        }
+    );
 }
-
-
-
 
 
 export async function handleChatGPTCommand(message: string, apiKey: string | null) {
