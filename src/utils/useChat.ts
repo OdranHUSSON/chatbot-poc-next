@@ -62,11 +62,17 @@ export const useChat = (apiKeyApp: string) => {
     };
     
 
-    const updateMessageById = (id: string, updatedMessage: string) => {
+    const updateMessageById = async (id: string, updatedMessage: string) => {
+        stateUpdateMessageById(id, updatedMessage);
+        await updateMessage(id, updateMessage);
+      };
+      
+      const stateUpdateMessageById = (id: string, updatedMessage: string) => {
         setChatHistory(prev =>
-            prev.map(message => (message.id === id ? { ...message, message: updatedMessage } : message))
+          prev.map(message => (message.id === id ? { ...message, message: updatedMessage } : message))
         );
-    };
+      };
+      
     
 
     const addUserMessageToChatHistory = async (message: string) => {
@@ -130,7 +136,7 @@ export const useChat = (apiKeyApp: string) => {
         await addUserMessageToChatHistory(inputCode); 
 
         if (inputCode.startsWith('/')) {
-            handleCommands(inputCode, setLoading, addBotMessageToChatHistory, clearChatHistory);
+            handleCommands(inputCode, setLoading, addBotMessageToChatHistory, clearChatHistory, updateMessageById);
             setInputCode('');
             return; 
         }
@@ -180,10 +186,9 @@ export const useChat = (apiKeyApp: string) => {
     
             const chunkValue = await decoder.decode(value);
             fullResponse += chunkValue;
-            updateMessageById(id, fullResponse);
+            stateUpdateMessageById(id, fullResponse);
         }
-        updateMessageById(id, fullResponse);
-        await updateMessage(id, fullResponse);
+        await updateMessageById(id, fullResponse)
 
         setLoading(false);
         setInputCode('');
