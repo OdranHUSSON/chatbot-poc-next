@@ -30,7 +30,6 @@ import Bg from '../public/img/chat/bg-image.png';
 import ReactMarkdown from 'react-markdown'
 import { Typography, Table, TableBody, TableCell, TableHead, TableRow, Paper, makeStyles } from '@mui/material'; // Updated to MUI
 import { useChat } from '@/utils/useChat';
-import { handleCopy } from '@/utils/copy';
 
 export default function Chat(props: { apiKeyApp: string }) {
 	const { 
@@ -109,7 +108,7 @@ export default function Chat(props: { apiKeyApp: string }) {
 			>
 				
 				<ModelChange model={model} setModel={setModel} outputCode={outputCode} />
-				<ChatHistory chatHistory={chatHistory} handleCopy={handleCopy} />
+				<ChatHistory chatHistory={chatHistory} />
 				<ChatInput
 					inputCode={inputCode}
 					setInputCode={setInputCode}

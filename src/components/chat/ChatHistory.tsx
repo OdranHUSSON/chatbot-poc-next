@@ -1,41 +1,38 @@
-import {
-	Box,
-	Flex,
-	Icon,
-	Text,
-	useColorModeValue,
-	Table,
-	Td,
-	Th,
-	Tr
-  } from '@chakra-ui/react';
-  import {
-	MdAutoAwesome,
-	MdBolt,
-	MdEdit,
-	MdPerson,
-	MdContentCopy,
-	MdFileCopy
-  } from 'react-icons/md';
-  import ReactMarkdown from "react-markdown";
-  import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-  import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-  import { isValidElement } from 'react';
-  
-  type ChatType = {
-	type: 'user' | 'bot';
-	message: string;
+import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr } from '@chakra-ui/react';
+import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } from 'react-icons/md';
+import ReactMarkdown from "react-markdown";
+import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+
+type ChatType = {
+  type: 'user' | 'bot';
+  message: string;
+};
+
+const ChatHistory = ({ chatHistory }: any) => {
+  const toast = useToast();
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast({
+          title: "Text copied to clipboard!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Failed to copy text. Try manually.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        console.error("Failed to copy text: ", err);
+      });
   };
-  
-  type CodeComponentProps = {
-	inline?: boolean;
-	language?: string;
-	value?: string;
-	children?: React.ReactNode;
-  };
-  
-  
-  const ChatHistory = ({ chatHistory, handleCopy }: any) => {
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
 	const brandColor = useColorModeValue('brand.500', 'white');
 	const gray = useColorModeValue('gray.500', 'white');
