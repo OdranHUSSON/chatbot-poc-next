@@ -3,6 +3,7 @@ import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } fr
 import ReactMarkdown from "react-markdown";
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { useClipboard } from '@/utils/copy';
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -12,27 +13,7 @@ type ChatType = {
 const ChatHistory = ({ chatHistory }: any) => {
   const toast = useToast();
 
-  const handleCopy = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        toast({
-          title: "Text copied to clipboard!",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      })
-      .catch((err) => {
-        toast({
-          title: "Failed to copy text. Try manually.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-        console.error("Failed to copy text: ", err);
-      });
-  };
+	const { handleCopy } = useClipboard();
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
 	const brandColor = useColorModeValue('brand.500', 'white');
 	const gray = useColorModeValue('gray.500', 'white');

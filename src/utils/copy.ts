@@ -1,6 +1,6 @@
-import { useToast } from "@chakra-ui/react";
+import { useToast } from '@chakra-ui/react';
 
-export const useHandleCopy = () => {
+export const useClipboard = () => {
   const toast = useToast();
 
   const handleCopy = (text: string) => {
@@ -25,5 +25,5 @@ export const useHandleCopy = () => {
       });
   };
 
-  return handleCopy;
+  return { handleCopy };
 };
