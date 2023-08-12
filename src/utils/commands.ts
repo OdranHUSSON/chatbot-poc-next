@@ -81,39 +81,42 @@ export const handleCommands = (
 
 export async function handleCommitCommand(
 	args: string[],
-	addBotMessageToChatHistory: (message: string) => void,
-	updateMessageById: (id: string, message: string) => void
+	addBotMessageToChatHistory: (message: string) => Promise<string>,
+	updateMessageById: (id: string, message: string) => Promise<void> // Change the return type to Promise<void>
 ) {
 	let commitMessage = "Generate a short commit message with one emoji at the beginning for the following changes " + args.join(' ');
 
-	const id = await addBotMessageToChatHistory("<Loading>");
+	const id = await addBotMessageToChatHistory("<Loading>"); // Await here to get the id
 
 	try {
 		const completion = await handleChatGPTCommand(commitMessage, apiKey);
-		updateMessageById(id, "Here's your commit command with the personalized commit message : \n\n```sh \n\n" + 'git commit -m "' + completion + '"\n\n ```');
+		await updateMessageById(id, "Here's your commit command with the personalized commit message : \n\n```sh \n\n" + 'git commit -m "' + completion + '"\n\n ```'); // Await the update
 	} catch (error) {
 		console.error(error);
-		updateMessageById(id, 'Error generating commit message');
+		await updateMessageById(id, 'Error generating commit message'); // Await the update
 	}
 }
 
 export async function chatGPT(
 	args: string[],
-	addBotMessageToChatHistory: (message: string) => void,
-	updateMessageById: (id: string, message: string) => void
+	addBotMessageToChatHistory: (message: string) => Promise<string>,
+	updateMessageById: (id: string, message: string) => Promise<void> // Change the return type to Promise<void>
 ) {
 	let message = args.join(' ');
 
-	const id = await addBotMessageToChatHistory("<Loading>");
+	const id = await addBotMessageToChatHistory("<Loading>"); // Await here to get the id
 
 	try {
 		const completion = await handleChatGPTCommand(message, apiKey);
-		updateMessageById(id, completion);
+		await updateMessageById(id, completion); // Await the update
 	} catch (error) {
 		console.error(error);
-		updateMessageById(id, 'Error generating commit message');
+		await updateMessageById(id, 'Error generating commit message'); // Await the update
 	}
 }
+
+
+
 
 
 export async function handleChatGPTCommand(message: string, apiKey: string | null) {

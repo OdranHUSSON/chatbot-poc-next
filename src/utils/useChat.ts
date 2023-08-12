@@ -63,9 +63,9 @@ export const useChat = (apiKeyApp: string) => {
     
 
     const updateMessageById = async (id: string, updatedMessage: string) => {
-        stateUpdateMessageById(id, updatedMessage);
-        await updateMessage(id, updateMessage);
-      };
+        await stateUpdateMessageById(id, updatedMessage); // Await this function
+        await updateMessage(id, updatedMessage); // Await this function
+    };
       
       const stateUpdateMessageById = (id: string, updatedMessage: string) => {
         setChatHistory(prev =>
