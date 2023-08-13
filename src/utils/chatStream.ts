@@ -19,10 +19,12 @@ export const OpenAIStream = async (
   inputCode: string,
   model: string,
   key: string | undefined,
+  historyMessages: { role: 'system' | 'user', content: string }[] = [],
 ) => {
   const prompt = createPrompt(inputCode);
 
-  const system = { role: 'system', content: prompt };
+  // Append the latest message (prompt) to the existing history.
+  historyMessages.push({ role: 'system', content: prompt });
 
   const res = await fetch(`https://api.openai.com/v1/chat/completions`, {
     headers: {
@@ -32,7 +34,7 @@ export const OpenAIStream = async (
     method: 'POST',
     body: JSON.stringify({
       model,
-      messages: [system],
+      messages: historyMessages,
       temperature: 0,
       stream: true,
     }),

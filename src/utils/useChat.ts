@@ -187,19 +187,20 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
         }
 
         const controller = new AbortController();
-        const body: ChatBody = {
-                inputCode,
-                model,
-                apiKey,
+        const body: ChatBody & { chatHistory: typeof chatHistory } = {
+            inputCode,
+            model,
+            apiKey,
+            chatHistory,
         };
-
+        
         const response = await fetch('/api/chatAPI', {
-                method: 'POST',
-                headers: {
-                        'Content-Type': 'application/json',
-                },
-                signal: controller.signal,
-                body: JSON.stringify(body),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            signal: controller.signal,
+            body: JSON.stringify(body),
         });
 
         if (!response.ok) {
