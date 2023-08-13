@@ -3,6 +3,7 @@ import { ChatBody, OpenAIModel } from '@/types/types';
 import { handleCommands } from '@/utils/commands';
 import { createUserMessage, createBotMessage, getAllMessages, updateMessage } from './messages';
 import { v4 as uuidv4 } from 'uuid';
+import { useToast } from '@chakra-ui/react';
 
 export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket | null) => {
     const [chatHistory, setChatHistory] = useState<Array<{ id: string; type: 'user' | 'bot'; message: string }>>([]);
@@ -11,7 +12,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const [outputCode, setOutputCode] = useState<string>('');
     const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
     const [loading, setLoading] = useState<boolean>(false);
-
+    const toast = useToast();
 
     useEffect(() => {
         const fetchChatHistory = async () => {
@@ -55,29 +56,54 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     };
 
     useEffect(() => {
-        if(socket) {
-          console.log("SOCKET CONNECTED!", socket.id);
+        if (socket) {
+            console.log("SOCKET CONNECTED!", socket.id);
     
-          // update chat on new message dispatched
-          socket.on("messageCreated", (message: string) => {
-              console.log("WS:createMessage:", message);
-              const newMessage = { id:message.id, type:message.type, message:message.message };
-              setChatHistory(prev => [...prev, newMessage]);
-          });
-
-          socket.on("messageUpdated", (message: string) => {
-            console.log("WS:updateMessage:", message);
-            stateUpdateMessageById(message.id, message.message)
-           });
+            // Show toast when socket connects
+            socket.on("connect", () => {
+                toast({
+                    title: "Websocket connected!",
+                    description: `Socket ID: ${socket.id}`,
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            });
+    
+            // Show toast when socket disconnects
+            socket.on("disconnect", (reason) => {
+                toast({
+                    title: "Websocket disconnected!",
+                    description: `Reason: ${reason}`,
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            });
+    
+            // update chat on new message dispatched
+            socket.on("messageCreated", (message: string) => {
+                console.log("WS:createMessage:", message);
+                const newMessage = { id: message.id, type: message.type, message: message.message };
+                setChatHistory(prev => [...prev, newMessage]);
+            });
+    
+            socket.on("messageUpdated", (message: string) => {
+                console.log("WS:updateMessage:", message);
+                stateUpdateMessageById(message.id, message.message)
+            });
         }
     
         return () => {
-            if(socket) {
+            if (socket) {
                 socket.off("messageCreated");
                 socket.off("messageUpdated");
+                socket.off("connect");
+                socket.off("disconnect");
             }
         }
     }, [socket]);
+    
     
 
     const updateMessageById = async (id: string, updatedMessage: string) => {
