@@ -1,4 +1,4 @@
-import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr, Spinner } from '@chakra-ui/react';
+import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr, Spinner, Badge } from '@chakra-ui/react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } from 'react-icons/md';
 import ReactMarkdown from "react-markdown";
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -39,7 +39,7 @@ const ChatHistory = ({ chatHistory }: any) => {
 	  
 		// Handle inline code
 		if (inline) {
-			return <Text as="code" px={1} bgColor="gray.200" borderRadius="md" {...props}>{content}</Text>;
+			return <Badge as="code" px={1} {...props}>{content}</Badge>;
 		}
 	  
 		// Handle block code
