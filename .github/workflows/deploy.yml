@@ -22,6 +22,6 @@ jobs:
         run: |
           echo 'de1.webforger.fr $(ssh-keyscan -H de1.webforger.fr 2>&1)' >> ~/.ssh/known_hosts
 
-      - name: Run updateChatbot.sh
+      - name: Run chatbotUpdate.sh
         run: |
-          ssh -o StrictHostKeyChecking=no debian@de1.webforger.fr "cd /home/debian/ && bash updateChatbot.sh"
+          ssh -o StrictHostKeyChecking=no debian@de1.webforger.fr "cd /home/debian/ && bash chatbotUpdate.sh"
