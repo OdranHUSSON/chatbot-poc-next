@@ -2,16 +2,29 @@ import { NextApiRequest } from 'next';
 import { NextApiResponseServerIO } from '@/types/io';
 import { Sequelize } from 'sequelize';
 import { Message, initialize } from '../../models/messages'; 
+import Config  from '../../config/config.json';
 
-const sequelize = new Sequelize('mysql://user:password@chatdb:3306/dev');
-initialize(sequelize);
 
 const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
+    const env = process.env.NODE_ENV || 'development';
+    console.log("nodeenv:", process.env.NODE_ENV )
+    console.log("actual:", env)
+    const config = Config[env];
+
+    const sequelize = new Sequelize(config.database, config.username, config.password, {
+        host: config.host,
+        dialect: config.dialect,
+    })
+    initialize(sequelize);
     try {
         switch (req.method) {
             case 'GET':
-                const messages = await Message.findAll();
-                res.json(messages);
+                try {
+                    const messages = await Message.findAll();
+                    res.json(messages);
+                } catch ( ex ) {
+
+                }
                 break;
             case 'POST':
                 const message = await Message.create(req.body);
