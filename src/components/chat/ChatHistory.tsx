@@ -51,11 +51,11 @@ const ChatHistory = ({ chatHistory }: any) => {
 	  
 		// Handle block code
 		return (
-			<Box position="relative" my={4} {...props}>
+			<Box maxW="300px" minW="100%" overflowX="auto" my={4} {...props}>
 				<Flex justifyContent="space-between" alignItems="center" borderBottom="1px solid" borderColor="gray.300" pb={1}>
 					<Icon as={MdFileCopy} onClick={() => handleCopy(content)} cursor="pointer" />
 				</Flex>
-				<SyntaxHighlighter style={dracula} language="javascript">
+				<SyntaxHighlighter position="relative" width={"100%"}  overflow={"scroll"} style={dracula} language="javascript">
 					{content}
 				</SyntaxHighlighter>
 			</Box>
@@ -72,7 +72,7 @@ const ChatHistory = ({ chatHistory }: any) => {
 			  <Icon as={chat.type === 'user' ? MdPerson : MdAutoAwesome} w="20px" h="20px" color={chat.type === 'user' ? brandColor : 'white'} />
 			</Flex>
 			<Flex p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px" w="100%" zIndex={2} color={textColor} fontWeight="600" fontSize={{ base: 'sm', md: 'md' }} lineHeight={{ base: '24px', md: '26px' }}>
-				<Box>{chat.message === '<Loading>' ? <Spinner size="sm" /> : <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>}</Box>
+				<Box position="relative">{chat.message === '<Loading>' ? <Spinner size="sm" /> : <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>}</Box>
 			  <Flex ms="auto" alignItems="center">
 				{chat.type === 'user' && (
 				  <Icon cursor="pointer" as={MdEdit} w="20px" h="20px" color={gray} ml={3} />
