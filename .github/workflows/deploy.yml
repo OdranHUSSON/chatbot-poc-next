@@ -24,4 +24,4 @@ jobs:
 
       - name: Run updateChatbot.sh
         run: |
-          ssh debian@de1.webforger.fr "cd /home/debian/ && bash updateChatbot.sh"
+          ssh -o StrictHostKeyChecking=no debian@de1.webforger.fr "cd /home/debian/ && bash updateChatbot.sh"
