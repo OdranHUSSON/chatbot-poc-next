@@ -109,7 +109,7 @@ export async function handleCommitCommand(
         updateMessageById,
         async (args) => {
             const commitMessage = "Generate a short commit message with one emoji at the beginning for the following changes " + args.join(' ');
-            return "Here's your commit command with the personalized commit message :\n\n```sh\n\ngit commit -m \"" + (await handleChatGPTCommand(commitMessage, apiKey)) + "\"\n\n```";
+            return "# Commit Message \n \n Here's your commit command with the personalized commit message :\n \n \n```sh\n\ngit commit -m \"" + (await handleChatGPTCommand(commitMessage, apiKey)) + "\"\n\n```";
         }
     );
 }
