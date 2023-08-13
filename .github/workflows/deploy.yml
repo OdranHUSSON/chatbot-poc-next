@@ -18,6 +18,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
 
+      - name: Add SSH known hosts
+        run: |
+          echo 'de1.webforger.fr $(ssh-keyscan -H de1.webforger.fr 2>&1)' >> ~/.ssh/known_hosts
+
       - name: Run updateChatbot.sh
         run: |
-          ssh debian@de1.webforger.fr "cd /home/debian/ && bash updateChatbot.sh" 
+          ssh debian@de1.webforger.fr "cd /home/debian/ && bash updateChatbot.sh"
