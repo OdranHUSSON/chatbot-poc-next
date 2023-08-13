@@ -37,7 +37,8 @@ export default function Chat(props: { apiKeyApp: string }) {
 	const [socket, setSocket] = useState<typeof SocketIOClient.Socket | null>(null);
 
 	useEffect(() => {
-	  const socketInstance = SocketIOClient('http://localhost:3000', {
+		const socketUrl = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL;
+		const socketInstance = SocketIOClient(socketUrl, {
 		path: "/api/ws",
 	  });
 	  setSocket(socketInstance);
