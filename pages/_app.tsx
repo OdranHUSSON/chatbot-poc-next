@@ -64,9 +64,6 @@ function App({ Component, pageProps }: AppProps<{}>) {
           >
             <Component apiKeyApp={apiKey} {...pageProps} />
           </Box>
-          <Box>
-            <Footer />
-          </Box>
         </Box>
       </Box>
     </ChakraProvider>
