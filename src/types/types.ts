@@ -5,3 +5,4 @@ export interface ChatBody {
   model: OpenAIModel;
   apiKey?: string | undefined;
 }
+

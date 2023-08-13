@@ -4,13 +4,14 @@ import { handleCommands } from '@/utils/commands';
 import { createUserMessage, createBotMessage, getAllMessages, updateMessage } from './messages';
 import { v4 as uuidv4 } from 'uuid';
 
-export const useChat = (apiKeyApp: string) => {
+export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket | null) => {
     const [chatHistory, setChatHistory] = useState<Array<{ id: string; type: 'user' | 'bot'; message: string }>>([]);
     const [inputOnSubmit, setInputOnSubmit] = useState<string>('');
     const [inputCode, setInputCode] = useState<string>('');
     const [outputCode, setOutputCode] = useState<string>('');
     const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
     const [loading, setLoading] = useState<boolean>(false);
+
 
     useEffect(() => {
         const fetchChatHistory = async () => {
@@ -52,7 +53,23 @@ export const useChat = (apiKeyApp: string) => {
             // Here, you can handle any additional error logging or UI feedback.
         }
     };
+
+    useEffect(() => {
+        if(socket) {
+          console.log("SOCKET CONNECTED!", socket.id);
     
+          // update chat on new message dispatched
+          socket.on("message", (message: string) => {
+              console.log("wsMessage:", message);
+          });
+        }
+    
+        return () => {
+          if(socket) {
+            socket.off("message");
+          }
+        }
+      }, [socket]);
 
     const addMessageToChatHistory = (type: 'user' | 'bot', message: string) => {
         const id = uuidv4(); 

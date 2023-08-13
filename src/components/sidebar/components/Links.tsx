@@ -56,8 +56,8 @@ export function SidebarLinks(props: SidebarLinksProps) {
       if (route.collapse && !route.invisible) {
         return (
           <Accordion defaultIndex={0} allowToggle key={key}>
-            <Flex w="100%" justifyContent={'space-between'}>
-              <AccordionItem isDisabled border="none" mb="14px" key={key}>
+            <Flex w="100%" justifyContent={'space-between'} key={key}>
+              <AccordionItem border="none" mb="14px" key={key}>
                 <AccordionButton
                   display="flex"
                   alignItems="center"
@@ -79,6 +79,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
                       align="center"
                       justifyContent="space-between"
                       w="100%"
+                      key={key}
                     >
                       <HStack
                         spacing={
@@ -106,7 +107,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
                             {route.icon}
                           </Box>
                           <Text
-                            cursor="not-allowed"
+                            cursor="click"
                             me="auto"
                             color={
                               route.disabled
@@ -135,7 +136,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
                         ps="32px"
                       >
                         <Text
-                          cursor="not-allowed"
+                          cursor="click"
                           me="auto"
                           fontWeight="500"
                           letterSpacing="0px"
@@ -185,7 +186,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
         );
       } else if (!route.invisible) {
         return (
-          <>
+          <div key={key}>
             {route.icon ? (
               <Flex
                 align="center"
@@ -193,7 +194,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
                 w="100%"
                 maxW="100%"
                 ps="17px"
-                mb="0px"
+                mb="0px"            
               >
                 <HStack
                   w="100%"
@@ -207,7 +208,6 @@ export function SidebarLinks(props: SidebarLinksProps) {
                       href={
                         route.layout ? route.layout + route.path : route.path
                       }
-                      key={key}
                       styles={{ width: '100%' }}
                     >
                       <Flex
@@ -250,7 +250,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
                       w="100%"
                       alignItems="center"
                       justifyContent="center"
-                      cursor="not-allowed"
+                      cursor="click"
                     >
                       <Box
                         opacity="0.4"
@@ -282,10 +282,6 @@ export function SidebarLinks(props: SidebarLinksProps) {
                       >
                         {route.name}
                       </Text>
-                      <Link
-                        isExternal
-                        href="https://horizon-ui.com/ai-template"
-                      >
                         <Badge
                           display={{ base: 'flex', lg: 'none', xl: 'flex' }}
                           colorScheme="brand"
@@ -295,15 +291,14 @@ export function SidebarLinks(props: SidebarLinksProps) {
                           letterSpacing="0px"
                           px="8px"
                         >
-                          PRO
+                          BADGE
                         </Badge>
-                      </Link>
                     </Flex>
                   )}
                 </HStack>
               </Flex>
             ) : (
-              <ListItem ms={0} cursor="not-allowed" opacity={'0.4'}>
+              <ListItem ms={0} opacity={'0.4'}>
                 <Flex ps="32px" alignItems="center" mb="8px">
                   <Text
                     color={
@@ -321,48 +316,32 @@ export function SidebarLinks(props: SidebarLinksProps) {
                 </Flex>
               </ListItem>
             )}
-          </>
+          </div>
         );
       }
     });
   };
   // this function creates the links from the secondary accordions (for example auth -> sign-in -> default)
+
   const createAccordionLinks = (routes: IRoute[]) => {
-    return routes.map((route: IRoute, key: number) => {
-      return (
-        <ListItem
-          ms="28px"
-          display="flex"
-          alignItems="center"
-          mb="10px"
-          key={key}
-          cursor="not-allowed"
+    return routes.map((route: IRoute) => (
+      <ListItem
+        ms="28px"
+        display="flex"
+        alignItems="center"
+        mb="10px"
+        key={route.path}
+      >
+        <Icon w="6px" h="6px" me="8px" as={FaCircle} color={route.disabled ? gray : activeIcon} />
+        <Text
+          color={(activeRoute(route.path.toLowerCase()) ? activeColor : inactiveColor)}
+          fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}
+          fontSize="sm"
         >
-          <Icon
-            w="6px"
-            h="6px"
-            me="8px"
-            as={FaCircle}
-            color={route.disabled ? gray : activeIcon}
-          />
-          <Text
-            color={
-              route.disabled
-                ? gray
-                : activeRoute(route.path.toLowerCase())
-                ? activeColor
-                : inactiveColor
-            }
-            fontWeight={
-              activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'
-            }
-            fontSize="sm"
-          >
-            {route.name}
-          </Text>
-        </ListItem>
-      );
-    });
+          {route.name}
+        </Text>
+      </ListItem>
+    ));
   };
   //  BRAND
   return <>{createLinks(routes)}</>;

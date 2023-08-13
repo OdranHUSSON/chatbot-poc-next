@@ -33,9 +33,6 @@ const ChatHistory = ({ chatHistory }: any) => {
 		const content = Array.isArray(children) 
 			? children[0]
 			: children;
-	  
-		console.log('Extracted content:', content);
-	  
 		if (!content) {
 			return <Text>Error displaying code.</Text>;
 		}
@@ -69,10 +66,8 @@ const ChatHistory = ({ chatHistory }: any) => {
 			<Flex borderRadius="full" justify="center" align="center" bg={chat.type === 'user' ? 'transparent' : 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'} me="20px" h="40px" minH="40px" minW="40px">
 			  <Icon as={chat.type === 'user' ? MdPerson : MdAutoAwesome} w="20px" h="20px" color={chat.type === 'user' ? brandColor : 'white'} />
 			</Flex>
-			<Flex p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px" w="100%" zIndex={2}>
-				<Text color={textColor} fontWeight="600" fontSize={{ base: 'sm', md: 'md' }} lineHeight={{ base: '24px', md: '26px' }}>
+			<Flex p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px" w="100%" zIndex={2} color={textColor} fontWeight="600" fontSize={{ base: 'sm', md: 'md' }} lineHeight={{ base: '24px', md: '26px' }}>
 				{chat.message === '<Loading>' ? <Spinner size="sm" /> : <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>}
-				</Text>
 			  <Flex ms="auto" alignItems="center">
 				{chat.type === 'user' && (
 				  <Icon cursor="pointer" as={MdEdit} w="20px" h="20px" color={gray} ml={3} />

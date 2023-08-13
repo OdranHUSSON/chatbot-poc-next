@@ -18,12 +18,12 @@ restart: down up
 build:
 	docker-compose build
 
-# Restart and Build Docker Compose services
-rebuild: down build up
-
 # Migrate the database
 migrate-db:
 	docker-compose exec nextjs npx sequelize-cli db:migrate
+
+# Restart and Build Docker Compose services
+fresh: down build up migrate-db
 
 # Undo migration
 migrate-db-undo:
