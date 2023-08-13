@@ -21,12 +21,26 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                     console.log(messages)
                     if (Array.isArray(messages)) {
                         setChatHistory(messages);
+                        toast({
+                            title: "Successfully fetched chat history from API",
+                            description: "Successfully fetched chat history from API",
+                            status: "success",
+                            duration: 2000,
+                            isClosable: false,
+                        });
                     } else {
                         setChatHistory([]);
                     }
                 } catch (error) {
                     console.error("Failed to fetch chat history from API:", error);
-                    setChatHistory([]); // Default to empty array in case of error
+                    toast({
+                        title: "Failed to fetch chat history from API",
+                        description: error,
+                        status: "error",
+                        duration: 10000,
+                        isClosable: false,
+                    });
+                    setChatHistory([]); 
                 }
             };
     

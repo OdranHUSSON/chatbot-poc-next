@@ -23,7 +23,7 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                     const messages = await Message.findAll();
                     res.json(messages);
                 } catch ( ex ) {
-
+                    res.status(500).json({ error: "Error fetching messages" });
                 }
                 break;
             case 'POST':
