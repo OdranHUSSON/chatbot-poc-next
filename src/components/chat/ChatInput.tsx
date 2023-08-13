@@ -101,7 +101,27 @@ const ChatInput: FC<ChatInputProps> = ({
         onChange={handleChange}
         value={inputCode}
       />
-      {/* ... (Button) */}
+      {          <Button
+            variant="primary"
+            py="20px"
+            px="16px"
+            fontSize="sm"
+            borderRadius="45px"
+            ms="auto"
+            w={{ base: '160px', md: '210px' }}
+            h="54px"
+            _hover={{
+              boxShadow:
+                '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
+              bg:
+                'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
+              _disabled: {
+                bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+              },
+            }}
+            onClick={handleChat}
+            isLoading={loading ? true : false}
+          >Submit</Button>}
     </Flex>
   );
 };
