@@ -25,22 +25,20 @@ const routes: IRoute[] = [
   },
   {
     name: 'All Templates',
-    disabled: true,
+    disabled: false,
     path: '/all-templates',
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
   {
     name: 'My Projects',
-    disabled: true,
+    disabled: false,
     path: '/my-projects',
     icon: <Icon as={MdLayers} width="20px" height="20px" color="inherit" />,
-    collapse: false,
   },
-  // --- Others ---
   {
     name: 'Other Pages',
-    disabled: true,
+    disabled: false,
     path: '/others',
     icon: <Icon as={MdFileCopy} width="20px" height="20px" color="inherit" />,
     collapse: true,
