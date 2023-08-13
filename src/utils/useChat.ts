@@ -59,24 +59,25 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
           console.log("SOCKET CONNECTED!", socket.id);
     
           // update chat on new message dispatched
-          socket.on("message", (message: string) => {
-              console.log("wsMessage:", message);
+          socket.on("messageCreated", (message: string) => {
+              console.log("WS:createMessage:", message);
+              const newMessage = { id:message.id, type:message.type, message:message.message };
+              setChatHistory(prev => [...prev, newMessage]);
           });
+
+          socket.on("messageUpdated", (message: string) => {
+            console.log("WS:updateMessage:", message);
+            stateUpdateMessageById(message.id, message.message)
+           });
         }
     
         return () => {
-          if(socket) {
-            socket.off("message");
-          }
+            if(socket) {
+                socket.off("messageCreated");
+                socket.off("messageUpdated");
+            }
         }
-      }, [socket]);
-
-    const addMessageToChatHistory = (type: 'user' | 'bot', message: string) => {
-        const id = uuidv4(); 
-        const newMessage = { id, type, message };
-        setChatHistory(prev => [...prev, newMessage]);
-        return id; 
-    };
+    }, [socket]);
     
 
     const updateMessageById = async (id: string, updatedMessage: string) => {
@@ -95,13 +96,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const addUserMessageToChatHistory = async (message: string) => {
         try {
             const savedMessage = await createUserMessage(message);
-            // assuming your API returns the saved message with its ID and content
-            const newMessage = {
-                id: savedMessage.id, 
-                type: 'user', 
-                message: savedMessage.message
-            };
-            setChatHistory(prev => [...prev, newMessage]);
             return savedMessage.id;
         } catch (error) {
             console.error("Error adding user message:", error);
@@ -111,12 +105,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const addBotMessageToChatHistory = async (message: string) => {
         try {
             const savedMessage = await createBotMessage(message);
-            const newMessage = {
-                id: savedMessage.id, 
-                type: 'bot', 
-                message: savedMessage.message
-            };
-            setChatHistory(prev => [...prev, newMessage]);
             return savedMessage.id;
         } catch (error) {
             console.error("Error adding bot message:", error);
