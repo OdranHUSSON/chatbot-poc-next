@@ -14,38 +14,30 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const [loading, setLoading] = useState<boolean>(false);
     const toast = useToast();
 
-    useEffect(() => {
         const fetchChatHistory = async () => {
-                try {
-                    const messages = await getAllMessages();
-                    console.log(messages)
-                    if (Array.isArray(messages)) {
-                        setChatHistory(messages);
-                        toast({
-                            title: "Successfully fetched chat history from API",
-                            description: "Successfully fetched chat history from API",
-                            status: "success",
-                            duration: 2000,
-                            isClosable: false,
-                        });
-                    } else {
-                        setChatHistory([]);
-                    }
-                } catch (error) {
-                    console.error("Failed to fetch chat history from API:", error);
-                    toast({
-                        title: "Failed to fetch chat history from API",
-                        description: error,
-                        status: "error",
-                        duration: 10000,
-                        isClosable: false,
-                    });
-                    setChatHistory([]); 
+            try {
+                const messages = await getAllMessages();
+                console.log(messages)
+                if (Array.isArray(messages)) {
+                    setChatHistory(messages);
+                } else {
+                    setChatHistory([]);
                 }
-            };
+            } catch (error) {
+                console.error("Failed to fetch chat history from API:", error);
+                toast({
+                    title: "Failed to fetch chat history from API",
+                    description: error,
+                    status: "error",
+                    duration: 10000,
+                    isClosable: false,
+                    position: "top-right"
+                });
+                setChatHistory([]); 
+            }
+        };
+        
     
-        fetchChatHistory();
-    }, []);
     
 
     useEffect(() => {
@@ -72,7 +64,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     useEffect(() => {
         if (socket) {
             console.log("SOCKET CONNECTED!", socket.id);
-    
+            fetchChatHistory();
             // Show toast when socket connects
             socket.on("connect", () => {
                 toast({
@@ -81,6 +73,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                     status: "success",
                     duration: 3000,
                     isClosable: true,
+                    position: "top-right"
                 });
             });
     
@@ -92,6 +85,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
+                    position: "top-right"
                 });
             });
     
