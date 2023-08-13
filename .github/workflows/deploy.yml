@@ -13,16 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up SSH
+      - name: Set up SSH Agent
         uses: webfactory/ssh-agent@v0.5.0
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy with Docker Compose
-        run: |
-          ssh user@your-server "cd /path/to/your/project && docker-compose pull && docker-compose up -d"
+          ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
 
       - name: Run updateChatbot.sh
         run: |
           ssh debian@de1.webforger.fr "cd /home/debian/ && bash updateChatbot.sh"
-
