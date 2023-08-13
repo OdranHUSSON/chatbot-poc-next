@@ -4,7 +4,6 @@ import ReactMarkdown from "react-markdown";
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { useClipboard } from '@/utils/copy';
-import React, { useRef, useEffect } from 'react';
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -19,14 +18,6 @@ const ChatHistory = ({ chatHistory }: any) => {
 	const brandColor = useColorModeValue('brand.500', 'white');
 	const gray = useColorModeValue('gray.500', 'white');
 	const textColor = useColorModeValue('navy.700', 'white');
-	const bottomRef = useRef<null | HTMLDivElement>(null);
-
-	useEffect(() => {
-		if (bottomRef.current) {
-			bottomRef.current.scrollIntoView({ behavior: "smooth" });
-		}
-	}, [chatHistory]);
-	
   
 	const MarkdownComponents = {
 	  h1: (props: any) => <Text as="h1" fontSize="2xl" fontWeight="bold" my={3} {...props} />,
@@ -88,7 +79,6 @@ const ChatHistory = ({ chatHistory }: any) => {
 			</Flex>
 		  </Flex>
 		))}
-		<Box ref={bottomRef} />
 	  </>
 	);
   };
