@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { useClipboard } from '@/utils/copy';
+import React, { useRef, useEffect } from 'react';
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -18,6 +19,12 @@ const ChatHistory = ({ chatHistory }: any) => {
 	const brandColor = useColorModeValue('brand.500', 'white');
 	const gray = useColorModeValue('gray.500', 'white');
 	const textColor = useColorModeValue('navy.700', 'white');
+	const chatEndRef = useRef(null); 
+
+	useEffect(() => { // Step 2: Use Effect to Scroll
+	  chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+	}, [chatHistory]);
+  
   
 	const MarkdownComponents = {
 	  h1: (props: any) => <Text as="h1" fontSize="2xl" fontWeight="bold" my={3} {...props} />,
@@ -54,10 +61,8 @@ const ChatHistory = ({ chatHistory }: any) => {
 			</Box>
 		);
 	  }
-	  
-	
-	  
 	};
+
   
 	return (
 	  <>
@@ -79,7 +84,8 @@ const ChatHistory = ({ chatHistory }: any) => {
 			</Flex>
 		  </Flex>
 		))}
-	  </>
+		<div ref={chatEndRef} /> {/* This empty div will be our scrolling target */}
+    </>
 	);
   };
   
