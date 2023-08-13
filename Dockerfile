@@ -15,6 +15,9 @@ COPY entrypoint.sh /entrypoint.sh
 # Copy the rest of the application to the container
 COPY . .
 
+RUN chmod -R 777 /app
+RUN npm install
+
 # Expose port 3000 for the application
 EXPOSE 3000
 
