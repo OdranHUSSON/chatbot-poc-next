@@ -70,6 +70,7 @@ const ChatInput: FC<ChatInputProps> = ({
   return (
     <Flex
       position="relative"
+      width={"100%"}
       bottom="0"
       left="0"
       right="0"

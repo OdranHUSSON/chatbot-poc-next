@@ -106,6 +106,7 @@ export default function Chat(props: { apiKeyApp: string }) {
 			pt={{ base: '70px', md: '0px' }}
 			direction="column"
 			position="relative"
+			overflow={"hidden"}
 		>
 			<Img
 				src={Bg.src}
@@ -131,8 +132,6 @@ export default function Chat(props: { apiKeyApp: string }) {
 					handleChat={handleChat}
 					loading={loading}
 				/>
-
-
 			</Flex>
 		</Flex>
 	);
