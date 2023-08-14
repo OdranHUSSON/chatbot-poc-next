@@ -14,28 +14,28 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const [loading, setLoading] = useState<boolean>(false);
     const toast = useToast();
 
-        const fetchChatHistory = async () => {
-            try {
-                const messages = await getAllMessages();
-                console.log(messages)
-                if (Array.isArray(messages)) {
-                    setChatHistory(messages);
-                } else {
-                    setChatHistory([]);
-                }
-            } catch (error) {
-                console.error("Failed to fetch chat history from API:", error);
-                toast({
-                    title: "Failed to fetch chat history from API",
-                    description: error,
-                    status: "error",
-                    duration: 10000,
-                    isClosable: false,
-                    position: "top-right"
-                });
-                setChatHistory([]); 
+    const fetchChatHistory = async () => {
+        try {
+            const messages = await getAllMessages();
+            console.log(messages)
+            if (Array.isArray(messages)) {
+                setChatHistory(messages);
+            } else {
+                setChatHistory([]);
             }
-        };
+        } catch (error) {
+            console.error("Failed to fetch chat history from API:", error);
+            setChatHistory([]); 
+            toast({
+                title: "Failed to fetch chat history from API",
+                description: error.message,
+                status: "error",
+                duration: 10000,
+                isClosable: false,
+                position: "top-right"
+            });
+        }
+    };
         
     
     

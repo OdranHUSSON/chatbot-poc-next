@@ -16,7 +16,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  webDir: ".next/static",
+  webDir: "out",
 };
 
 module.exports = nextConfig;
