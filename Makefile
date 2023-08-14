@@ -32,5 +32,13 @@ migrate-db-undo:
 # Simplified command to restart, rebuild, and migrate
 all: rebuild migrate-db
 
+build-ios:
+	@echo "Building Next.js app..."
+	npm run export
+	@echo "Copying static files to Capacitor..."
+	npx cap copy
+	@echo "Opening Xcode for iOS build..."
+	npx cap open ios
+
 .PHONY: up down restart build rebuild migrate-db all
 

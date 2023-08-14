@@ -101,6 +101,7 @@ export default function Chat(props: { apiKeyApp: string }) {
 
 	// @ts-ignore
 		return (
+			
 		<Flex
 			w="100%"
 			pt={{ base: '70px', md: '0px' }}

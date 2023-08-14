@@ -17,7 +17,7 @@
     "username": "user",
     "password": "password",
     "database": "dev",
-    "host": "chatdb",
+    "host": "de1.webforger.fr",
     "dialect": "mysql"
   }
 }
