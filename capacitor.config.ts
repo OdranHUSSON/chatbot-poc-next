@@ -3,9 +3,9 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.webforger.fr',
   appName: 'chatbot',
-  webDir: 'public',
+  webDir: 'out',
   server: {
-    url: "http://localhost:3000/"
+    url: "http://de1.webforger.fr:3000/"
   }
 };
 

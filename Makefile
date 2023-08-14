@@ -35,8 +35,7 @@ all: rebuild migrate-db
 build-ios:
 	@echo "Building Next.js app..."
 	npm run export
-	@echo "Copying static files to Capacitor..."
-	npx cap copy
+	npx cap sync
 	@echo "Opening Xcode for iOS build..."
 	npx cap open ios
 
