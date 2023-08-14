@@ -4,17 +4,21 @@ export const commands = [
     description: 'Lists all available commands',
   },
   {
-    name: 'clearChat',
+    name: 'clearchat',
     description: 'Clears the chat history',
   },
   {
-    name: 'chatGPT',
+    name: 'chatgpt',
     description: 'Fetches a response from chat GPT',
   },
 	{
     name: 'commit',
     description: 'Generates a commit message',
   },
+  {
+    name: 'linechart',
+    description: 'Create a linechart from last messages data'
+  }
 ];
 
 let apiKey: string | null = getApiKeyFromLocalStorage();
@@ -46,7 +50,8 @@ export const handleCommands = (
 	setLoading: (loading: boolean) => void,
 	addBotMessageToChatHistory: (message: string) => void,
 	clearChatHistory: () => void,
-	updateMessageById: (id: string, message: string) => void
+	updateMessageById: (id: string, message: string) => void,
+  chatHistory: { id: number, message: string, role: 'user' | 'bot' }[] 
 ) => {
 	const [commandName, ...args] = commandText.split(' ');
 
@@ -57,15 +62,18 @@ export const handleCommands = (
 	}
 
 	switch (commandName) {
-			case '/clearChat':
+			case '/clearchat':
 					clearChatHistory();
 					break;
 			case '/commit':
-					handleCommitCommand(args, addBotMessageToChatHistory, updateMessageById);
+					handleCommitCommand(args, addBotMessageToChatHistory, updateMessageById, chatHistory);
 					break;
-			case '/chatGPT':
-					chatGPT(args, addBotMessageToChatHistory, updateMessageById);
+			case '/chatgpt':
+					chatGPT(args, addBotMessageToChatHistory, updateMessageById, chatHistory);
 					break
+      case '/linechart':
+        linechart(args, addBotMessageToChatHistory, updateMessageById, chatHistory);
+        break
 			case '/help':
 					addBotMessageToChatHistory(
 							commands.map((command) => `${command.name}: ${command.description}`).join('\n')
@@ -99,25 +107,27 @@ async function processCommandWithLoading(
 
 
 export async function handleCommitCommand(
-    args: string[],
-    addBotMessageToChatHistory: (message: string) => Promise<string>,
-    updateMessageById: (id: string, message: string) => Promise<void>
+  args: string[],
+  addBotMessageToChatHistory: (message: string) => Promise<string>,
+  updateMessageById: (id: string, message: string) => Promise<void>,
+  chatHistory: { id: number, message: string, role: 'user' | 'bot' }[] 
 ) {
-    await processCommandWithLoading(
-        args,
-        addBotMessageToChatHistory,
-        updateMessageById,
-        async (args) => {
-            const commitMessage = "Generate a short commit message with one emoji at the beginning for the following changes " + args.join(' ');
-            return "# Commit Message \n \n Here's your commit command with the personalized commit message :\n \n \n```sh\n\ngit commit -m \"" + (await handleChatGPTCommand(commitMessage, apiKey)) + "\"\n\n```";
-        }
-    );
+  await processCommandWithLoading(
+      args,
+      addBotMessageToChatHistory,
+      updateMessageById,
+      async (args) => {
+          const commitMessage = "Generate a short commit message with one emoji at the beginning for the following changes " + args.join(' ');
+          return "# Commit Message \n \n Here's your commit command with the personalized commit message :\n \n \n```sh\n\ngit commit -m \"" + (await handleChatGPTCommand(commitMessage, apiKey, chatHistory)) + "\"\n\n```"; // Pass chatHistory here
+      }
+  );
 }
 
 export async function chatGPT(
     args: string[],
     addBotMessageToChatHistory: (message: string) => Promise<string>,
-    updateMessageById: (id: string, message: string) => Promise<void>
+    updateMessageById: (id: string, message: string) => Promise<void>,
+    chatHistory: { id: number, message: string, role: 'user' | 'bot' }[] 
 ) {
     await processCommandWithLoading(
         args,
@@ -125,20 +135,39 @@ export async function chatGPT(
         updateMessageById,
         async (args) => {
             const message = args.join(' ');
-            return await handleChatGPTCommand(message, apiKey);
+            return await handleChatGPTCommand(message, apiKey, chatHistory);
         }
     );
 }
 
+export async function linechart(
+  args: string[],
+  addBotMessageToChatHistory: (message: string) => Promise<string>,
+  updateMessageById: (id: string, message: string) => Promise<void>,
+  chatHistory: { id: number, message: string, role: 'user' | 'bot' }[] 
+) {
+  await processCommandWithLoading(
+      args,
+      addBotMessageToChatHistory,
+      updateMessageById,
+      async (args) => {
+        
+          const commitMessage = "Generate a linechart dataset in json using this example format : " + `{"labels":["Monday","Tuesday","Wednesday","Thursday","Friday"],"datasets":[{"label":"Product A Sales","data":[50,75,60,80,95],"borderColor":"rgb(255, 99, 132)","backgroundColor":"rgba(255, 99, 132, 0.2)"},{"label":"Product B Sales","data":[55,70,65,85,90],"borderColor":"rgb(75, 192, 192)","backgroundColor":"rgba(75, 192, 192, 0.2)"}]}` + " (this is an example do no use the data ) , you can adapt the data as you want, output only the dataset nothing else";
+          return "<LineChart dataset='" + (await handleChatGPTCommand(commitMessage, apiKey, chatHistory)) + "'>";
+      }
+  );
+}
 
-export async function handleChatGPTCommand(message: string, apiKey: string | null) {
+
+export async function handleChatGPTCommand(message: string, apiKey: string | null, chatHistory: { id: number, message: string, role: 'user' | 'bot' }[] = []) {
 	try {
 			const response = await fetch('/api/completionAPI', {
 					method: 'POST',
 					headers: {
 							'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({ prompt: message, apiKey }), // Include the message and apiKey in the request body
+					// Include the message, apiKey, and chatHistory in the request body
+					body: JSON.stringify({ prompt: message, apiKey, chatHistory }), 
 			});
 
 			if (!response.ok) {

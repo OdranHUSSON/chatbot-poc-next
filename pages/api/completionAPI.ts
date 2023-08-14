@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { ChatBody } from '@/types/types';
 import { Configuration, OpenAIApi } from 'openai';
 
 type CreateChatCompletionResponse = {
@@ -20,8 +21,7 @@ type CreateChatCompletionResponse = {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { prompt, apiKey } = req.body;
-
+  const { prompt, apiKey, chatHistory } = req.body as ChatBody & { chatHistory: { id: number, message: string, role: 'user' | 'bot' }[] };
   try {
     if (!apiKey) {
       res.status(400).json({ error: 'API key is missing' });
@@ -32,11 +32,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       apiKey: apiKey,
     });
 
+    const mappedHistory = chatHistory.map(item => ({
+      role: item.role === 'bot' ? 'system' : "user",
+      content: item.message
+    }));
+    mappedHistory.push({ role: 'system', content: prompt });
+
     const openai = new OpenAIApi(configuration);
 
     const chatCompletion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
+      messages: mappedHistory,
     });
 
     // Make sure to await the completion before accessing its content
