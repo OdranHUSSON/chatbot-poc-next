@@ -27,17 +27,17 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 }
                 break;
             case 'POST':
-                const message = await Message.create(req.body);
-                res?.socket?.server?.io?.emit("messageCreated", message);
                 console.log('Emitting messageCreated event with data:', req.body)
+                res?.socket?.server?.io?.emit("messageCreated", req.body);
+                const message = await Message.create(req.body);                                
                 res.json(message);
                 break;
             case 'PUT':
+                console.log('Emitting messageUpdated event with data:', req.body)
+                res?.socket?.server?.io?.emit("messageUpdated", req.body);
                 await Message.update(req.body, {
                     where: { id: req.body.id }
-                });
-                res?.socket?.server?.io?.emit("messageUpdated", req.body);
-                console.log('Emitting messageUpdated event with data:', req.body)
+                });                                
                 res.json({ success: true });
                 break;
             case 'DELETE':
