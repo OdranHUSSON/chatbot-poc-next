@@ -27,9 +27,9 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 }
                 break;
             case 'POST':
+                const message = await Message.create(req.body);
+                res?.socket?.server?.io?.emit("messageCreated", message); // need to send message id for post
                 console.log('Emitting messageCreated event with data:', req.body)
-                res?.socket?.server?.io?.emit("messageCreated", req.body);
-                const message = await Message.create(req.body);                                
                 res.json(message);
                 break;
             case 'PUT':
