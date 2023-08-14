@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@capacitor/cli": "^5.2.3",
+    "@capacitor/core": "^5.2.3",
+    "@capacitor/ios": "^5.2.3",
     "@chakra-ui/icons": "^1.1.5",
     "@chakra-ui/react": "1.8.9",
     "@chakra-ui/system": "^1.12.1",

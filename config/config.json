@@ -7,17 +7,17 @@
     "dialect": "mysql"
   },
   "test": {
-    "username": "c0chat",
-    "password": "p#5dWbVB8p",
-    "database": "c0chat",
-    "host": "127.0.0.1",
+    "username": "user",
+    "password": "password",
+    "database": "dev",
+    "host": "chatdb",
     "dialect": "mysql"
   },
   "production": {
-    "username": "",
-    "password": "",
-    "database": "",
-    "host": "",
-    "dialect": ""
+    "username": "user",
+    "password": "password",
+    "database": "dev",
+    "host": "chatdb",
+    "dialect": "mysql"
   }
 }

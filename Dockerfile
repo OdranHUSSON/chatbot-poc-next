@@ -21,7 +21,7 @@ RUN npm install
 # Expose port 3000 for the application
 EXPOSE 3000
 
-ENTRYPOINT ["/entrypoint.sh"]
+# Make our shell script executable
+RUN chmod +x /entrypoint.sh
 
-# Command to run the application using Next.js's production server
-CMD ["npm", "run", "dev"]
+ENTRYPOINT ["/entrypoint.sh"]

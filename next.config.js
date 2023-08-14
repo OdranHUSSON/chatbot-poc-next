@@ -11,12 +11,12 @@ const nextConfig = {
       'i.ibb.co',
       'scontent.fotp8-1.fna.fbcdn.net',
     ],
-    // Make ENV
     unoptimized: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
+  webDir: ".next/static",
 };
 
 module.exports = nextConfig;

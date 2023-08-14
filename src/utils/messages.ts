@@ -20,18 +20,36 @@ export const createBotMessage = async (messageContent: string) => {
 
 
 export const getAllMessages = async () => {
-    const response = await fetch('/api/messages', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-    });
+    try {
+        const response = await fetch('/api/messages', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch messages.');
+        if (!response.ok) {
+            // Get more detailed error information from the response if available
+            let errorMessage = 'Failed to fetch messages.';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch (_) {
+                // In case parsing the response body fails, use the default error message
+            }
+
+            // Throw error with refined message
+            const error = new Error(errorMessage);
+            error.status = response.status;  // Attach the status code to the error object for further handling
+            throw error;
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error in getAllMessages:", error);
+        throw error;  // re-throw the error so it can be handled by callers
     }
-
-    const data = await response.json();
-    return data;
 };
+
 
 
 export const updateMessage = async (id: string, updatedContent: string) => {
