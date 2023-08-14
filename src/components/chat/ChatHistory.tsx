@@ -5,6 +5,7 @@ import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { useClipboard } from '@/utils/copy';
 import React, { useRef, useEffect } from 'react';
+import LineChart from '../charts/LineChart';
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -68,47 +69,67 @@ const ChatHistory = ({ chatHistory }: any) => {
 	  <Box width={"100%"} position={"relative"}>
 		{chatHistory.map((chat: ChatType, index: number) => (
 			<Flex 
-    key={index} 
-    w="100%" 
-    overflowX="hidden" 
-    align="center" 
-    mb="10px"
-    direction={{ base: 'column', md: 'row' }}
->
-    <Flex 
-        direction="row"
-        align="center"
-        borderRadius="full" 
-        bg={chat.type === 'user' ? 'transparent' : 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'} 
-        me={{ base: '0', md: '20px' }} 
-        mt={{ base: '10px', md: '0' }}
-        h="40px" 
-        minH="40px" 
-        minW="40px"
-        justifyContent={{ base: 'flex-start', md: 'center' }}
-        p={{ base: '10px', md: '0' }}
-    >
-<Icon as={chat.type === 'user' ? MdPerson : MdAutoAwesome} w="20px" h="20px" color={chat.type === 'user' ? brandColor : 'white'} />
-    </Flex>
-    <Flex 
-        p="22px" 
-        border="1px solid" 
-        borderColor={borderColor} 
-        borderRadius="14px" 
-        flex="1" 
-        zIndex={2} 
-        color={textColor} 
-        fontWeight="600" 
-        fontSize={{ base: 'sm', md: 'md' }} 
-        lineHeight={{ base: '24px', md: '26px' }}
-        w="100%"
-        mt={{ base: '10px', md: '0' }}
-    >
-        <Box position="relative">
-            {chat.message === '<Loading>' ? <Spinner size="sm" /> : <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>}
-        </Box>
-    </Flex>
-</Flex>
+				key={index} 
+				w="100%" 
+				overflowX="hidden" 
+				align="center" 
+				mb="10px"
+				direction={{ base: 'column', md: 'row' }}
+			>
+				<Flex 
+					direction="row"
+					align="center"
+					borderRadius="full" 
+					bg={chat.type === 'user' ? 'transparent' : 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'} 
+					me={{ base: '0', md: '20px' }} 
+					mt={{ base: '10px', md: '0' }}
+					h="40px" 
+					minH="40px" 
+					minW="40px"
+					justifyContent={{ base: 'flex-start', md: 'center' }}
+					p={{ base: '10px', md: '0' }}
+				>
+			<Icon as={chat.type === 'user' ? MdPerson : MdAutoAwesome} w="20px" h="20px" color={chat.type === 'user' ? brandColor : 'white'} />
+				</Flex>
+				<Flex 
+					p="22px" 
+					border="1px solid" 
+					borderColor={borderColor} 
+					borderRadius="14px" 
+					flex="1" 
+					zIndex={2} 
+					color={textColor} 
+					fontWeight="600" 
+					fontSize={{ base: 'sm', md: 'md' }} 
+					lineHeight={{ base: '24px', md: '26px' }}
+					w="100%"
+					mt={{ base: '10px', md: '0' }}
+				>
+					<Box position="relative" width={"100%"} minW={"320px"}>
+					{
+						(() => {
+							const cleanedMessage = chat.message.trim().replace(/\n/g, '');
+
+							// Extract JSON dataset
+							const datasetMatch = cleanedMessage.match(/<LineChart dataset='(.*?)'>/);
+							const jsonString = datasetMatch ? datasetMatch[1] : null;
+						
+							try {
+							  const dataset = JSON.parse(jsonString);
+							  if (dataset && typeof dataset === 'object' && dataset.datasets) {
+								return <LineChart dataJSON={jsonString} />;
+							  }
+							} catch (e) {
+							  // JSON parse failed, handle or ignore error
+							}
+
+							if (chat.message === '<Loading>') return <Spinner size="sm" />;
+							return <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>;
+						})()
+					}
+					</Box>
+				</Flex>
+			</Flex>
 
 		))}
 		<div ref={chatEndRef} /> {/* This empty div will be our scrolling target */}

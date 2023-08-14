@@ -175,7 +175,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
         await addUserMessageToChatHistory(inputCode); 
 
         if (inputCode.startsWith('/')) {
-            handleCommands(inputCode, setLoading, addBotMessageToChatHistory, clearChatHistory, updateMessageById);
+            handleCommands(inputCode, setLoading, addBotMessageToChatHistory, clearChatHistory, updateMessageById, chatHistory);
             setInputCode('');
             return; 
         }
