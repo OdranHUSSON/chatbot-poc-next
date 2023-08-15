@@ -9,6 +9,8 @@ COPY package*.json ./
 COPY next*.json ./
 COPY next.config.js ./
 
+RUN npm install
+
 # Copy the entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 
@@ -16,7 +18,6 @@ COPY entrypoint.sh /entrypoint.sh
 COPY . .
 
 RUN chmod -R 777 /app
-RUN npm install
 
 # Expose port 3000 for the application
 EXPOSE 3000
