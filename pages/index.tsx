@@ -123,6 +123,7 @@ export default function Chat(props: { apiKeyApp: string }) {
 				w={{ base: '100%', md: '100%', xl: '100%' }}
 				minH={{ base: '75vh', '2xl': '85vh' }}
 				maxW="1000px"
+				paddingTop={{ base: '44px', md: '16px', xl: '18px' }}
 			>
 				
 				<ModelChange model={model} setModel={setModel} outputCode={outputCode} />

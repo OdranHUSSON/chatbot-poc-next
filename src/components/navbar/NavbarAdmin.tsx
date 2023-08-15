@@ -13,6 +13,7 @@ import {
 import { useState, useEffect } from 'react';
 import AdminNavbarLinks from './NavbarLinksAdmin';
 import { isWindowAvailable } from '@/utils/navigation';
+import { lightBlue } from '@mui/material/colors';
 
 export default function AdminNavbar(props: {
   secondary: boolean;
@@ -91,7 +92,7 @@ export default function AdminNavbar(props: {
         md: '12px',
       }}
       pt="8px"
-      top={{ base: '12px', md: '16px', xl: '18px' }}
+      top={{ base: '44px', md: '16px', xl: '18px' }}
       w={{
         base: 'calc(100vw - 8%)',
         md: 'calc(100vw - 8%)',
