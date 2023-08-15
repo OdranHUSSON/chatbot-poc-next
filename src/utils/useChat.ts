@@ -17,7 +17,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const fetchChatHistory = async () => {
         try {
             const messages = await getAllMessages();
-            console.log(messages)
             if (Array.isArray(messages)) {
                 setChatHistory(messages);
             } else {

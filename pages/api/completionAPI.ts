@@ -47,7 +47,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Make sure to await the completion before accessing its content
     const completionResponse: CreateChatCompletionResponse = chatCompletion.data;
-    console.log('chatCompletion:', completionResponse);
 
     const completion = completionResponse.choices[0].message.content;
 

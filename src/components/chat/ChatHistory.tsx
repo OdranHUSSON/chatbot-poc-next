@@ -109,10 +109,8 @@ const ChatHistory = ({ chatHistory }: any) => {
 					{
 						(() => {
 							let cleanedMessage = chat.message.trim().replace(/\n/g, '');
-							console.log("cleanedMessage", cleanedMessage)
 							const datasetMatch = cleanedMessage.match(/<Linechart dataset='([^']+)'\/?>/i);
 							const jsonString = datasetMatch ? datasetMatch[1] : null;
-							console.log("jsonString", jsonString)
 						
 							if (jsonString) {
 								return <LineChart dataJSON={jsonString} />;

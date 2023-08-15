@@ -7,8 +7,6 @@ import Config  from '../../config/config.json';
 
 const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     const env = process.env.NODE_ENV || 'development';
-    console.log("nodeenv:", process.env.NODE_ENV )
-    console.log("actual:", env)
     const config = Config[env];
 
     const sequelize = new Sequelize(config.database, config.username, config.password, {
@@ -28,12 +26,10 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 break;
             case 'POST':
                 const message = await Message.create(req.body);
-                res?.socket?.server?.io?.emit("messageCreated", message); // need to send message id for post
-                console.log('Emitting messageCreated event with data:', req.body)
+                res?.socket?.server?.io?.emit("messageCreated", message);
                 res.json(message);
                 break;
             case 'PUT':
-                console.log('Emitting messageUpdated event with data:', req.body)
                 res?.socket?.server?.io?.emit("messageUpdated", req.body);
                 await Message.update(req.body, {
                     where: { id: req.body.id }
@@ -49,12 +45,11 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                         where: { id: req.body.id }
                     });
                     res?.socket?.server?.io?.emit("messageDeleted", req.body.id);
-                    console.log('Emitting messageDeleted event with data:', req.body.id)
                 }
                 res.json({ success: true });
                 break;
             default:
-                res.status(405).end(); // Method not allowed
+                res.status(405).end();
                 break;
         }
     } catch (error) {

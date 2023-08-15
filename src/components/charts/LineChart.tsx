@@ -62,7 +62,6 @@ class LineChart extends React.Component<ChartProps> {
   render() {
     try {
       const data: ChartData = JSON.parse(this.props.dataJSON);
-      console.log("LineChart:init", this.props.dataJSON)
 
       if (!data.datasets) {
         throw new Error("Invalid data format");
