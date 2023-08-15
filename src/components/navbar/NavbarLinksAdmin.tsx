@@ -22,6 +22,7 @@ import { MdInfoOutline } from 'react-icons/md';
 import APIModal from '@/components/apiModal';
 import NavLink from '../link/NavLink';
 import routes from '@/routes';
+import StatusComponent from '../statusIcon';
 
 export default function HeaderLinks(props: {
   secondary: boolean;
@@ -178,6 +179,10 @@ export default function HeaderLinks(props: {
           as={colorMode === 'light' ? IoMdMoon : IoMdSunny}
         />
       </Button>
+      <Box w="18px" h="18px" me="10px">
+        <StatusComponent status={"ok"} />
+      </Box>
+
       <Menu>
         <MenuButton p="0px" style={{ position: 'relative' }}>
           <Box
