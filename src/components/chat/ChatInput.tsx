@@ -87,6 +87,7 @@ const ChatInput: FC<ChatInputProps> = ({
     >
       <Button
         onClick={truncateMessages}
+        onTouchEnd={truncateMessages}
         colorScheme="red"
         variant="ghost"
         borderRadius="45px"

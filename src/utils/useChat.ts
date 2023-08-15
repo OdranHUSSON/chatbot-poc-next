@@ -31,7 +31,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                 status: "error",
                 duration: 10000,
                 isClosable: false,
-                position: "top-right"
+                
             });
         }
     };
@@ -70,7 +70,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                     status: "success",
                     duration: 3000,
                     isClosable: true,
-                    position: "top-right"
                 });
             });
     
@@ -82,7 +81,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
-                    position: "top-right"
                 });
             });
     
@@ -107,7 +105,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
-                    position: "top-right"
                 });
             });
                 

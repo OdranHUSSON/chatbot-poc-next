@@ -19,6 +19,14 @@ export default extendTheme(
   textareaStyles, // textarea styles
   switchStyles, // switch styles
   CardComponent, // card component
+  {
+    baseStyle: {
+      top: "44px", // This will position the Toast 44 pixels down from the top
+      right: "0",
+      padding: "8px",
+      zIndex: "1",
+    },
+  },
 );
 
 export interface CustomCardProps extends HTMLChakraProps<'div'>, ThemingProps {}
