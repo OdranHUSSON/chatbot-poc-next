@@ -16,13 +16,21 @@ export class Message extends Model {
 
     static async findAll(): Promise<Message[]> {
         return super.findAll({
-            order: [['createdAt', 'ASC']]
+            order: [['createdAt', 'ASC']],
+            logging: console.warn
         });
     }
 
     static async truncate(): Promise<void> {
         return super.destroy({
             truncate: true
+        });
+    }
+
+    static async findOneById(id: string): Promise<Message | null> {
+        return super.findAll({
+            where: { 'id': id },
+            logging: console.error
         });
     }
     

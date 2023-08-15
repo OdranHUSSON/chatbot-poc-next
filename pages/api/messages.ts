@@ -12,21 +12,36 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
     const sequelize = new Sequelize(config.database, config.username, config.password, {
         host: config.host,
         dialect: config.dialect,
+        logging: console.log 
     })
     initialize(sequelize);
     try {
         switch (req.method) {
             case 'GET':
                 try {
-                    const messages = await Message.findAll();
-                    res.json(messages);
-                } catch ( ex ) {
+                    console.log('on entre')
+                    const messageId = req.query.id;
+                    console.log("messageId", messageId)
+                    if (messageId) {
+                        const message = await Message.findOneById(messageId);        
+                        if (message) {
+                            res.json(message[0]);
+                        } else {
+                            res.status(404).json({ error: "Message not found" });
+                        }
+                    } else {
+                        console.log("fallback")
+                        // Fetch all messages if no ID is provided
+                        const messages = await Message.findAll();
+                        res.json(messages);
+                    }
+                } catch (ex) {
                     res.status(500).json({ error: "Error fetching messages" });
                 }
                 break;
             case 'POST':
                 const message = await Message.create(req.body);
-                res?.socket?.server?.io?.emit("messageCreated", message);
+                res?.socket?.server?.io?.emit("messageCreated", message.id);
                 res.json(message);
                 break;
             case 'PUT':
@@ -34,7 +49,7 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 await Message.update(updatedMessageData, {
                     where: { id: updatedMessageData.id }
                 });
-                res?.socket?.server?.io?.emit("refreshChatHistory");
+                res?.socket?.server?.io?.emit("messageUpdated", updatedMessageData.id);
                 res.json({ success: true });
                 break;
                 

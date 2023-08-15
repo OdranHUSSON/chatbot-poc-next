@@ -1,5 +1,6 @@
 // Utility function to add a message to the database
 export const createMessage = async (type: 'user' | 'bot', messageContent: string) => {
+    let content = messageContent ?? '<Loading>';
     const response = await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -97,5 +98,35 @@ export const truncateMessages = async () => {
     } catch (error) {
         console.error("Error in truncateMessages:", error);
         throw error;
+    }
+};
+
+export const getMessageById = async (id: string) => {
+    try {
+        const response = await fetch(`/api/messages?id=${id}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+            let errorMessage = 'Failed to fetch the message.';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch (_) {
+                // In case parsing the response body fails, use the default error message
+            }
+
+            const error = new Error(errorMessage);
+            error.status = response.status; 
+            throw error;
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error("Error in getMessageById:", error);
+        throw error; 
     }
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChatBody, OpenAIModel } from '@/types/types';
 import { handleCommands } from '@/utils/commands';
-import { createUserMessage, createBotMessage, getAllMessages, updateMessage } from './messages';
+import { createUserMessage, createBotMessage, getAllMessages, updateMessage, getMessageById } from './messages';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@chakra-ui/react';
 
@@ -35,13 +35,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
             });
         }
     };
-        
-    
-    
-
-    useEffect(() => {
-        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-    }, [chatHistory]);
 
     const clearChatHistory = async () => {
         try {
@@ -58,18 +51,32 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
         }
     };
 
+    const getMessageFromDatabaseAddToState = async (id) => {
+        console.log("WS:createMessage:", id);
+        let message = await getMessageById(id);
+        console.log("message", message)
+        setChatHistory(prev => [...prev, message]);
+    };
+
+    const getMessageFromDatabaseUpdateState = async (id) => {
+        console.log("WS:updateMessage:", id);
+        let message = await getMessageById(id);
+        stateUpdateMessageById(message.id, message.message)
+    };
+
     useEffect(() => {
         if (socket) {    
+            
+            socket.on("connect", () => {
+                fetchChatHistory()
+            });
             // update chat on new message dispatched
-            socket.on("messageCreated", (message: string) => {
-                console.log("WS:createMessage:", message);
-                const newMessage = { id: message.id, type: message.type, message: message.message };
-                setChatHistory(prev => [...prev, newMessage]);
+            socket.on("messageCreated", (id) => {
+                getMessageFromDatabaseAddToState(id).catch(err => console.error(err));
             });
     
-            socket.on("refreshChatHistory", (message: string) => {
-                console.log("WS:updateMessage");
-                fetchChatHistory()
+            socket.on("messageUpdated", (id) => {
+                getMessageFromDatabaseUpdateState(id).catch(err => console.error(err));
             });
 
             socket.on("messagesTruncated", (message: string) => {
@@ -90,7 +97,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
             if (socket) {
                 socket.off("messagesTruncated");
                 socket.off("messageCreated");
-                socket.off("refreshChatHistory");
+                socket.off("connect");
             }
         }
     }, [socket]);
