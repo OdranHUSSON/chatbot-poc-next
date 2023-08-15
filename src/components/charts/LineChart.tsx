@@ -24,8 +24,8 @@ ChartJS.register(
 interface Dataset {
   label: string;
   data: number[];
-  borderColor: string;
-  backgroundColor: string;
+  borderColor?: string;
+  backgroundColor?: string;
 }
 
 interface ChartData {
@@ -42,20 +42,42 @@ class LineChart extends React.Component<ChartProps> {
     responsive: true,
   };
 
+  // Default colors for datasets
+  static defaultBorderColors = [
+    'rgba(75, 192, 192, 1)',
+    'rgba(255, 99, 132, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(54, 162, 235, 1)'
+    // ... add more as needed
+  ];
+
+  static defaultBackgroundColors = [
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(54, 162, 235, 0.2)'
+    // ... add more as needed
+  ];
+
   render() {
     try {
       const data: ChartData = JSON.parse(this.props.dataJSON);
-      console.log(this.props.dataJSON)
+      console.log("LineChart:init", this.props.dataJSON)
 
-      // Ensure data format is valid
       if (!data.datasets) {
         throw new Error("Invalid data format");
       }
 
-      for (let dataset of data.datasets) {
-        if (!dataset.label || !Array.isArray(dataset.data) || !dataset.borderColor || !dataset.backgroundColor) {
+      for (let i = 0; i < data.datasets.length; i++) {
+        let dataset = data.datasets[i];
+
+        if (!Array.isArray(dataset.data)) {
           throw new Error("Invalid dataset format");
         }
+
+        // Assign default colors if they are not set
+        dataset.borderColor = dataset.borderColor || LineChart.defaultBorderColors[i % LineChart.defaultBorderColors.length];
+        dataset.backgroundColor = dataset.backgroundColor || LineChart.defaultBackgroundColors[i % LineChart.defaultBackgroundColors.length];
       }
 
       return <Line maxwidth={"100%"} options={LineChart.options} data={data} />;

@@ -21,11 +21,20 @@ const handler = async (req: Request): Promise<Response> => {
         }
 
 		console.log("history", chatHistory)
-        // Map the chatHistory to GPT format
-        const mappedHistory = chatHistory.map(item => ({
+        
+        // Take the 20 latest messages from chatHistory
+        const latestChatHistory = chatHistory.slice(-20);
+
+        // Map the latestChatHistory to GPT format
+        const mappedHistory = latestChatHistory.map(item => ({
             role: item.role === 'bot' ? 'system' : "user",
             content: item.message
         }));
+
+        mappedHistory.unshift({
+            role: "user",
+            content: "You're my AI assistant, you can answer in markdown, code and can also display graphs, line chart with the following syntax : <Linechart dataset='JSON_ENCODED_DATASET_HERE'>, send components such as Linchart in ONE line and no other message. My front end will read your message and handle the display"
+        });
 
 		console.log("mapped", mappedHistory)
 

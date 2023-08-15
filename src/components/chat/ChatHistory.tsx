@@ -108,19 +108,14 @@ const ChatHistory = ({ chatHistory }: any) => {
 					<Box position="relative" width={"100%"} minW={"320px"}>
 					{
 						(() => {
-							const cleanedMessage = chat.message.trim().replace(/\n/g, '');
-
-							// Extract JSON dataset
-							const datasetMatch = cleanedMessage.match(/<LineChart dataset='(.*?)'>/);
+							let cleanedMessage = chat.message.trim().replace(/\n/g, '');
+							console.log("cleanedMessage", cleanedMessage)
+							const datasetMatch = cleanedMessage.match(/<Linechart dataset='([^']+)'\/?>/i);
 							const jsonString = datasetMatch ? datasetMatch[1] : null;
+							console.log("jsonString", jsonString)
 						
-							try {
-							  const dataset = JSON.parse(jsonString);
-							  if (dataset && typeof dataset === 'object' && dataset.datasets) {
+							if (jsonString) {
 								return <LineChart dataJSON={jsonString} />;
-							  }
-							} catch (e) {
-							  // JSON parse failed, handle or ignore error
 							}
 
 							if (chat.message === '<Loading>') return <Spinner size="sm" />;
