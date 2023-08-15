@@ -20,6 +20,7 @@ const ChatInput: FC<ChatInputProps> = ({
   handleChat,
   loading,
 }) => {
+  const [truncating, setTruncating] = useState<boolean>(false);
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
   const inputColor = useColorModeValue('navy.700', 'white');
   const placeholderColor = useColorModeValue(
@@ -71,6 +72,13 @@ const ChatInput: FC<ChatInputProps> = ({
     }
   };
 
+  const handleTruncateMessages = async () => {
+    console.log("Truncate button clicked");
+    setTruncating(true);
+    await truncateMessages();
+    setTruncating(false);
+  };
+
   return (
     <Flex
       position="relative"
@@ -86,15 +94,13 @@ const ChatInput: FC<ChatInputProps> = ({
       align={"center"}
     >
       <Button
-        onClick={() => {
-          console.log("Truncate button clicked");
-          truncateMessages();
-        }}
+        onClick={handleTruncateMessages}
         colorScheme="red"
         variant="ghost"
         borderRadius="45px"
         p="12px"
         me="10px"
+        isLoading={truncating}
       >
         <Icon as={MdDelete} w={6} h={6} />
       </Button>  
