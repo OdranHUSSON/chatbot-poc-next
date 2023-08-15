@@ -71,3 +71,31 @@ export const deleteMessage = async (id: string) => {
     const data = await response.json();
     return data;
 };
+
+export const truncateMessages = async () => {
+    try {
+        const response = await fetch('/api/messages?truncate=true', {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            let errorMessage = 'Failed to truncate messages.';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch (_) {
+                // In case parsing the response body fails, use the default error message
+            }
+
+            const error = new Error(errorMessage);
+            error.status = response.status; 
+            throw error;
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error in truncateMessages:", error);
+        throw error;
+    }
+};

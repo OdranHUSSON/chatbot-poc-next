@@ -52,9 +52,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     
             if (!response.ok) {
                 throw new Error('Failed to truncate chat history.');
-            }
-            
-            setChatHistory([]);
+            }            
         } catch (error) {
             console.error("Error clearing chat history:", error);
             // Here, you can handle any additional error logging or UI feedback.
@@ -100,10 +98,25 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                 console.log("WS:updateMessage:", message);
                 stateUpdateMessageById(message.id, message.message)
             });
+
+            socket.on("messagesTruncated", (message: string) => {
+                console.log("WS:truncateMessages:", message);
+                setChatHistory([]);
+                toast({
+                    title: "🕵️ Chat erased",
+                    description: `Chat erased  by web event`,
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top-right"
+                });
+            });
+                
         }
     
         return () => {
             if (socket) {
+                socket.off("messagesTruncated");
                 socket.off("messageCreated");
                 socket.off("messageUpdated");
                 socket.off("connect");

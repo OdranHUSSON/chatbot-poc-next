@@ -2,6 +2,8 @@
 
 . ./.env.local
 
+npm install
+
 if [ "$NODE_ENV" = "development" ]; then 
     npm run dev
 else 

@@ -43,8 +43,7 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
             case 'DELETE':
                 if (req.query.truncate === 'true') {
                     await Message.truncate();
-                    // Optionally emit a 'messagesTruncated' event if necessary
-                    // res?.socket?.server?.io?.emit("messagesTruncated");
+                    res?.socket?.server?.io?.emit("messagesTruncated");
                 } else {
                     await Message.destroy({
                         where: { id: req.body.id }

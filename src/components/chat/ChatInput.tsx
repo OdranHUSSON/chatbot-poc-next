@@ -2,13 +2,17 @@ import React, { FC, KeyboardEvent, ChangeEvent, useState } from 'react';
 import { MdBolt } from 'react-icons/md';
 import { Button, Flex, Icon, Input, useColorModeValue } from '@chakra-ui/react';
 import { commands } from '@/utils/commands';
+import { MdDelete } from 'react-icons/md';
+import { truncateMessages } from '@/utils/messages';
 
 interface ChatInputProps {
   inputCode: string;
   setInputCode: (value: string) => void;
   handleChat: () => void;
+  handleDeleteChat: () => void; 
   loading: boolean;
 }
+
 
 const ChatInput: FC<ChatInputProps> = ({
   inputCode,
@@ -79,7 +83,18 @@ const ChatInput: FC<ChatInputProps> = ({
       justifySelf={'flex-end'}
       as="form"
       onSubmit={(e) => e.preventDefault()}
+      align={"center"}
     >
+      <Button
+        onClick={truncateMessages}
+        colorScheme="red"
+        variant="ghost"
+        borderRadius="45px"
+        p="12px"
+        me="10px"
+      >
+        <Icon as={MdDelete} w={6} h={6} />
+      </Button>  
       <Input
         placeholder={
           autoCompleteIndex >= 0
@@ -102,7 +117,7 @@ const ChatInput: FC<ChatInputProps> = ({
         onChange={handleChange}
         value={inputCode}
       />
-      {          <Button
+      <Button
             variant="primary"
             py="20px"
             px="16px"
@@ -122,7 +137,7 @@ const ChatInput: FC<ChatInputProps> = ({
             }}
             onClick={handleChat}
             isLoading={loading ? true : false}
-          >Submit</Button>}
+          >Submit</Button>
     </Flex>
   );
 };

@@ -40,11 +40,6 @@ interface ChartProps {
 class LineChart extends React.Component<ChartProps> {
   static options = {
     responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      }
-    },
   };
 
   render() {
