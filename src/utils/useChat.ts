@@ -26,7 +26,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
             console.error("Failed to fetch chat history from API:", error);
             setChatHistory([]); 
             toast({
-                title: "Failed to fetch chat history from API",
+                title: "Failed to fetch chat history 😔",
                 description: error.message,
                 status: "error",
                 duration: 10000,
@@ -59,31 +59,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     };
 
     useEffect(() => {
-        if (socket) {
-            console.log("SOCKET CONNECTED!", socket.id);
-            // Show toast when socket connects
-            socket.on("connect", () => {
-                fetchChatHistory();
-                toast({
-                    title: "Websocket connected!",
-                    description: `Socket ID: ${socket.id}`,
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                });
-            });
-    
-            // Show toast when socket disconnects
-            socket.on("disconnect", (reason) => {
-                toast({
-                    title: "Websocket disconnected!",
-                    description: `Reason: ${reason}`,
-                    status: "warning",
-                    duration: 3000,
-                    isClosable: true,
-                });
-            });
-    
+        if (socket) {    
             // update chat on new message dispatched
             socket.on("messageCreated", (message: string) => {
                 console.log("WS:createMessage:", message);
@@ -115,8 +91,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                 socket.off("messagesTruncated");
                 socket.off("messageCreated");
                 socket.off("refreshChatHistory");
-                socket.off("connect");
-                socket.off("disconnect");
             }
         }
     }, [socket]);
