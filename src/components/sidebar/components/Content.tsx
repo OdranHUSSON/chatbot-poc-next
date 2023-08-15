@@ -13,6 +13,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  Center
 } from '@chakra-ui/react';
 import NavLink from '@/components/link/NavLink';
 //   Custom components
@@ -77,9 +78,23 @@ function SidebarContent(props: SidebarContent) {
         borderRadius="30px"
         p="14px"
       >
-        <NextAvatar h="34px" w="34px" src={avatar4} me="10px" />
+        <Box p="0px" style={{ position: 'relative', left:'-20px' }}>
+          <Box
+            _hover={{ cursor: 'pointer' }}
+            color="white"
+            bg="#11047A"
+            w="40px"
+            h="40px"
+            borderRadius={'50%'}
+          />
+          <Center top={0} left={0} position={'absolute'} w={'100%'} h={'100%'}>
+            <Text fontSize={'xs'} fontWeight="bold" color={'white'}> 
+              LF
+            </Text>
+          </Center>
+        </Box>
         <Text color={textColor} fontSize="xs" fontWeight="600" me="10px">
-          Adela Parkson
+          Firstname
         </Text>
         <Menu>
           <MenuButton
