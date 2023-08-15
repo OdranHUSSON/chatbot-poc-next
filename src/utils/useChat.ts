@@ -61,9 +61,9 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     useEffect(() => {
         if (socket) {
             console.log("SOCKET CONNECTED!", socket.id);
-            fetchChatHistory();
             // Show toast when socket connects
             socket.on("connect", () => {
+                fetchChatHistory();
                 toast({
                     title: "Websocket connected!",
                     description: `Socket ID: ${socket.id}`,

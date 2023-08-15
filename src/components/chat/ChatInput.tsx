@@ -86,8 +86,10 @@ const ChatInput: FC<ChatInputProps> = ({
       align={"center"}
     >
       <Button
-        onClick={truncateMessages}
-        onTouchEnd={truncateMessages}
+        onClick={() => {
+          console.log("Truncate button clicked");
+          truncateMessages();
+        }}
         colorScheme="red"
         variant="ghost"
         borderRadius="45px"

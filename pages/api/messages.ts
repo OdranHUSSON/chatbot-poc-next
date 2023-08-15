@@ -30,12 +30,15 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 res.json(message);
                 break;
             case 'PUT':
-                res?.socket?.server?.io?.emit("messageUpdated", req.body);
-                await Message.update(req.body, {
-                    where: { id: req.body.id }
-                });                                
+                const updatedMessageData = req.body;
+                const sanitizedMessage = JSON.stringify(updatedMessageData);
+                res?.socket?.server?.io?.emit("messageUpdated", sanitizedMessage);
+                await Message.update(updatedMessageData, {
+                    where: { id: updatedMessageData.id }
+                });
                 res.json({ success: true });
                 break;
+                
             case 'DELETE':
                 if (req.query.truncate === 'true') {
                     await Message.truncate();
