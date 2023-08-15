@@ -31,11 +31,10 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 break;
             case 'PUT':
                 const updatedMessageData = req.body;
-                const sanitizedMessage = JSON.stringify(updatedMessageData);
-                res?.socket?.server?.io?.emit("messageUpdated", sanitizedMessage);
                 await Message.update(updatedMessageData, {
                     where: { id: updatedMessageData.id }
                 });
+                res?.socket?.server?.io?.emit("refreshChatHistory");
                 res.json({ success: true });
                 break;
                 

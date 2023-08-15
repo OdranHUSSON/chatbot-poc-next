@@ -13,6 +13,7 @@ type ChatType = {
 };
 
 const ChatHistory = ({ chatHistory }: any) => {
+  console.log("ChatHistory:", chatHistory)
   const toast = useToast();
 
 	const { handleCopy } = useClipboard();

@@ -91,9 +91,9 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
                 setChatHistory(prev => [...prev, newMessage]);
             });
     
-            socket.on("messageUpdated", (message: string) => {
-                console.log("WS:updateMessage:", message);
-                stateUpdateMessageById(message.id, message.message)
+            socket.on("refreshChatHistory", (message: string) => {
+                console.log("WS:updateMessage");
+                fetchChatHistory()
             });
 
             socket.on("messagesTruncated", (message: string) => {
@@ -114,7 +114,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
             if (socket) {
                 socket.off("messagesTruncated");
                 socket.off("messageCreated");
-                socket.off("messageUpdated");
+                socket.off("refreshChatHistory");
                 socket.off("connect");
                 socket.off("disconnect");
             }
