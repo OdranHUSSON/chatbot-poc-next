@@ -30,24 +30,8 @@ import Bg from '../public/img/chat/bg-image.png';
 import ReactMarkdown from 'react-markdown'
 import { Typography, Table, TableBody, TableCell, TableHead, TableRow, Paper, makeStyles } from '@mui/material'; // Updated to MUI
 import { useChat } from '@/utils/useChat';
-import SocketIOClient from 'socket.io-client';
 
-export default function Chat(props: { apiKeyApp: string }) {
-	// Initialize the socket instance
-	const [socket, setSocket] = useState<typeof SocketIOClient.Socket | null>(null);
-
-	useEffect(() => {
-		const socketUrl = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL;
-		const socketInstance = SocketIOClient(socketUrl, {
-		path: "/api/ws",
-	  });
-	  setSocket(socketInstance);
-	  
-	  return () => {
-		socketInstance.disconnect();
-	  };
-	}, []);
-
+export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIOClient.Socket | null }) {
 	const { 
 		chatHistory,
 		setChatHistory, 
@@ -63,7 +47,7 @@ export default function Chat(props: { apiKeyApp: string }) {
 		setLoading, 
 		clearChatHistory, 
 		handleChat 
-	} = useChat(props.apiKeyApp, socket);
+	} = useChat(props.apiKeyApp, props.socket);
 
 	const { apiKeyApp } = props;
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');

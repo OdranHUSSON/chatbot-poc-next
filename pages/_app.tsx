@@ -13,17 +13,33 @@ import '@/styles/App.css';
 import '@/styles/Contact.css';
 import '@/styles/Plugins.css';
 import '@/styles/MiniCalendar.css';
+import SocketIOClient from 'socket.io-client';
 
 function App({ Component, pageProps }: AppProps<{}>) {
-  const pathname = usePathname();
   const [apiKey, setApiKey] = useState('');
+  const pathname = usePathname();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   useEffect(() => {
     const initialKey = localStorage.getItem('apiKey');
     if (initialKey?.includes('sk-') && apiKey !== initialKey) {
       setApiKey(initialKey);
     }
   }, [apiKey]);
+
+  const [socket, setSocket] = useState<typeof SocketIOClient.Socket | null>(null);
+  
+  useEffect(() => {
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL;
+    const socketInstance = SocketIOClient(socketUrl, {
+      path: "/api/ws",
+    });
+    setSocket(socketInstance);
+
+    return () => {
+      socketInstance.disconnect();
+    };
+  }, []);
 
   return (
     <ChakraProvider theme={theme}>
@@ -52,6 +68,7 @@ function App({ Component, pageProps }: AppProps<{}>) {
                 logoText={'Horizon UI Dashboard PRO'}
                 brandText={getActiveRoute(routes, pathname)}
                 secondary={getActiveNavbar(routes, pathname)}
+                socket={socket}
               />
             </Box>
           </Portal>
@@ -62,7 +79,7 @@ function App({ Component, pageProps }: AppProps<{}>) {
             minH="100vh"
             pt="50px"
           >
-            <Component apiKeyApp={apiKey} {...pageProps} />
+            <Component apiKeyApp={apiKey} socket={socket} {...pageProps} />
           </Box>
         </Box>
       </Box>

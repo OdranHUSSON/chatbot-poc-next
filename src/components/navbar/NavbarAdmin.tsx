@@ -21,6 +21,7 @@ export default function AdminNavbar(props: {
   logoText: string;
   onOpen: (...args: any[]) => any;
   setApiKey: any;
+  socket: typeof SocketIOClient.Socket | null;
 }) {
   const [scrolled, setScrolled] = useState(false);
 
@@ -48,7 +49,7 @@ export default function AdminNavbar(props: {
   let navbarBorder = 'transparent';
   let secondaryMargin = '0px';
   let gap = '0px';
-  const changeNavbar = () => {
+  const changeNavbar = () => { 
     if (isWindowAvailable() && window.scrollY > 1) {
       setScrolled(true);
     } else {
@@ -147,7 +148,7 @@ export default function AdminNavbar(props: {
           </Link>
         </Box>
         <Box ms="auto" w={{ sm: '100%', md: 'unset' }}>
-          <AdminNavbarLinks setApiKey={setApiKey} secondary={props.secondary} />
+          <AdminNavbarLinks setApiKey={setApiKey} secondary={props.secondary} socket={props.socket} />
         </Box>
       </Flex>
     </Box>
