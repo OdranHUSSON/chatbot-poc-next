@@ -1,5 +1,4 @@
 version: '3'
-
 services:
   nextjs:
     build: .
@@ -9,9 +8,10 @@ services:
       - .:/app
       - /app/node_modules
       - /app/.next
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
     networks:
       - mynetwork
-
   mysql:
     container_name: chatdb
     image: 'mysql/mysql-server:8.0'
@@ -26,9 +26,7 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - mynetwork
-
 volumes:
   mysql-data:
-
 networks:
   mynetwork:
