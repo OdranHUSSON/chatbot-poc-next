@@ -1,4 +1,4 @@
-import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr, Spinner, Badge } from '@chakra-ui/react';
+import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr, Spinner, Badge, Button } from '@chakra-ui/react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy, MdShare, MdSave } from 'react-icons/md';
 import ReactMarkdown from "react-markdown";
 import { useClipboard } from '@/utils/copy';
@@ -7,6 +7,7 @@ import LineChart from '../charts/LineChart';
 import { GitModal } from '../sidebar/components/git/GitModal';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { FileToChatModal } from '../sidebar/components/git/FileToChatModal';
 
 
 type ChatType = {
@@ -19,6 +20,7 @@ const ChatHistory = ({ chatHistory }: any) => {
   	const toast = useToast();
 
   	const [isOpen, setIsOpen] = useState(false);
+	const [isFileModalOpen, setisFileModalOpen] = useState(false);
   	const [fileContentForModal, setFileContentForModal] = useState<string | null>(null);
 	const { handleCopy } = useClipboard();
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
@@ -34,6 +36,15 @@ const ChatHistory = ({ chatHistory }: any) => {
 	const onClose = () => {
 		setIsOpen(false);
 	}
+
+	const onFileModalClose = () => {
+		setisFileModalOpen(false);
+	}
+
+	const openFileModal = () => {
+		setisFileModalOpen(true);
+	  };
+	  
 
 	const MarkdownComponents = {
 		h1: (props: any) => <Text as="h1" fontSize="2xl" fontWeight="bold" my={3} {...props} />,
@@ -78,7 +89,17 @@ const ChatHistory = ({ chatHistory }: any) => {
 
 	return (
 	  <Box width={"100%"} position={"relative"}>
+		<Button 
+			onClick={openFileModal} 
+			colorScheme="blue" 
+			variant="solid"
+			size="md"
+			mt={4}
+			>
+			Open File Modal
+		</Button>
 		<GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} />
+		<FileToChatModal isOpen={isFileModalOpen} onClose={onFileModalClose}/>
 		{chatHistory.map((chat: ChatType, index: number) => (
 			<Flex 
 				key={index} 

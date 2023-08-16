@@ -61,4 +61,8 @@ export default class GitClient {
   public writeFile(filename: string, content: string, repo?: string) {
     return this.makeRequest({ command: 'writeFile', filename, content, repo });
   }
+
+  public readFile(filename: string, repo?: string) {
+    return this.makeRequest({ command: 'readFile', filename, repo });
+  }
 }
