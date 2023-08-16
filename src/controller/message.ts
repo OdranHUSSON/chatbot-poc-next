@@ -14,12 +14,14 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 initialize(sequelize);
 
-export const getMessage = async (messageId) => {
+export const getOneMessage = async (messageId) => {
     if (messageId) {
         return await Message.findOneById(messageId);
-    } else {
-        return await Message.findAll();
     }
+}
+
+export const getMessages = async () => {
+    return await Message.findAll();
 }
 
 export const createMessage = async (messageData, socketIO: SocketIOServer) => {

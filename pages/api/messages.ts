@@ -1,6 +1,6 @@
 import { NextApiRequest } from 'next';
 import { NextApiResponseServerIO } from '@/types/io';
-import { getMessage, createMessage, updateMessage, deleteMessage } from '@/controller/message';
+import { getOneMessage, getMessages, createMessage, updateMessage, deleteMessage } from '@/controller/message';
 
 const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     const socketIO = res.socket.server.io;
@@ -9,11 +9,21 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
             case 'GET':
                 try {
                     const messageId = req.query.id;
-                    const message = await getMessage(messageId);
-                    if (message) {
-                        res.json(message[0]);
-                    } else {
-                        res.status(404).json({ error: "Message not found" });
+                    if (!req.query.id) {
+                        const message = await getMessages();
+                        if (message) {
+                            res.json(message);
+                        } else {
+                            res.status(404).json({ error: "Message not found" });
+                        }
+                    }
+                    else {
+                        const message = await getOneMessage(messageId);
+                        if (message) {
+                            res.json(message[0]);
+                        } else {
+                            res.status(404).json({ error: "Message not found" });
+                        }
                     }
                 } catch (ex) {
                     res.status(500).json({ error: "Error fetching messages" });

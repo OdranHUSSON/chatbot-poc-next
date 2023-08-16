@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Box, Text, Button, VStack, Flex, Spinner, HStack, useToast } from '@chakra-ui/react';
 import GitClient from '@/utils/gitClient';
 import ReactMarkdown from 'react-markdown';
+import { LightMarkdownComponents } from '@/styles/LightMarkdownComponent';
 
 interface RepoDetailsProps {
   repoName: string;
@@ -144,7 +145,9 @@ const RepoDetails: React.FC<RepoDetailsProps> = ({ repoName, onRemove, fileConte
             Are you sure you want to overwrite <strong>{selectedFile}</strong> with the following content?
           </Text>
           <Box mt={4} p={4} borderWidth={1} borderRadius="md" shadow="sm">
-            <ReactMarkdown>{fileContent}</ReactMarkdown>
+            <ReactMarkdown components={LightMarkdownComponents}>
+              {fileContent}
+            </ReactMarkdown>
           </Box>
           <Flex mt={4} justifyContent="space-between">
             <Button variant="outline" onClick={handleCancel}>Cancel</Button>

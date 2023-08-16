@@ -69,19 +69,6 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
 		{ color: 'whiteAlpha.600' },
 	);
 
-	useEffect(() => {
-    if (typeof window !== 'undefined') {
-        const savedChatHistory = localStorage.getItem('chatHistory');
-        if (savedChatHistory) {
-            setChatHistory(JSON.parse(savedChatHistory));
-        }
-    }
-	}, []);
-
-	useEffect(() => {
-		localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-	}, [chatHistory]);
-
 	// @ts-ignore
 		return (
 			
