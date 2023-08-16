@@ -28,7 +28,6 @@ import { useEffect, useState } from 'react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } from 'react-icons/md'; 
 import Bg from '../public/img/chat/bg-image.png';
 import ReactMarkdown from 'react-markdown'
-import { Typography, Table, TableBody, TableCell, TableHead, TableRow, Paper, makeStyles } from '@mui/material'; // Updated to MUI
 import { useChat } from '@/utils/useChat';
 
 export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIOClient.Socket | null }) {

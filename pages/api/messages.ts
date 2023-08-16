@@ -1,68 +1,35 @@
 import { NextApiRequest } from 'next';
 import { NextApiResponseServerIO } from '@/types/io';
-import { Sequelize } from 'sequelize';
-import { Message, initialize } from '../../models/messages'; 
-import Config  from '../../config/config.json';
-
+import { getMessage, createMessage, updateMessage, deleteMessage } from '@/controller/message';
 
 const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-    const env = process.env.NODE_ENV || 'development';
-    const config = Config[env];
-
-    const sequelize = new Sequelize(config.database, config.username, config.password, {
-        host: config.host,
-        dialect: config.dialect,
-        logging: console.log 
-    })
-    initialize(sequelize);
+    const socketIO = res.socket.server.io;
     try {
         switch (req.method) {
             case 'GET':
                 try {
-                    console.log('on entre')
                     const messageId = req.query.id;
-                    console.log("messageId", messageId)
-                    if (messageId) {
-                        const message = await Message.findOneById(messageId);        
-                        if (message) {
-                            res.json(message[0]);
-                        } else {
-                            res.status(404).json({ error: "Message not found" });
-                        }
+                    const message = await getMessage(messageId);
+                    if (message) {
+                        res.json(message[0]);
                     } else {
-                        console.log("fallback")
-                        // Fetch all messages if no ID is provided
-                        const messages = await Message.findAll();
-                        res.json(messages);
+                        res.status(404).json({ error: "Message not found" });
                     }
                 } catch (ex) {
                     res.status(500).json({ error: "Error fetching messages" });
                 }
                 break;
             case 'POST':
-                const message = await Message.create(req.body);
-                res?.socket?.server?.io?.emit("messageCreated", message.id);
+                const message = await createMessage(req.body, socketIO);
                 res.json(message);
                 break;
             case 'PUT':
                 const updatedMessageData = req.body;
-                await Message.update(updatedMessageData, {
-                    where: { id: updatedMessageData.id }
-                });
-                res?.socket?.server?.io?.emit("messageUpdated", updatedMessageData.id);
+                await updateMessage(updatedMessageData, socketIO);
                 res.json({ success: true });
                 break;
-                
             case 'DELETE':
-                if (req.query.truncate === 'true') {
-                    await Message.truncate();
-                    res?.socket?.server?.io?.emit("messagesTruncated");
-                } else {
-                    await Message.destroy({
-                        where: { id: req.body.id }
-                    });
-                    res?.socket?.server?.io?.emit("messageDeleted", req.body.id);
-                }
+                await deleteMessage(req.body.id, req.query.truncate, socketIO);
                 res.json({ success: true });
                 break;
             default:
@@ -76,4 +43,3 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
 };
 
 export default handleMessages;
-

@@ -1,11 +1,12 @@
 import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr, Spinner, Badge } from '@chakra-ui/react';
-import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } from 'react-icons/md';
+import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy, MdShare, MdSave } from 'react-icons/md';
 import ReactMarkdown from "react-markdown";
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { useClipboard } from '@/utils/copy';
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import LineChart from '../charts/LineChart';
+import { GitModal } from '../sidebar/components/git/GitModal';
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -13,9 +14,11 @@ type ChatType = {
 };
 
 const ChatHistory = ({ chatHistory }: any) => {
-  console.log("ChatHistory:", chatHistory)
-  const toast = useToast();
+  	console.log("ChatHistory:", chatHistory)
+  	const toast = useToast();
 
+  	const [isOpen, setIsOpen] = useState(false);
+  	const [fileContentForModal, setFileContentForModal] = useState<string | null>(null);
 	const { handleCopy } = useClipboard();
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
 	const brandColor = useColorModeValue('brand.500', 'white');
@@ -55,7 +58,11 @@ const ChatHistory = ({ chatHistory }: any) => {
 		return (
 			<Box maxW="300px" minW="100%" overflowX="auto" my={4} {...props}>
 				<Flex justifyContent="space-between" alignItems="center" borderBottom="1px solid" borderColor="gray.300" pb={1}>
-					<Icon as={MdFileCopy} onClick={() => handleCopy(content)} cursor="pointer" />
+					<Icon as={MdFileCopy} onClick={() => handleCopy(content)} cursor="pointer" />	
+					<Icon as={MdSave} onClick={() => {
+						setFileContentForModal(content);
+						setIsOpen(true);
+					}} cursor="pointer" />				 
 				</Flex>
 				<SyntaxHighlighter position="relative" width={"100%"}  overflow={"scroll"} style={dracula} language="javascript">
 					{content}
@@ -65,9 +72,13 @@ const ChatHistory = ({ chatHistory }: any) => {
 	  }
 	};
 
-  
+	const onClose = () => {
+		setIsOpen(false);
+	}
+
 	return (
 	  <Box width={"100%"} position={"relative"}>
+		<GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} />
 		{chatHistory.map((chat: ChatType, index: number) => (
 			<Flex 
 				key={index} 

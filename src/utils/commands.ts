@@ -1,3 +1,5 @@
+import GitClient from "./gitClient";
+
 export const commands = [
   {
     name: 'help',
@@ -79,13 +81,13 @@ export const handleCommands = (
 							commands.map((command) => `${command.name}: ${command.description}`).join('\n')
 					);
 					break;
+        break;
 			default:
 					addBotMessageToChatHistory('Unknown command');
 	}
 
 	setLoading(false);
 };
-
 
 async function processCommandWithLoading(
     args: string[],
