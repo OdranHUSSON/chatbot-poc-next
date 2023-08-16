@@ -41,20 +41,13 @@ const FileToChat: React.FC<RepoDetailsProps> = ({ repoName, onRemove , closeModa
     setSelectedFile(filePath);
   };
 
-  const handleRead = async () => { // Added the async keyword here
+  const handleRead = async () => { 
     try {
-      const data = await GitClient.getInstance().readFile(selectedFile!, repoName); // Added the await keyword here
+      const data = await GitClient.getInstance().readFile(selectedFile!, repoName);
   
       if (data.success) {
-        await createUserMessage("Provide me the code of " + selectedFile); // Added the await keyword here
-        await createBotMessage(data.content); // Added the await keyword here
-        toast({
-          title: "Success",
-          description: `File added to chat from path: ${repoName}${selectedFile}`,
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
+        await createUserMessage("Provide me the code of " + selectedFile); 
+        await createBotMessage(data.content); 
       } else {
         toast({
           title: "Error",

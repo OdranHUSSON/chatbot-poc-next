@@ -7,8 +7,6 @@ import LineChart from '../charts/LineChart';
 import { GitModal } from '../sidebar/components/git/GitModal';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { FileToChatModal } from '../sidebar/components/git/FileToChatModal';
-
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -16,11 +14,9 @@ type ChatType = {
 };
 
 const ChatHistory = ({ chatHistory }: any) => {
-  	console.log("ChatHistory:", chatHistory)
   	const toast = useToast();
 
   	const [isOpen, setIsOpen] = useState(false);
-	const [isFileModalOpen, setisFileModalOpen] = useState(false);
   	const [fileContentForModal, setFileContentForModal] = useState<string | null>(null);
 	const { handleCopy } = useClipboard();
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
@@ -36,14 +32,6 @@ const ChatHistory = ({ chatHistory }: any) => {
 	const onClose = () => {
 		setIsOpen(false);
 	}
-
-	const onFileModalClose = () => {
-		setisFileModalOpen(false);
-	}
-
-	const openFileModal = () => {
-		setisFileModalOpen(true);
-	  };
 	  
 
 	const MarkdownComponents = {
@@ -89,17 +77,7 @@ const ChatHistory = ({ chatHistory }: any) => {
 
 	return (
 	  <Box width={"100%"} position={"relative"}>
-		<Button 
-			onClick={openFileModal} 
-			colorScheme="blue" 
-			variant="solid"
-			size="md"
-			mt={4}
-			>
-			Open File Modal
-		</Button>
 		<GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} />
-		<FileToChatModal isOpen={isFileModalOpen} onClose={onFileModalClose}/>
 		{chatHistory.map((chat: ChatType, index: number) => (
 			<Flex 
 				key={index} 

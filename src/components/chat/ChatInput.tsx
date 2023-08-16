@@ -1,9 +1,10 @@
 import React, { FC, KeyboardEvent, ChangeEvent, useState } from 'react';
 import { MdBolt } from 'react-icons/md';
-import { Button, Flex, Icon, Input, useColorModeValue } from '@chakra-ui/react';
+import { Button, Flex, Icon, Input, useColorModeValue, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { commands } from '@/utils/commands';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdFileDownload } from 'react-icons/md';
 import { truncateMessages } from '@/utils/messages';
+import { FileToChatModal } from '../sidebar/components/git/FileToChatModal';
 
 interface ChatInputProps {
   inputCode: string;
@@ -21,12 +22,38 @@ const ChatInput: FC<ChatInputProps> = ({
   loading,
 }) => {
   const [truncating, setTruncating] = useState<boolean>(false);
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const [isFileModalOpen, setisFileModalOpen] = useState(false);
   const inputColor = useColorModeValue('navy.700', 'white');
   const placeholderColor = useColorModeValue(
     { color: 'gray.500' },
     { color: 'whiteAlpha.600' }
   );
+
+  const navbarIcon = useColorModeValue('gray.500', 'white');
+  let menuBg = useColorModeValue('white', 'navy.800');
+  const textColor = useColorModeValue('navy.700', 'white');
+  const borderColor = useColorModeValue('#E6ECFA', 'rgba(135, 140, 189, 0.3)');
+  const shadow = useColorModeValue(
+    '14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
+    '0px 41px 75px #081132',
+  );
+  const buttonBg = useColorModeValue('transparent', 'navy.800');
+  const hoverButton = useColorModeValue(
+    { bg: 'gray.100' },
+    { bg: 'whiteAlpha.100' },
+  );
+  const activeButton = useColorModeValue(
+    { bg: 'gray.200' },
+    { bg: 'whiteAlpha.200' },
+  );
+
+  const onFileModalClose = () => {
+		setisFileModalOpen(false);
+	}
+
+	const openFileModal = () => {
+		setisFileModalOpen(true);
+	  };
 
   const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(-1);
 
@@ -79,6 +106,12 @@ const ChatInput: FC<ChatInputProps> = ({
     setTruncating(false);
   };
 
+  const handleAddFileFromGithub = () => {
+    setisFileModalOpen(true)
+    console.log("Add file from Github clicked");
+    // Add your logic here
+  };
+
   return (
     <Flex
       position="relative"
@@ -86,6 +119,7 @@ const ChatInput: FC<ChatInputProps> = ({
       bottom="0"
       left="0"
       right="0"
+      zIndex={1000}
       ms={{ base: '0px', xl: '60px' }}
       mt="20px"
       justifySelf={'flex-end'}
@@ -93,17 +127,27 @@ const ChatInput: FC<ChatInputProps> = ({
       onSubmit={(e) => e.preventDefault()}
       align={"center"}
     >
-      <Button
-        onClick={handleTruncateMessages}
-        colorScheme="red"
-        variant="ghost"
-        borderRadius="45px"
-        p="12px"
-        me="10px"
-        isLoading={truncating}
-      >
-        <Icon as={MdDelete} w={6} h={6} />
-      </Button>  
+   <FileToChatModal isOpen={isFileModalOpen} onClose={onFileModalClose}/>
+    <Menu>
+      <MenuButton
+          as={Button}
+          bg={menuBg}
+          transition='all 0.2s'
+          borderRadius="45px"
+          p="12px"
+          me="10px"
+        >
+          <Icon as={MdBolt} w={6} h={6} />
+        </MenuButton>
+        <MenuList>
+          <MenuItem  icon={<MdDelete />} onClick={handleTruncateMessages}>
+            Delete
+          </MenuItem>
+          <MenuItem icon={<MdFileDownload />} onClick={handleAddFileFromGithub}>
+            Add file from Github
+          </MenuItem>
+        </MenuList>
+      </Menu>
       <Input
         placeholder={
           autoCompleteIndex >= 0
