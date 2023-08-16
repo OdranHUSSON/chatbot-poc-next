@@ -28,7 +28,6 @@ import { useEffect, useState } from 'react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } from 'react-icons/md'; 
 import Bg from '../public/img/chat/bg-image.png';
 import ReactMarkdown from 'react-markdown'
-import { Typography, Table, TableBody, TableCell, TableHead, TableRow, Paper, makeStyles } from '@mui/material'; // Updated to MUI
 import { useChat } from '@/utils/useChat';
 
 export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIOClient.Socket | null }) {
@@ -69,19 +68,6 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
 		{ color: 'gray.500' },
 		{ color: 'whiteAlpha.600' },
 	);
-
-	useEffect(() => {
-    if (typeof window !== 'undefined') {
-        const savedChatHistory = localStorage.getItem('chatHistory');
-        if (savedChatHistory) {
-            setChatHistory(JSON.parse(savedChatHistory));
-        }
-    }
-	}, []);
-
-	useEffect(() => {
-		localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-	}, [chatHistory]);
 
 	// @ts-ignore
 		return (

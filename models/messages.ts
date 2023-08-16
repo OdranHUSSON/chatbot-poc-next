@@ -16,8 +16,7 @@ export class Message extends Model {
 
     static async findAll(): Promise<Message[]> {
         return super.findAll({
-            order: [['createdAt', 'ASC']],
-            logging: console.warn
+            order: [['createdAt', 'ASC']]
         });
     }
 
@@ -29,8 +28,7 @@ export class Message extends Model {
 
     static async findOneById(id: string): Promise<Message | null> {
         return super.findAll({
-            where: { 'id': id },
-            logging: console.error
+            where: { 'id': id }
         });
     }
     

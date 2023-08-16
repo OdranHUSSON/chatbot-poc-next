@@ -4,6 +4,9 @@ FROM node:19
 # Set the working directory in the container
 WORKDIR /app
 
+# Install git
+RUN apt-get update && apt-get install -y git
+
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
 COPY next*.json ./

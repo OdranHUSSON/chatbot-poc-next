@@ -1,11 +1,12 @@
-import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr, Spinner, Badge } from '@chakra-ui/react';
-import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } from 'react-icons/md';
+import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr, Spinner, Badge, Button } from '@chakra-ui/react';
+import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy, MdShare, MdSave } from 'react-icons/md';
 import ReactMarkdown from "react-markdown";
+import { useClipboard } from '@/utils/copy';
+import React, { useState, useRef, useEffect } from 'react';
+import LineChart from '../charts/LineChart';
+import { GitModal } from '../sidebar/components/git/GitModal';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { useClipboard } from '@/utils/copy';
-import React, { useRef, useEffect } from 'react';
-import LineChart from '../charts/LineChart';
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -13,9 +14,10 @@ type ChatType = {
 };
 
 const ChatHistory = ({ chatHistory }: any) => {
-  console.log("ChatHistory:", chatHistory)
-  const toast = useToast();
+  	const toast = useToast();
 
+  	const [isOpen, setIsOpen] = useState(false);
+  	const [fileContentForModal, setFileContentForModal] = useState<string | null>(null);
 	const { handleCopy } = useClipboard();
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
 	const brandColor = useColorModeValue('brand.500', 'white');
@@ -23,51 +25,59 @@ const ChatHistory = ({ chatHistory }: any) => {
 	const textColor = useColorModeValue('navy.700', 'white');
 	const chatEndRef = useRef(null); 
 
-	useEffect(() => { // Step 2: Use Effect to Scroll
+	useEffect(() => {
 	  chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 	}, [chatHistory]);
-  
-  
-	const MarkdownComponents = {
-	  h1: (props: any) => <Text as="h1" fontSize="2xl" fontWeight="bold" my={3} {...props} />,
-	  h2: (props: any) => <Text as="h2" fontSize="xl" fontWeight="bold" my={2} {...props} />,
-	  h3: (props: any) => <Text as="h3" fontSize="lg" fontWeight="bold" my={2} {...props} />,
-	  p: (props: any) => <Text my={2} {...props} />,
-	  table: Table,
-	  th: Th,
-	  td: Td,
-	  tr: Tr,
-	  code: ({ inline, children, ...props }: CodeComponentProps) => {
-		// Extracting the content from children
-		const content = Array.isArray(children) 
-			? children[0]
-			: children;
-		if (!content) {
-			return <Text>Error displaying code.</Text>;
-		}
-	  
-		// Handle inline code
-		if (inline) {
-			return <Badge as="code" px={1} {...props}>{content}</Badge>;
-		}
-	  
-		// Handle block code
-		return (
-			<Box maxW="300px" minW="100%" overflowX="auto" my={4} {...props}>
-				<Flex justifyContent="space-between" alignItems="center" borderBottom="1px solid" borderColor="gray.300" pb={1}>
-					<Icon as={MdFileCopy} onClick={() => handleCopy(content)} cursor="pointer" />
-				</Flex>
-				<SyntaxHighlighter position="relative" width={"100%"}  overflow={"scroll"} style={dracula} language="javascript">
-					{content}
-				</SyntaxHighlighter>
-			</Box>
-		);
-	  }
-	};
 
-  
+	const onClose = () => {
+		setIsOpen(false);
+	}
+	  
+
+	const MarkdownComponents = {
+		h1: (props: any) => <Text as="h1" fontSize="2xl" fontWeight="bold" my={3} {...props} />,
+		h2: (props: any) => <Text as="h2" fontSize="xl" fontWeight="bold" my={2} {...props} />,
+		h3: (props: any) => <Text as="h3" fontSize="lg" fontWeight="bold" my={2} {...props} />,
+		p: (props: any) => <Text my={2} {...props} />,
+		table: Table,
+		th: Th,
+		td: Td,
+		tr: Tr,
+		code: ({ inline, children, ...props }: CodeComponentProps) => {
+		  // Extracting the content from children
+		  const content = Array.isArray(children) 
+			  ? children[0]
+			  : children;
+		  if (!content) {
+			  return <Text>Error displaying code.</Text>;
+		  }
+		
+		  // Handle inline code
+		  if (inline) {
+			  return <Badge as="code" px={1} {...props}>{content}</Badge>;
+		  }
+		
+		  // Handle block code
+		  return (
+			  <Box maxW="300px" minW="100%" overflowX="auto" my={4} {...props}>
+				  <Flex justifyContent="space-between" alignItems="center" borderBottom="1px solid" borderColor="gray.300" pb={1}>
+					  <Icon as={MdFileCopy} onClick={() => handleCopy(content)} cursor="pointer" />	
+					  <Icon as={MdSave} onClick={() => {
+						  setFileContentForModal(content);
+						  setIsOpen(true);
+					  }} cursor="pointer" />				 
+				  </Flex>
+				  <SyntaxHighlighter position="relative" width={"100%"}  overflow={"scroll"} style={dracula} language="javascript">
+					  {content}
+				  </SyntaxHighlighter>
+			  </Box>
+		  );
+		}
+	  };
+
 	return (
 	  <Box width={"100%"} position={"relative"}>
+		<GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} />
 		{chatHistory.map((chat: ChatType, index: number) => (
 			<Flex 
 				key={index} 
