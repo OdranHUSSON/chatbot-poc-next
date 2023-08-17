@@ -15,7 +15,7 @@ interface GitCommandBody {
   content?: string;
 }
 
-const getStatus = async (git: SimpleGit, res: NextApiResponseServerIO) => {
+export const getStatus = async (git: SimpleGit, res: NextApiResponseServerIO) => {
   try {
     const status = await git.status();
     res.json({ success: true, status });
@@ -25,7 +25,7 @@ const getStatus = async (git: SimpleGit, res: NextApiResponseServerIO) => {
   }
 };
 
-const addFiles = async (git: SimpleGit, res: NextApiResponseServerIO) => {
+export const addFiles = async (git: SimpleGit, res: NextApiResponseServerIO) => {
   try {
     await git.add('.');
     res.json({ success: true, message: 'All files added' });
@@ -35,7 +35,7 @@ const addFiles = async (git: SimpleGit, res: NextApiResponseServerIO) => {
   }
 };
 
-const commitChanges = async (git: SimpleGit, message: string, res: NextApiResponseServerIO) => {
+export const commitChanges = async (git: SimpleGit, message: string, res: NextApiResponseServerIO) => {
   try {
     const commit = await git.commit(message || 'Commit from simple-git');
     res.json({ success: true, commit });
@@ -45,7 +45,7 @@ const commitChanges = async (git: SimpleGit, message: string, res: NextApiRespon
   }
 };
 
-const cloneRepository = async (repo: string, res: NextApiResponseServerIO) => {
+export const cloneRepository = async (repo: string, res: NextApiResponseServerIO) => {
   const cloneDir = process.env.GIT_REPO_DIR || 'workdir';
   try {
     await simpleGit(cloneDir).clone(repo || '');
@@ -56,7 +56,7 @@ const cloneRepository = async (repo: string, res: NextApiResponseServerIO) => {
   }
 };
 
-const listRepositories = async (repoDir: string, res: NextApiResponseServerIO) => {
+export const listRepositories = async (repoDir: string, res: NextApiResponseServerIO) => {
   try {
     const data = await fs.readdir(repoDir);
     const filteredData = data.filter(file => file !== '.gitkeep');
@@ -67,7 +67,7 @@ const listRepositories = async (repoDir: string, res: NextApiResponseServerIO) =
   }
 };
 
-const listFiles = async (repoDir: string, directory: string, res: NextApiResponseServerIO) => {
+export const listFiles = async (repoDir: string, directory: string, res: NextApiResponseServerIO) => {
   const dirPath = path.join(repoDir, directory || '');
   try {
     const items = await fs.readdir(dirPath, { withFileTypes: true });
@@ -82,7 +82,7 @@ const listFiles = async (repoDir: string, directory: string, res: NextApiRespons
   }
 };
 
-const writeFile = async (repoDir: string, directory: string, filename: string, content: string, res: NextApiResponseServerIO) => {
+export const writeFile = async (repoDir: string, directory: string, filename: string, content: string, res: NextApiResponseServerIO) => {
   if (!filename || !content) {
     res.status(400).json({ error: 'Filename and content are required' });
     return;
@@ -97,7 +97,7 @@ const writeFile = async (repoDir: string, directory: string, filename: string, c
   }
 };
 
-const readFile = async (repoDir: string, directory: string, filename: string, res: NextApiResponseServerIO) => {
+export const readFile = async (repoDir: string, directory: string, filename: string, res: NextApiResponseServerIO) => {
   if (!filename) {
     res.status(400).json({ error: 'Filename is required' });
     return;
