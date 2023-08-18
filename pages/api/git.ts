@@ -13,6 +13,7 @@ interface GitCommandBody {
   directory?: string;
   filename?: string;
   content?: string;
+  branch?: string;
 }
 
 export const getStatus = async (git: SimpleGit, res: NextApiResponseServerIO) => {
@@ -22,6 +23,16 @@ export const getStatus = async (git: SimpleGit, res: NextApiResponseServerIO) =>
   } catch (error) {
     console.error('Error getting status:', error);
     res.status(500).json({ error: 'Failed to get status', details: error.message });
+  }
+};
+
+export const getDiff = async (git: SimpleGit, res: NextApiResponseServerIO) => {
+  try {
+    const diff = await git.diff();
+    res.json({ success: true, diff });
+  } catch (error) {
+    console.error('Error getting diff:', error);
+    res.status(500).json({ error: 'Failed to get diff', details: error.message });
   }
 };
 
@@ -123,11 +134,59 @@ export const readFile = async (repoDir: string, directory: string, filename: str
   }
 };
 
-export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  const { command } = req.body as GitCommandBody;
-  const { message, repo, directory, filename, content } = req.body as GitCommandBody;
-  const repoDir = path.join(process.env.GIT_REPO_DIR || '', repo || '');
+export const listBranches = async (git: SimpleGit, res: NextApiResponseServerIO) => {
+  try {
+    const branches = await git.branch();
+    res.json({ success: true, branches });
+  } catch (error) {
+    console.error('Error listing branches:', error);
+    res.status(500).json({ error: 'Failed to list branches', details: error.message });
+  }
+};
 
+export const checkoutBranch = async (git: SimpleGit, branch: string, res: NextApiResponseServerIO) => {
+  try {
+    await git.checkout(branch);
+    res.json({ success: true, message: `Switched to branch ${branch}` });
+  } catch (error) {
+    console.error('Error checking out branch:', error);
+    res.status(500).json({ error: 'Failed to checkout branch', details: error.message });
+  }
+};
+
+export const pushChanges = async (git: SimpleGit, res: NextApiResponseServerIO) => {
+  try {
+    await git.push();
+    res.json({ success: true, message: 'Changes pushed successfully' });
+  } catch (error) {
+    console.error('Error pushing changes:', error);
+    res.status(500).json({ error: 'Failed to push changes', details: error.message });
+  }
+};
+
+export const pullChanges = async (git: SimpleGit, res: NextApiResponseServerIO) => {
+  try {
+    await git.pull();
+    res.json({ success: true, message: 'Changes pulled successfully' });
+  } catch (error) {
+    console.error('Error pulling changes:', error);
+    res.status(500).json({ error: 'Failed to pull changes', details: error.message });
+  }
+};
+
+export const stashChanges = async (git: SimpleGit, res: NextApiResponseServerIO) => {
+  try {
+    await git.stash();
+    res.json({ success: true, message: 'Changes stashed successfully' });
+  } catch (error) {
+    console.error('Error stashing changes:', error);
+    res.status(500).json({ error: 'Failed to stash changes', details: error.message });
+  }
+};
+
+export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
+  const { command, message, repo, directory, filename, content, branch } = req.body as GitCommandBody;
+  const repoDir = path.join(process.env.GIT_REPO_DIR || '', repo || '');
 
   try {
     switch (command) {
@@ -170,6 +229,47 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
 
       case 'readFile':
         await readFile(repoDir, directory, filename, res);
+        break;
+        
+      case 'diff':
+        if (repo) {
+          const git: SimpleGit = simpleGit(repoDir);
+          await getDiff(git, res);
+        }
+        break;
+      case 'listBranches':
+        if (repo) {
+          const git: SimpleGit = simpleGit(repoDir);
+          await listBranches(git, res);
+        }
+        break;
+
+      case 'checkout':
+        if (repo) {
+          const git: SimpleGit = simpleGit(repoDir);
+          await checkoutBranch(git, branch, res);
+        }
+        break;
+
+      case 'push':
+        if (repo) {
+          const git: SimpleGit = simpleGit(repoDir);
+          await pushChanges(git, res);
+        }
+        break;
+
+      case 'pull':
+        if (repo) {
+          const git: SimpleGit = simpleGit(repoDir);
+          await pullChanges(git, res);
+        }
+        break;
+
+      case 'stash':
+        if (repo) {
+          const git: SimpleGit = simpleGit(repoDir);
+          await stashChanges(git, res);
+        }
         break;
 
       default:

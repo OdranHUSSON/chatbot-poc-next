@@ -44,9 +44,7 @@ const RepoDetails: React.FC<RepoDetailsProps> = ({ repoName, onRemove, fileConte
   const handleOverwrite = () => {
     GitClient.getInstance().writeFile(selectedFile!, fileContent, repoName)
       .then(data => {
-        if (data.success) {
-          createBotMessage(`[GIT] Successfully overwritten file ${repoName}${selectedFile}`);          
-        } else {
+        if (!data.success) {
           createBotMessage(`[GIT] Failed to overwrite file ${repoName}${selectedFile}`);
         }
       })
