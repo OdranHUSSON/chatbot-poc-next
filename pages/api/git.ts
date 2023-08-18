@@ -37,6 +37,10 @@ export const addFiles = async (git: SimpleGit, res: NextApiResponseServerIO) => 
 
 export const commitChanges = async (git: SimpleGit, message: string, res: NextApiResponseServerIO) => {
   try {
+    git
+    .addConfig('user.email', 'ohusson55@gmail.com')
+    .addConfig('user.name', 'Odran HUSSON')
+    .exec(() => console.log('Git config set successfully!'));
     const commit = await git.commit(message || 'Commit from simple-git');
     res.json({ success: true, commit });
   } catch (error) {
@@ -46,9 +50,17 @@ export const commitChanges = async (git: SimpleGit, message: string, res: NextAp
 };
 
 export const cloneRepository = async (repo: string, res: NextApiResponseServerIO) => {
-  const cloneDir = process.env.GIT_REPO_DIR || 'workdir';
+  const cloneDir = process.env.GIT_REPO_DIR;
+  const git = simpleGit(cloneDir, {
+    binary: 'git',
+    maxConcurrentProcesses: 6,
+    config: {
+      'http.extraHeader': `Authorization: Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`
+    }
+  });
+
   try {
-    await simpleGit(cloneDir).clone(repo || '');
+    await git.clone(repo || '');
     res.json({ success: true, message: 'Repository cloned' });
   } catch (error) {
     console.error('Error cloning repository:', error);
@@ -115,20 +127,29 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   const { command } = req.body as GitCommandBody;
   const { message, repo, directory, filename, content } = req.body as GitCommandBody;
   const repoDir = path.join(process.env.GIT_REPO_DIR || '', repo || '');
-  const git: SimpleGit = simpleGit(repoDir);
+
 
   try {
     switch (command) {
       case 'status':
-        await getStatus(git, res);
+        if (repo) {
+          const git: SimpleGit = simpleGit(repoDir);
+          await getStatus(git, res);
+        }
         break;
 
       case 'add':
-        await addFiles(git, res);
+        if (repo) {
+          const git: SimpleGit = simpleGit(repoDir);          
+          await addFiles(git, res);
+        }
         break;
 
       case 'commit':
-        await commitChanges(git, message || 'Commit from simple-git', res);
+        if (repo) {
+          const git: SimpleGit = simpleGit(repoDir);
+          await commitChanges(git, message || 'Commit from simple-git', res);
+        }
         break;
 
       case 'clone':

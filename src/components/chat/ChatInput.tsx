@@ -2,7 +2,7 @@ import React, { FC, KeyboardEvent, ChangeEvent, useState } from 'react';
 import { MdBolt } from 'react-icons/md';
 import { Button, Flex, Icon, Input, useColorModeValue, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { commands } from '@/utils/commands';
-import { MdDelete, MdFileDownload } from 'react-icons/md';
+import { MdDelete, MdFileDownload, MdMemory } from 'react-icons/md';
 import { truncateMessages } from '@/utils/messages';
 import { FileToChatModal } from '../sidebar/components/git/FileToChatModal';
 
@@ -23,6 +23,7 @@ const ChatInput: FC<ChatInputProps> = ({
 }) => {
   const [truncating, setTruncating] = useState<boolean>(false);
   const [isFileModalOpen, setisFileModalOpen] = useState(false);
+  const [modalComponent, setModalComponent] = useState('fileread');
   const inputColor = useColorModeValue('navy.700', 'white');
   const placeholderColor = useColorModeValue(
     { color: 'gray.500' },
@@ -104,6 +105,11 @@ const ChatInput: FC<ChatInputProps> = ({
   };
 
   const handleAddFileFromGithub = () => {
+    setModalComponent('fileread')
+    setisFileModalOpen(true)
+  };
+  const handleCommit = () => {
+    setModalComponent('commit')
     setisFileModalOpen(true)
   };
 
@@ -122,7 +128,7 @@ const ChatInput: FC<ChatInputProps> = ({
       onSubmit={(e) => e.preventDefault()}
       align={"center"}
     >
-   <FileToChatModal isOpen={isFileModalOpen} onClose={onFileModalClose}/>
+   <FileToChatModal isOpen={isFileModalOpen} onClose={onFileModalClose} component={modalComponent}/>
     <Menu>
       <MenuButton
           as={Button}
@@ -156,6 +162,9 @@ const ChatInput: FC<ChatInputProps> = ({
           </MenuItem>
           <MenuItem icon={<MdFileDownload />} onClick={handleAddFileFromGithub}>
             Add file from Github
+          </MenuItem>
+          <MenuItem icon={<MdMemory />} onClick={handleCommit}>
+            Commit
           </MenuItem>
         </MenuList>
       </Menu>
