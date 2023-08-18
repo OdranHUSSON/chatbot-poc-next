@@ -46,7 +46,7 @@ export const FileToChatModal = ({ isOpen, onClose, component }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size='xl'>
+    <Modal isOpen={isOpen} onClose={onClose} size='fw' motionPreset='slideInBottom'>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Git Repositories</ModalHeader>
