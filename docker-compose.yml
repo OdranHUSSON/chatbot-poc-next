@@ -10,7 +10,7 @@ services:
       - /app/.next
       - ./workdir:/app/workdir
     environment:
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_TOKEN=${NEXT_PUBLIC_GITHUB_TOKEN}
     networks:
       - mynetwork
   mysql:

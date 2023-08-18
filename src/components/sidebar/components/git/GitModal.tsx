@@ -15,6 +15,7 @@ import {
 import GitClient from '@/utils/gitClient';
 import RepoList from '@/components/sidebar/components/git/RepoList';
 import RepoDetails from '@/components/sidebar/components/git/RepoDetail';
+import GitClone from './GitClone';
 
 export const GitModal = ({ isOpen, onClose, fileContent }) => {
   const [repos, setRepos] = useState<string[]>([]);
@@ -57,6 +58,7 @@ export const GitModal = ({ isOpen, onClose, fileContent }) => {
           ) : (
             <RepoList repos={repos} onSelect={handleRepoSelect} />
           )}
+          <GitClone />
         </ModalBody>
       </ModalContent>
     </Modal>

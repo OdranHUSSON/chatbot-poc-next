@@ -2,7 +2,7 @@ import React, { FC, KeyboardEvent, ChangeEvent, useState } from 'react';
 import { MdBolt } from 'react-icons/md';
 import { Button, Flex, Icon, Input, useColorModeValue, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { commands } from '@/utils/commands';
-import { MdDelete, MdFileDownload } from 'react-icons/md';
+import { MdDelete, MdFileDownload, MdMemory } from 'react-icons/md';
 import { truncateMessages } from '@/utils/messages';
 import { FileToChatModal } from '../sidebar/components/git/FileToChatModal';
 
@@ -23,6 +23,7 @@ const ChatInput: FC<ChatInputProps> = ({
 }) => {
   const [truncating, setTruncating] = useState<boolean>(false);
   const [isFileModalOpen, setisFileModalOpen] = useState(false);
+  const [modalComponent, setModalComponent] = useState('fileread');
   const inputColor = useColorModeValue('navy.700', 'white');
   const placeholderColor = useColorModeValue(
     { color: 'gray.500' },
@@ -30,7 +31,7 @@ const ChatInput: FC<ChatInputProps> = ({
   );
 
   const navbarIcon = useColorModeValue('gray.500', 'white');
-  let menuBg = useColorModeValue('white', 'navy.800');
+  let menuBg = useColorModeValue('white', 'navy.700');
   const textColor = useColorModeValue('navy.700', 'white');
   const borderColor = useColorModeValue('#E6ECFA', 'rgba(135, 140, 189, 0.3)');
   const shadow = useColorModeValue(
@@ -38,10 +39,6 @@ const ChatInput: FC<ChatInputProps> = ({
     '0px 41px 75px #081132',
   );
   const buttonBg = useColorModeValue('transparent', 'navy.800');
-  const hoverButton = useColorModeValue(
-    { bg: 'gray.100' },
-    { bg: 'whiteAlpha.100' },
-  );
   const activeButton = useColorModeValue(
     { bg: 'gray.200' },
     { bg: 'whiteAlpha.200' },
@@ -108,6 +105,11 @@ const ChatInput: FC<ChatInputProps> = ({
   };
 
   const handleAddFileFromGithub = () => {
+    setModalComponent('fileread')
+    setisFileModalOpen(true)
+  };
+  const handleCommit = () => {
+    setModalComponent('commit')
     setisFileModalOpen(true)
   };
 
@@ -126,24 +128,43 @@ const ChatInput: FC<ChatInputProps> = ({
       onSubmit={(e) => e.preventDefault()}
       align={"center"}
     >
-   <FileToChatModal isOpen={isFileModalOpen} onClose={onFileModalClose}/>
+   <FileToChatModal isOpen={isFileModalOpen} onClose={onFileModalClose} component={modalComponent}/>
     <Menu>
       <MenuButton
           as={Button}
           bg={menuBg}
           transition='all 0.2s'
           borderRadius="45px"
-          p="12px"
-          me="10px"
+          p="120x"
+          me="10px"          
+          _hover={{
+            boxShadow:
+              '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
+            bg:
+              'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
+            _active: {
+              bg:  'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
+            },
+          }}
+          
         >
-          <Icon as={MdBolt} w={6} h={6} />
+          <Icon as={MdBolt} w={7} h={7} marginLeft="-5px" />
         </MenuButton>
         <MenuList>
-          <MenuItem  icon={<MdDelete />} onClick={handleTruncateMessages}>
+          <MenuItem bg={"red.500"}  _hover={{
+              bg:
+              'red.700',
+              _disabled: {
+                bg: 'red.700',
+              },
+            }} icon={<MdDelete />} onClick={handleTruncateMessages}>
             Delete
           </MenuItem>
           <MenuItem icon={<MdFileDownload />} onClick={handleAddFileFromGithub}>
             Add file from Github
+          </MenuItem>
+          <MenuItem icon={<MdMemory />} onClick={handleCommit}>
+            Commit
           </MenuItem>
         </MenuList>
       </Menu>

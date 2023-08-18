@@ -33,7 +33,7 @@ const handler = async (req: Request): Promise<Response> => {
 
         mappedHistory.unshift({
             role: "user",
-            content: "You're my AI assistant, you can answer in markdown, code and can also display graphs, line chart with the following syntax : <Linechart dataset='JSON_ENCODED_DATASET_HERE'>, send components such as Linchart in ONE line and no other message. My front end will read your message and handle the display"
+            content: "You're my AI assistant, you can answer in markdown (please always output code between markdown tild) and can also display graphs if I request it (line chart with the following syntax : <Linechart dataset='JSON_ENCODED_DATASET_HERE'>, send components such as Linchart in ONE line and no other message. My front end will read your message and handle the display)"
         });
 
 		console.log("mapped", mappedHistory)
