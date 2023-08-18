@@ -50,8 +50,8 @@ export const commitChanges = async (git: SimpleGit, message: string, res: NextAp
   try {
     git
     .addConfig('user.email', 'ohusson55@gmail.com')
-    .addConfig('user.name', 'Odran HUSSON')
-    .exec(() => console.log('Git config set successfully!'));
+    .addConfig('user.name', 'Odran HUSSON');
+
     const commit = await git.commit(message || 'Commit from simple-git');
     res.json({ success: true, commit });
   } catch (error) {
@@ -62,6 +62,7 @@ export const commitChanges = async (git: SimpleGit, message: string, res: NextAp
 
 export const cloneRepository = async (repo: string, res: NextApiResponseServerIO) => {
   const cloneDir = process.env.GIT_REPO_DIR;
+  
   const git = simpleGit(cloneDir, {
     binary: 'git',
     maxConcurrentProcesses: 6,
@@ -69,6 +70,11 @@ export const cloneRepository = async (repo: string, res: NextApiResponseServerIO
       'http.extraHeader': `Authorization: Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`
     }
   });
+
+  git
+    .addConfig('user.email', 'ohusson55@gmail.com')
+    .addConfig('user.name', 'Odran HUSSON')
+    .addConfig('Username', 'OdranHUSSON');
 
   try {
     await git.clone(repo || '');
