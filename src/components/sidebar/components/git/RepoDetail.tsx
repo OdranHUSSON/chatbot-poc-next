@@ -3,6 +3,7 @@ import { Box, Text, Button, VStack, Flex, Spinner, HStack, useToast } from '@cha
 import GitClient from '@/utils/gitClient';
 import ReactMarkdown from 'react-markdown';
 import { LightMarkdownComponents } from '@/styles/LightMarkdownComponent';
+import { createBotMessage } from '@/utils/messages';
 
 interface RepoDetailsProps {
   repoName: string;
@@ -44,31 +45,13 @@ const RepoDetails: React.FC<RepoDetailsProps> = ({ repoName, onRemove, fileConte
     GitClient.getInstance().writeFile(selectedFile!, fileContent, repoName)
       .then(data => {
         if (data.success) {
-          toast({
-            title: "Success",
-            description: `File overwrited at path: ${repoName}${selectedFile}`,
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-          });
+          createBotMessage(`[GIT] Successfully overwritten file ${repoName}${selectedFile}`);          
         } else {
-          toast({
-            title: "Error",
-            description: `Failed to overwrite file ${selectedFile} : ${data.error}`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          });
+          createBotMessage(`[GIT] Failed to overwrite file ${repoName}${selectedFile}`);
         }
       })
       .catch(error => {
-        toast({
-          title: "Error",
-          description: `Failed to overwrite file ${selectedFile} : ${error.message}`,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+        createBotMessage(`[GIT] Failed to overwrite file ${repoName}${selectedFile}`);
       })
       .finally(() => {
         setSelectedFile(null);

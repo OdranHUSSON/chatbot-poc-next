@@ -37,10 +37,10 @@ const GitCommit: React.FC<GitCommitProps> = ({ repo }) => {
         value={commitMessage}
         onChange={(e) => setCommitMessage(e.target.value)}
       />
-      <Button colorScheme={buttonColor} onClick={handleCommit}>
+      <Button colorScheme={"brand"} onClick={handleCommit}>
         Commit Changes
       </Button>
-      <Button colorScheme={buttonColor} onClick={handleGenerateCommitMessage} leftIcon={<Icon as={MdAndroid} />}>
+      <Button colorScheme={"brand"} onClick={handleGenerateCommitMessage} leftIcon={<Icon as={MdAndroid} />}>
         Generate Commit Message
       </Button>
     </VStack>
