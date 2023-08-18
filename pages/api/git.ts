@@ -89,7 +89,26 @@ export const listRepositories = async (repoDir: string, res: NextApiResponseServ
   try {
     const data = await fs.readdir(repoDir);
     const filteredData = data.filter(file => file !== '.gitkeep');
-    res.json({ success: true, data: filteredData });
+    const reposWithReadme: any[] = [];
+
+    for (const repo of filteredData) {
+      const readmePath = path.join(repoDir, repo, 'README.md');
+      let readmeContent = 'No README.md file';
+
+      try {
+        readmeContent = await fs.readFile(readmePath, 'utf-8');
+      } catch (error) {
+        console.warn(`No README.md file found in repository ${repo}`);
+      }
+
+      reposWithReadme.push({
+        name: repo,
+        description: readmeContent,
+      });
+    }
+
+    res.json({ success: true, data: reposWithReadme });
+
   } catch (error) {
     console.error('Error listing repositories:', error);
     res.status(500).json({ error: 'Failed to list repositories', details: error.message });

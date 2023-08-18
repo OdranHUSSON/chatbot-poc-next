@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text, Button, useToast, Card } from '@chakra-ui/react';
-import GitClient from '../utils/gitClient';
+import GitClient from '@/utils/gitClient';
 
 interface RepoListProps {
   onSelect: (repo: string) => void;
