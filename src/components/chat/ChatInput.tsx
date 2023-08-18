@@ -99,7 +99,7 @@ const ChatInput: FC<ChatInputProps> = ({
     }
   };
 
-  const handleTruncateMessages = async () => {
+  const handleTruncateMessages = async (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
     console.log("Truncate button clicked");
     setTruncating(true);
