@@ -53,7 +53,7 @@ const ChatInput: FC<ChatInputProps> = ({
 
 	const openFileModal = () => {
 		setisFileModalOpen(true);
-	  };
+  };
 
   const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(-1);
 
@@ -100,6 +100,7 @@ const ChatInput: FC<ChatInputProps> = ({
   };
 
   const handleTruncateMessages = async () => {
+    e.stopPropagation();
     console.log("Truncate button clicked");
     setTruncating(true);
     await truncateMessages();
@@ -108,8 +109,6 @@ const ChatInput: FC<ChatInputProps> = ({
 
   const handleAddFileFromGithub = () => {
     setisFileModalOpen(true)
-    console.log("Add file from Github clicked");
-    // Add your logic here
   };
 
   return (
