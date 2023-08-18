@@ -23,9 +23,27 @@ const GitClone = () => {
     }
   };
 
+  const textColorPrimary = useColorModeValue('navy.700', 'white');
+  const searchColor = useColorModeValue('gray.700', 'white');
+  const inputBg = useColorModeValue('transparent', 'navy.800');
+  const placeholderColor = useColorModeValue(
+    { color: 'gray.500' },
+    { color: 'whiteAlpha.600' }
+  );
+
   return (
     <VStack spacing={4}>
       <Input
+        fontWeight="500"
+        bg={inputBg}
+        variant="main"
+        fontSize="sm"
+        border="1px solid"
+        color={searchColor}
+        borderColor={useColorModeValue('gray.200', 'whiteAlpha.100')}
+        borderRadius="12px"
+        h="44px"
+        maxH="44px"
         placeholder="Enter repo URL"
         value={repo}
         onChange={(e) => setRepo(e.target.value)}
