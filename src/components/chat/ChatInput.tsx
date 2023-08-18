@@ -4,7 +4,7 @@ import { Button, Flex, Icon, Input, useColorModeValue, Menu, MenuButton, MenuLis
 import { commands } from '@/utils/commands';
 import { MdDelete, MdFileDownload, MdMemory } from 'react-icons/md';
 import { truncateMessages } from '@/utils/messages';
-import { FileToChatModal } from '../sidebar/components/git/FileToChatModal';
+import { FileToChatModal } from '../git/FileToChatModal';
 
 interface ChatInputProps {
   inputCode: string;

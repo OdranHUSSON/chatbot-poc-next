@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Modal, 
-  ModalOverlay, 
-  ModalContent, 
-  ModalHeader, 
-  ModalCloseButton, 
-  ModalBody, 
-  Text, 
-  VStack, 
-  useDisclosure, 
-  Box 
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Text,
+  VStack,
+  useDisclosure
 } from '@chakra-ui/react';
 import GitClient from '@/utils/gitClient';
-import RepoList from '@/components/sidebar/components/git/RepoList';
-import RepoDetails from '@/components/sidebar/components/git/RepoDetail';
-import FileToChat from './FileToChat';
+import RepoList from '@/components/git/RepoList';
+import RepoDetails from '@/components/git/RepoDetail';
 import GitClone from './GitClone';
-import GitCommit from './GitCommit';
 
-export const FileToChatModal = ({ isOpen, onClose, component }) => {
+export const GitModal = ({ isOpen, onClose, fileContent }) => {
   const [repos, setRepos] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
@@ -55,20 +54,11 @@ export const FileToChatModal = ({ isOpen, onClose, component }) => {
           {loading ? (
             <Text>Loading...</Text>
           ) : selectedRepo ? (
-            <Box>
-              {component === 'commit' && (
-                <GitCommit repo={selectedRepo} />
-              )}
-              {component === 'fileread' && (
-                <FileToChat repoName={selectedRepo} closeModal={onClose} onRemove={handleRepoRemove} />
-              )}
-            </Box>
+            <RepoDetails repoName={selectedRepo} fileContent={fileContent} closeModal={onClose} onRemove={handleRepoRemove} />
           ) : (
-            <>
-              <RepoList repos={repos} onSelect={handleRepoSelect} />
-              <GitClone />
-            </>
+            <RepoList repos={repos} onSelect={handleRepoSelect} />
           )}
+          <GitClone />
         </ModalBody>
       </ModalContent>
     </Modal>
