@@ -79,7 +79,7 @@ const RepoList: React.FC<RepoListProps> = ({ onSelect }) => {
               letterSpacing="0px"
               px="8px"
             >
-              Branch
+              {repo.branch}
             </Badge>        
           </Flex>
           <Box p={2}>
