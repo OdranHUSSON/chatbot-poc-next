@@ -7,8 +7,8 @@ import {
   DrawerCloseButton, 
   DrawerBody, 
   Text, 
-  VStack, 
-  useDisclosure, 
+  Flex, 
+  Icon, 
   Box 
 } from '@chakra-ui/react';
 import GitClient from '@/utils/gitClient';
@@ -17,6 +17,7 @@ import RepoDetails from '@/components/git/GitSave';
 import FileToChat from './FileToChat';
 import GitClone from './GitClone';
 import GitCommit from './GitCommit';
+import { MdMemory } from 'react-icons/md';
 
 export const GitDrawer = ({ isOpen, onClose, component }) => {
   const [repos, setRepos] = useState<string[]>([]);
@@ -50,7 +51,17 @@ export const GitDrawer = ({ isOpen, onClose, component }) => {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Github</DrawerHeader>
+        <DrawerHeader>
+          <Flex
+            align={"center"}
+            verticalAlign={"center"}
+            w="100%"
+            p={2}>
+              <Icon as={MdMemory} color={"brand.500"} mr={2} /> 
+              <Text fontStyle={"bold"}>Github</Text>
+              <Text fontStyle={"light"}> - save</Text>
+          </Flex>            
+        </DrawerHeader>
         <DrawerBody>
         {loading ? (
           <Text>Loading...</Text>
