@@ -74,16 +74,16 @@ export default function AutocompleteInput(props: AutocompleteInputProps) {
       </FormLabel>
       <Input
         {...props}
-        id={props.id}
-        fontWeight="500"
-        bg={inputBg}
-        variant="main"
-        fontSize="sm"
+        id={props.id}        
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyPress}
         placeholder={props.placeholder}
         _placeholder={placeholderColor}
+        fontWeight="500"
+        bg={inputBg}
+        variant="main"
+        fontSize="sm"
         border="1px solid"
         color={searchColor}
         borderColor={useColorModeValue('gray.200', 'whiteAlpha.100')}

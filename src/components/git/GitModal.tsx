@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import GitClient from '@/utils/gitClient';
 import RepoList from '@/components/git/RepoList';
-import RepoDetails from '@/components/git/RepoDetail';
+import GitSave from '@/components/git/GitSave';
 import GitClone from './GitClone';
 
 export const GitModal = ({ isOpen, onClose, fileContent }) => {
@@ -54,7 +54,7 @@ export const GitModal = ({ isOpen, onClose, fileContent }) => {
           {loading ? (
             <Text>Loading...</Text>
           ) : selectedRepo ? (
-            <RepoDetails repoName={selectedRepo} fileContent={fileContent} closeModal={onClose} onRemove={handleRepoRemove} />
+            <GitSave repoName={selectedRepo} fileContent={fileContent} closeModal={onClose} onRemove={handleRepoRemove} />
           ) : (
             <RepoList repos={repos} onSelect={handleRepoSelect} />
           )}

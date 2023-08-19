@@ -282,17 +282,17 @@ export function SidebarLinks(props: SidebarLinksProps) {
                       >
                         {route.name}
                       </Text>
-                        <Badge
-                          display={{ base: 'flex', lg: 'none', xl: 'flex' }}
-                          colorScheme="brand"
-                          borderRadius="25px"
-                          color="brand.500"
-                          textTransform={'none'}
-                          letterSpacing="0px"
-                          px="8px"
-                        >
-                          BADGE
-                        </Badge>
+                      <Badge
+                        display={{ base: 'flex', lg: 'none', xl: 'flex' }}
+                        colorScheme="brand"
+                        borderRadius="25px"
+                        color="brand.500"
+                        textTransform={'none'}
+                        letterSpacing="0px"
+                        px="8px"
+                      >
+                        BADGE
+                      </Badge>
                     </Flex>
                   )}
                 </HStack>
