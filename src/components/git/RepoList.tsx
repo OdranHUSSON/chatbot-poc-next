@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text, Button, useToast, Badge, Flex } from '@chakra-ui/react';
 import GitClient from '@/utils/gitClient';
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown from 'react-markdown';
 import { LightMarkdownComponents } from '@/styles/LightMarkdownComponent';
 
 interface RepoListProps {
@@ -9,7 +9,7 @@ interface RepoListProps {
 }
 
 const RepoList: React.FC<RepoListProps> = ({ onSelect }) => {
-  const [repos, setRepos] = useState<{name: string, description: string}[]>([]);
+  const [repos, setRepos] = useState<{ name: string; description: string }[]>([]);
   const toast = useToast();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const RepoList: React.FC<RepoListProps> = ({ onSelect }) => {
     };
 
     fetchRepos();
-  }, []);
+  }, [toast]);
 
   const handleSelectRepo = (repo: string) => {
     onSelect(repo);
@@ -49,7 +49,7 @@ const RepoList: React.FC<RepoListProps> = ({ onSelect }) => {
         duration: 3000,
         isClosable: true,
       });
-      setRepos(prevRepos => prevRepos.filter(r => r.name !== repo));
+      setRepos((prevRepos) => prevRepos.filter((r) => r.name !== repo));
     } catch (error) {
       toast({
         title: 'Error',
@@ -63,28 +63,27 @@ const RepoList: React.FC<RepoListProps> = ({ onSelect }) => {
 
   return (
     <>
-      {repos.map(repo => (
-        <Box key={repo.name} p={5} mb={8} shadow="md" borderWidth="1px" borderRadius="lg" p={4}>
-          <Flex
-            w="100%"
-            alignItems="center"
-            justifyContent="left">
-            <Text fontSize="xl" fontWeight="bold">{repo.name}</Text>       
+      {repos.map((repo) => (
+        <Box key={repo.name} p={5} mb={8} shadow="md" borderWidth="1px" borderRadius="lg">
+          <Flex w="100%" alignItems="center" justifyContent="left">
+            <Text fontSize="xl" fontWeight="bold">
+              {repo.name}
+            </Text>
             <Badge
               display={{ base: 'flex', lg: 'none', xl: 'flex' }}
               colorScheme="brand"
               borderRadius="25px"
               color="brand.500"
-              textTransform={'none'}
+              textTransform="none"
               letterSpacing="0px"
               px="8px"
             >
               {repo.branch}
-            </Badge>        
+            </Badge>
           </Flex>
           <Box p={2}>
             <Text fontWeight="bold">README.md</Text>
-            <Box height={"200px"} overflow={"scroll"} m={2} p={8} bg={"#000"} color={"#FFF"}>            
+            <Box height="200px" overflow="scroll" m={2} p={8} bg="#000" color="#FFF">
               <ReactMarkdown components={LightMarkdownComponents}>{repo.description}</ReactMarkdown>
             </Box>
           </Box>
