@@ -47,7 +47,7 @@ const FileToChat: React.FC<RepoDetailsProps> = ({ repoName, onRemove , closeModa
   
       if (data.success) {
         await createUserMessage("Provide me the code of " + selectedFile); 
-        await createBotMessage(data.content); 
+        await createBotMessage('```\n' + data.content + '\n```\n'); 
       } else {
         toast({
           title: "Error",
