@@ -13,7 +13,8 @@ import {
   Text,
   Link,
   Badge,
-  MenuItem
+  MenuItem,
+  Spinner
 } from '@chakra-ui/react';
 import { MdDelete, MdFileDownload, MdLightbulbCircle, MdLightbulbOutline, MdMemory, MdOutlineManageAccounts } from 'react-icons/md';
 import { GitDrawer } from '../git/GitDrawer';
@@ -96,14 +97,8 @@ const ChatActions: FC<ChatActionsProps> = () => {
                     height="24px"
                     color={"red.500"}
                     me="12px"
-                  />
-                  <Text
-                    color={"brand"}
-                    fontWeight="500"
-                    fontSize="sm"
-                  >
-                    Truncate
-                  </Text>
+                  />                  
+                   {truncating ? <Spinner color='brand' /> : <Text color={"brand"} fontWeight="500" fontSize="sm">Truncate</Text> }
                 </Flex>
               </Button>
 
