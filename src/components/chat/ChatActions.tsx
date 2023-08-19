@@ -13,12 +13,14 @@ import {
   Text,
   Link,
   Badge,
-  MenuItem,
-  Spinner
+  Spinner,
+  DrawerFooter
 } from '@chakra-ui/react';
-import { MdDelete, MdFileDownload, MdLightbulbCircle, MdLightbulbOutline, MdMemory, MdOutlineManageAccounts } from 'react-icons/md';
+import { HSeparator } from '@/components/separator/Separator';
+import { MdDelete, MdDrafts, MdFileDownload, MdLightbulbCircle, MdLightbulbOutline, MdMemory, MdOutlineManageAccounts } from 'react-icons/md';
 import { GitDrawer } from '../git/GitDrawer';
 import { truncateMessages } from '@/utils/messages';
+import { useColorModeValue } from '@chakra-ui/react';
 
 const ChatActions: FC<ChatActionsProps> = () => {
   const [isFileModalOpen, setisFileModalOpen] = useState(false);
@@ -52,7 +54,10 @@ const ChatActions: FC<ChatActionsProps> = () => {
     setIsDrawerOpen(true);
   };
 
-  const gray = 'gray.500'; // define gray color, adjust as needed
+  const gray = 'gray.500';
+
+  let sidebarBackgroundColor = useColorModeValue('white', 'navy.800');
+  let menuColor = useColorModeValue('gray.400', 'white');
 
   return (
     <>
@@ -83,13 +88,18 @@ const ChatActions: FC<ChatActionsProps> = () => {
           color={"#FFF"}
         /> 
       </Button>
-      <Drawer placement="right" onClose={() => setIsDrawerOpen(false)} isOpen={isDrawerOpen}>
+      <Drawer bg={sidebarBackgroundColor} placement="right" onClose={() => setIsDrawerOpen(false)} isOpen={isDrawerOpen}>
         <DrawerOverlay>
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader>Actions</DrawerHeader>
+            <DrawerCloseButton _focus={{ boxShadow: 'none' }} _hover={{ boxShadow: 'none' }} />
+            <DrawerContent>
+            <DrawerHeader>                            
+              <Flex alignItems="center" flexDirection="column">
+                <Text m={4}>Chat actions</Text>
+                <HSeparator mb="20px" w="284px" />
+              </Flex>
+            </DrawerHeader>
             <DrawerBody>
-              <Button mb="30px" w={"100%"} onClick={handleTruncateMessages}>
+              <Button mb="16px" w={"100%"} onClick={handleTruncateMessages}>
                 <Flex align="center" w="100%">
                   <Icon
                     as={MdDelete}
@@ -102,7 +112,7 @@ const ChatActions: FC<ChatActionsProps> = () => {
                 </Flex>
               </Button>
 
-              <Button mb="30px" w={"100%"} onClick={handleAddFileFromGithub}>
+              <Button mb="16px" w={"100%"} onClick={handleAddFileFromGithub}>
                 <Flex align="center" w="100%">
                   <Icon
                     as={MdMemory}
@@ -118,6 +128,36 @@ const ChatActions: FC<ChatActionsProps> = () => {
                   >
                     Github
                   </Text>
+                </Flex>
+              </Button>
+
+              <Button mb="16px" w={"100%"}>
+                <Flex align="center" verticalAlign={"center"} w="100%">
+                  <Icon
+                    as={MdDrafts}
+                    width="24px"
+                    height="24px"
+                    color={"brand"}
+                    me="12px"
+                  />
+                  <Text
+                    color={"brand"}
+                    fontWeight="500"
+                    fontSize="sm"
+                  >
+                    AI templates
+                  </Text>
+                  <Badge
+                    display={{ base: 'flex', lg: 'none', xl: 'flex' }}
+                    colorScheme="red.500"
+                    borderRadius="25px"
+                    color="red.500"
+                    textTransform="none"
+                    letterSpacing="0px"
+                    px="8px"
+                  >
+                    WIP
+                    </Badge>
                 </Flex>
               </Button>
             </DrawerBody>

@@ -18,6 +18,7 @@ import FileToChat from './FileToChat';
 import GitClone from './GitClone';
 import GitCommit from './GitCommit';
 import { MdMemory } from 'react-icons/md';
+import { useColorModeValue } from '@chakra-ui/react';
 
 export const GitDrawer = ({ isOpen, onClose, component }) => {
   const [repos, setRepos] = useState<string[]>([]);
@@ -46,8 +47,11 @@ export const GitDrawer = ({ isOpen, onClose, component }) => {
     setSelectedRepo(null);
   };
 
+  let sidebarBackgroundColor = useColorModeValue('white', 'navy.800');
+  let menuColor = useColorModeValue('gray.400', 'white');
+
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} size={"xl"}>
+    <Drawer isOpen={isOpen} onClose={onClose} size={"xl"} borderRadius="16px" bg={sidebarBackgroundColor}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
