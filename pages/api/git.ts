@@ -89,7 +89,45 @@ export const listRepositories = async (repoDir: string, res: NextApiResponseServ
   try {
     const data = await fs.readdir(repoDir);
     const filteredData = data.filter(file => file !== '.gitkeep');
-    res.json({ success: true, data: filteredData });
+    const reposWithReadme: any[] = [];
+
+    for (const repo of filteredData) {
+      const readmePath = path.join(repoDir, repo, 'README.md');
+      let readmeContent = 'No README.md file';
+
+      const git = simpleGit(path.join(repoDir, repo), {
+        binary: 'git',
+        maxConcurrentProcesses: 6,
+        config: {
+          'http.extraHeader': `Authorization: Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`
+        }
+      });
+
+      let activeBranch = "unknown";
+      console.log("folder", repo)
+      try {
+        readmeContent = await fs.readFile(readmePath, 'utf-8');
+        await git.branchLocal((err, branchSummary) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        
+          activeBranch = branchSummary.current;
+        });
+      } catch (error) {
+        console.warn(`No README.md file found in repository ${repo}`);
+      }
+
+      reposWithReadme.push({
+        name: repo,
+        description: readmeContent,
+        branch: activeBranch
+      });
+    }
+
+    res.json({ success: true, data: reposWithReadme });
+
   } catch (error) {
     console.error('Error listing repositories:', error);
     res.status(500).json({ error: 'Failed to list repositories', details: error.message });

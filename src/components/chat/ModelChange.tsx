@@ -20,7 +20,7 @@ const ModelChange: FC<ModelChangeProps> = ({ outputCode, model, setModel }) => {
         'linear-gradient(180deg, #FBFBFF 0%, #CACAFF 100%)',
         'whiteAlpha.200',
     );
-    const iconColor = useColorModeValue('brand.500', 'white');
+    const iconColor = useColorModeValue('brand.500', 'brand.500');
 
     return (
         <Flex

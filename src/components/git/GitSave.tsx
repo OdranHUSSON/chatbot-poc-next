@@ -10,9 +10,10 @@ interface RepoDetailsProps {
   onRemove: () => void;
   fileContent: string;
   closeModal: () => void;
+  filePath?: string;
 }
 
-const RepoDetails: React.FC<RepoDetailsProps> = ({ repoName, onRemove, fileContent , closeModal }) => {
+const RepoDetails: React.FC<RepoDetailsProps> = ({ repoName, onRemove, fileContent , closeModal, filePath }) => {
   const [contents, setContents] = useState<any[]>([]);
   const [currentDir, setCurrentDir] = useState('.');
   const [loading, setLoading] = useState(false);
@@ -36,6 +37,14 @@ const RepoDetails: React.FC<RepoDetailsProps> = ({ repoName, onRemove, fileConte
   useEffect(() => {
     fetchContents();
   }, [fetchContents]);
+
+  useEffect(() => {
+    if (filePath) {
+      const directory = filePath.substring(0, filePath.lastIndexOf('/'));
+      setCurrentDir(directory);
+      setSelectedFile(filePath);
+    }
+  }, [filePath]);
 
   const handleFileSelect = (filePath: string) => {
     setSelectedFile(filePath);

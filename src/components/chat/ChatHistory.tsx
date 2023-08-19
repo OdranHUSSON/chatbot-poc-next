@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useClipboard } from '@/utils/copy';
 import React, { useState, useRef, useEffect } from 'react';
 import LineChart from '../charts/LineChart';
-import { GitModal } from '../sidebar/components/git/GitModal';
+import { GitModal } from '../git/GitSaveDrawer';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
@@ -76,7 +76,7 @@ const ChatHistory = ({ chatHistory }: any) => {
 	  };
 
 	return (
-	  <Box width={"100%"} position={"relative"}>
+	  <Box width={"100%"} position={"relative"}>		
 		<GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} />
 		{chatHistory.map((chat: ChatType, index: number) => (
 			<Flex 
