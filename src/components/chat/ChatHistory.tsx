@@ -7,7 +7,6 @@ import LineChart from '../charts/LineChart';
 import { GitModal } from '../git/GitModal';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import ChatActions from './ChatActions';
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -77,8 +76,7 @@ const ChatHistory = ({ chatHistory }: any) => {
 	  };
 
 	return (
-	  <Box width={"100%"} position={"relative"}>
-		<ChatActions />
+	  <Box width={"100%"} position={"relative"}>		
 		<GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} />
 		{chatHistory.map((chat: ChatType, index: number) => (
 			<Flex 

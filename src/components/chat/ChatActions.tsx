@@ -15,7 +15,7 @@ import {
   Badge,
   MenuItem
 } from '@chakra-ui/react';
-import { MdDelete, MdFileDownload, MdMemory, MdOutlineManageAccounts } from 'react-icons/md';
+import { MdDelete, MdFileDownload, MdLightbulbCircle, MdLightbulbOutline, MdMemory, MdOutlineManageAccounts } from 'react-icons/md';
 import { GitDrawer } from '../git/GitDrawer';
 import { truncateMessages } from '@/utils/messages';
 
@@ -62,9 +62,10 @@ const ChatActions: FC<ChatActionsProps> = () => {
       />
       <Button
         transition='all 0.2s'
-        borderRadius="45px"
+        borderRadius="24px"
         p="120x"
         me="10px"
+        bg={"linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important"}
         _hover={{
           boxShadow: '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
           bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
@@ -74,7 +75,12 @@ const ChatActions: FC<ChatActionsProps> = () => {
         }}
         onClick={openDrawer}
       >
-        Actions
+        <Icon
+          as={MdLightbulbOutline}
+          width="24px"
+          height="24px"
+          color={"#FFF"}
+        /> 
       </Button>
       <Drawer placement="right" onClose={() => setIsDrawerOpen(false)} isOpen={isDrawerOpen}>
         <DrawerOverlay>
@@ -88,7 +94,7 @@ const ChatActions: FC<ChatActionsProps> = () => {
                     as={MdDelete}
                     width="24px"
                     height="24px"
-                    color={"red"}
+                    color={"red.500"}
                     me="12px"
                   />
                   <Text
@@ -111,7 +117,7 @@ const ChatActions: FC<ChatActionsProps> = () => {
                     me="12px"
                   />
                   <Text
-                    color={"black"}
+                    color={"brand"}
                     fontWeight="500"
                     fontSize="sm"
                   >

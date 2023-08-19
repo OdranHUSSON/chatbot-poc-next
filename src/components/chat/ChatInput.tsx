@@ -1,5 +1,6 @@
 import React, { FC, KeyboardEvent, ChangeEvent } from 'react';
 import { Button, Flex, Input, useColorModeValue } from '@chakra-ui/react';
+import ChatActions from './ChatActions';
 
 interface ChatInputProps {
   inputCode: string;
@@ -48,6 +49,7 @@ const ChatInput: FC<ChatInputProps> = ({
       onSubmit={(e) => e.preventDefault()}
       align={"center"}
     >
+      <ChatActions />
       <Input
         placeholder='Type your message here...'
         onKeyDown={handleKeyDown}
