@@ -88,10 +88,21 @@ const ChatActions: FC<ChatActionsProps> = () => {
           color={"#FFF"}
         /> 
       </Button>
-      <Drawer bg={sidebarBackgroundColor} placement="right" onClose={() => setIsDrawerOpen(false)} isOpen={isDrawerOpen}>
-        <DrawerOverlay>
+      <Drawer placement="right" onClose={() => setIsDrawerOpen(false)} isOpen={isDrawerOpen}>
+        <DrawerOverlay>            
+            <DrawerContent
+              w="285px"
+              maxW="285px"
+              ms={{
+                sm: '16px',
+              }}
+              my={{
+                sm: '16px',
+              }}
+              borderRadius="16px"
+              mr={'24px'}
+              bg={sidebarBackgroundColor}>
             <DrawerCloseButton _focus={{ boxShadow: 'none' }} _hover={{ boxShadow: 'none' }} />
-            <DrawerContent>
             <DrawerHeader>                            
               <Flex alignItems="center" flexDirection="column">
                 <Text m={4}>Chat actions</Text>

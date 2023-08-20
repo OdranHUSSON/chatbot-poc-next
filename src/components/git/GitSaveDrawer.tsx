@@ -17,6 +17,7 @@ import RepoList from '@/components/git/RepoList';
 import GitSave from '@/components/git/GitSave';
 import GitClone from './GitClone';
 import { MdSave } from 'react-icons/md';
+import { useColorModeValue } from '@chakra-ui/react';
 
 export const GitModal = ({ isOpen, onClose, fileContent }) => {
   const [repos, setRepos] = useState<string[]>([]);
@@ -45,10 +46,22 @@ export const GitModal = ({ isOpen, onClose, fileContent }) => {
     setSelectedRepo(null);
   };
 
+  let sidebarBackgroundColor = useColorModeValue('white', 'navy.800');
+  let menuColor = useColorModeValue('gray.400', 'white');
+
   return (
     <Drawer isOpen={isOpen} onClose={onClose} size={"xl"}>
       <DrawerOverlay />
-      <DrawerContent>
+      <DrawerContent
+       ms={{
+         sm: '16px',
+       }}
+       my={{
+         sm: '16px',
+       }}
+       borderRadius="16px"
+       mr={'24px'}
+       bg={sidebarBackgroundColor}>
         <DrawerCloseButton />
         <DrawerHeader>
           <Flex

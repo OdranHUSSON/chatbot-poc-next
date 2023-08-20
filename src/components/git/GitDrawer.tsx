@@ -51,9 +51,18 @@ export const GitDrawer = ({ isOpen, onClose, component }) => {
   let menuColor = useColorModeValue('gray.400', 'white');
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} size={"xl"} borderRadius="16px" bg={sidebarBackgroundColor}>
+    <Drawer isOpen={isOpen} onClose={onClose} size={"xl"}>
       <DrawerOverlay />
-      <DrawerContent>
+      <DrawerContent 
+              ms={{
+                sm: '16px',
+              }}
+              my={{
+                sm: '16px',
+              }}
+              borderRadius="16px"
+              mr={'24px'}
+              bg={sidebarBackgroundColor}>
         <DrawerCloseButton />
         <DrawerHeader>
           <Flex
