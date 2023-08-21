@@ -37,14 +37,13 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
     const [isLoading, setIsLoading] = useState(true);
 
     const chat = useChat(props.apiKeyApp, props.socket, chatId as string);
-
-    useEffect(() => {
+    const { chatHistory, model, setModel, outputCode, setOutputCode, inputCode, setInputCode, handleChat, loading, fetchChatHistory } = chat;
+	useEffect(() => {
         if (chatId) {
             setIsLoading(false);
+			fetchChatHistory(chatId)
         }
     }, [chatId]);
-
-    const { chatHistory, model, setModel, outputCode, setOutputCode, inputCode, setInputCode, handleChat, loading } = chat;
 
 	const { apiKeyApp } = props;
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
