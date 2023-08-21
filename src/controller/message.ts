@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize, Op } from 'sequelize';
 import { Message, initialize } from '../../models/messages';
 import Config from '../../config/config.json';
 import { Server as SocketIOServer } from "socket.io";
@@ -10,7 +10,7 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
     host: config.host,
     dialect: config.dialect,
     logging: console.log
-})
+});
 
 initialize(sequelize);
 
@@ -36,6 +36,13 @@ export const updateMessage = async (updatedMessageData, socketIO: SocketIOServer
     });
     socketIO.emit('messageUpdated', {id :updatedMessageData.id, chatId: updatedMessageData.chatId});
 }
+
+export const getAllChats = async () => {
+    const query = 'SELECT DISTINCT chatId FROM messages;'; 
+    const result = await sequelize.query(query, { type: Sequelize.QueryTypes.SELECT });
+    return result;
+};
+
 
 export const deleteMessage = async (id, truncate, socketIO: SocketIOServer, chatId) => {
     if (truncate === 'true') {

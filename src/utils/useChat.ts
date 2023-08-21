@@ -82,12 +82,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
 
     useEffect(() => {
         if (socket) {    
-            
-            socket.on("connect", () => {
-                fetchChatHistory();
-                console.log("socketconnect",chatId)
-            });
-
             // update chat on new message dispatched
             socket.on("messageCreated", (message) => {
                 if(message.id && message.chatId) {
@@ -121,7 +115,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
             if (socket) {
                 socket.off("messagesTruncated");
                 socket.off("messageCreated");
-                socket.off("connect");
             }
         }
     }, [socket]);
