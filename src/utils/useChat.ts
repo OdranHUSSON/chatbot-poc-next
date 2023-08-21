@@ -13,9 +13,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
     const [loading, setLoading] = useState<boolean>(false);
     const toast = useToast();
-    console.log("initialChatId", initialChatId)
     const [chatId, setChatId] = useState(initialChatId || uuidv4());
-    console.log("chatId", chatId);
     
 
     const fetchChatHistory = useCallback(async (overrideChatId?: string) => {
@@ -83,6 +81,10 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     useEffect(() => {
         if (socket) {    
             // update chat on new message dispatched
+            socket.on("connect", (message) => {
+                
+            });
+
             socket.on("messageCreated", (message) => {
                 if(message.id && message.chatId) {
                     console.log('WS:messageCreated', message)
@@ -115,6 +117,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
             if (socket) {
                 socket.off("messagesTruncated");
                 socket.off("messageCreated");
+                socket.off("connect");
             }
         }
     }, [socket]);

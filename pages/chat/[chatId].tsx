@@ -27,22 +27,22 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } from 'react-icons/md'; 
-import Bg from '../public/img/chat/bg-image.png';
+import Bg from '../../public/img/chat/bg-image.png';
 import ReactMarkdown from 'react-markdown'
 import { useChat } from '@/utils/useChat';
 
 export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIOClient.Socket | null }) {
     const router = useRouter();
-    const { id } = router.query;
+    const { chatId } = router.query;
     const [isLoading, setIsLoading] = useState(true);
 
-    const chat = useChat(props.apiKeyApp, props.socket, id as string);
+    const chat = useChat(props.apiKeyApp, props.socket, chatId as string);
 
     useEffect(() => {
-        if (id) {
+        if (chatId) {
             setIsLoading(false);
         }
-    }, [id]);
+    }, [chatId]);
 
     const { chatHistory, model, setModel, outputCode, setOutputCode, inputCode, setInputCode, handleChat, loading } = chat;
 
