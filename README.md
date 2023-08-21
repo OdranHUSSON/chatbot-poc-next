@@ -31,6 +31,11 @@ To get the project up and running, use the provided `Makefile` which has command
 
 That's it! After running `make up`, you should be able to access the chatbot system from your web browser.
 
+## Create new migration
+```sh
+docker compose exec nextjs npx sequelize-cli migration:generate --name migration name
+```
+
 # Template used
 
 - [Horizon ChatGPT AI Template](https://horizon-ui.com/chatgpt-ai-template) 

@@ -15,7 +15,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const toast = useToast();
 
     const fetchChatHistory = async () => {
-        console.log("on entre")
         try {
             const messages = await getAllMessages();
             if (Array.isArray(messages)) {
