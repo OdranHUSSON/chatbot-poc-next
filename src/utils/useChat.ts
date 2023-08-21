@@ -265,6 +265,7 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
         handleChat,
         addUserMessageToChatHistory,
         addBotMessageToChatHistory,
-        fetchChatHistory
+        fetchChatHistory,
+        chatId
     };
 }

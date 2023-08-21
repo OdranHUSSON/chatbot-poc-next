@@ -10,9 +10,10 @@ interface RepoDetailsProps {
   onRemove: () => void;
   fileContent: string;
   closeModal: () => void;
+  chatId: string;
 }
 
-const FileToChat: React.FC<RepoDetailsProps> = ({ repoName, onRemove , closeModal }) => {
+const FileToChat: React.FC<RepoDetailsProps> = ({ repoName, onRemove , closeModal, chatId }) => {
   const [contents, setContents] = useState<any[]>([]);
   const [currentDir, setCurrentDir] = useState('.');
   const [loading, setLoading] = useState(false);
@@ -46,8 +47,8 @@ const FileToChat: React.FC<RepoDetailsProps> = ({ repoName, onRemove , closeModa
       const data = await GitClient.getInstance().readFile(selectedFile!, repoName);
   
       if (data.success) {
-        await createUserMessage("Provide me the code of " + selectedFile); 
-        await createBotMessage('```\n' + data.content + '\n```\n'); 
+        await createUserMessage("Provide me the code of " + selectedFile, chatId); 
+        await createBotMessage('```\n' + data.content + '\n```\n', chatId); 
       } else {
         toast({
           title: "Error",

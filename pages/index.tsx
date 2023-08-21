@@ -45,7 +45,8 @@ export default function Index(props: { apiKeyApp: string, socket: typeof SocketI
 		loading, 
 		setLoading, 
 		clearChatHistory, 
-		handleChat 
+		handleChat ,
+		chatId
 	} = useChat(props.apiKeyApp, props.socket);
 
 	const { apiKeyApp } = props;
@@ -103,6 +104,7 @@ export default function Index(props: { apiKeyApp: string, socket: typeof SocketI
 					setInputCode={setInputCode}
 					handleChat={handleChat}
 					loading={loading}
+					chatId={chatId as string}
 				/>
 			</Flex>
 		</Flex>

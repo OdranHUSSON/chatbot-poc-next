@@ -41,7 +41,7 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
 	useEffect(() => {
         if (chatId) {
             setIsLoading(false);
-			fetchChatHistory(chatId)
+			fetchChatHistory(chatId as string) 
         }
     }, [chatId]);
 
@@ -100,6 +100,7 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
 					setInputCode={setInputCode}
 					handleChat={handleChat}
 					loading={loading}
+					chatId={chatId as string}
 				/>
 			</Flex>
 		</Flex>
