@@ -5,6 +5,7 @@ export class Message extends Model {
     public id!: string; 
     public type!: 'user' | 'bot';
     public message!: string;
+    public chatId!: string;
 
     static async create(body: any): Promise<Message> {
         return super.create(body);
@@ -37,7 +38,6 @@ export class Message extends Model {
             where: { id }
         });
     }    
-    
 }
 
 export function initialize(sequelize: Sequelize) {
@@ -55,6 +55,10 @@ export function initialize(sequelize: Sequelize) {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: "<Loading>",
+        },
+        chatId: {
+            type: DataTypes.UUID,
+            allowNull: false,
         },
     }, {
         sequelize,
