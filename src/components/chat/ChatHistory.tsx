@@ -13,7 +13,7 @@ type ChatType = {
   message: string;
 };
 
-const ChatHistory = ({ chatHistory }: any) => {
+const ChatHistory = ({ chatHistory, chatId }: any) => {
   	const toast = useToast();
 
   	const [isOpen, setIsOpen] = useState(false);
@@ -77,7 +77,7 @@ const ChatHistory = ({ chatHistory }: any) => {
 
 	return (
 	  <Box width={"100%"} position={"relative"}>		
-		<GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} />
+		<GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} chatId={chatId} />
 		{chatHistory.map((chat: ChatType, index: number) => (
 			<Flex 
 				key={index} 

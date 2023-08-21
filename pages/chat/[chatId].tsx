@@ -94,7 +94,7 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
 			>
 				
 				<ModelChange model={model} setModel={setModel} outputCode={outputCode} />
-				<ChatHistory chatHistory={chatHistory} />
+				<ChatHistory chatHistory={chatHistory} chatId={chatId} />
 				<ChatInput
 					inputCode={inputCode}
 					setInputCode={setInputCode}

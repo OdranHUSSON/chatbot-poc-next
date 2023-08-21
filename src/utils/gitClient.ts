@@ -7,6 +7,7 @@ interface GitCommandBody {
   directory?: string;
   filename?: string;
   content?: string;
+  chatId?: string; // Added chatId property
 }
 
 export default class GitClient {
@@ -16,7 +17,7 @@ export default class GitClient {
 
   private constructor() {
     this.baseURL = '/api/git';
-    this.baseAIUrl = '/api/gitAI'
+    this.baseAIUrl = '/api/gitAI';
   }
 
   public static getInstance(): GitClient {
@@ -26,10 +27,10 @@ export default class GitClient {
     return GitClient.instance;
   }
 
-  private async makeRequest(body: GitCommandBody, useAI : boolean) {
+  private async makeRequest(body: GitCommandBody, useAI: boolean) {
     try {
-      if(useAI) {
-        console.log("USING AI for git request")
+      if (useAI) {
+        console.log("USING AI for git request");
         const response = await axios.post(this.baseAIUrl, body);
         return response.data;
       }
@@ -42,35 +43,35 @@ export default class GitClient {
     }
   }
 
-  public status(repo?: string) {
-    return this.makeRequest({ command: 'status', repo });
+  public status(repo?: string, chatId?: string) {
+    return this.makeRequest({ command: 'status', repo, chatId }, false);
   }
 
-  public add(repo?: string) {
-    return this.makeRequest({ command: 'add', repo });
+  public add(repo?: string, chatId?: string) {
+    return this.makeRequest({ command: 'add', repo, chatId }, false);
   }
 
-  public commit(message: string, repo?: string) {
-    return this.makeRequest({ command: 'commit', message, repo });
+  public commit(message: string, repo?: string, chatId?: string) {
+    return this.makeRequest({ command: 'commit', message, repo, chatId }, false);
   }
 
-  public clone(repo: string) {
-    return this.makeRequest({ command: 'clone', repo });
+  public clone(repo: string, chatId?: string) {
+    return this.makeRequest({ command: 'clone', repo, chatId }, false);
   }
 
-  public repos() {
-    return this.makeRequest({ command: 'repos' });
+  public repos(chatId?: string) {
+    return this.makeRequest({ command: 'repos', chatId }, false);
   }
 
-  public list(directory: string, repo?: string) {
-    return this.makeRequest({ command: 'list', directory, repo });
+  public list(directory: string, repo?: string, chatId?: string) {
+    return this.makeRequest({ command: 'list', directory, repo, chatId }, false);
   }
 
-  public writeFile(filename: string, content: string, repo?: string) {
-    return this.makeRequest({ command: 'writeFile', filename, content, repo }, true);
+  public writeFile(filename: string, content: string, repo?: string, chatId?: string) {
+    return this.makeRequest({ command: 'writeFile', filename, content, repo, chatId }, true);
   }
 
-  public readFile(filename: string, repo?: string) {
-    return this.makeRequest({ command: 'readFile', filename, repo });
+  public readFile(filename: string, repo?: string, chatId?: string) {
+    return this.makeRequest({ command: 'readFile', filename, repo, chatId }, false);
   }
 }

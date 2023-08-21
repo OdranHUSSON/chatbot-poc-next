@@ -3,23 +3,18 @@ import { Button, Input, VStack, useColorModeValue } from '@chakra-ui/react';
 import GitClient from '@/utils/gitClient';
 import { createBotMessage } from '@/utils/messages';
 
-interface GitCloneProps {
-  repo: string;
-  setRepo: (repo: string) => void;
-}
-
-const GitClone = () => {
+const GitClone = ({chatId}) => {
   const [repo, setRepo] = useState('');
   const gitClient = GitClient.getInstance();
   const buttonColor = useColorModeValue('brand.500', 'white');
 
   const handleClone = async () => {
     try {      
-      await createBotMessage(`[GIT] Coning repo ${repo}`)
-      await gitClient.clone(repo);
-      await createBotMessage(`[GIT] ✅ Successfully cloned ${repo}`)
+      await createBotMessage(`[GIT] Coning repo ${repo}`, chatId)
+      await gitClient.clone(repo, chatId);
+      await createBotMessage(`[GIT] ✅ Successfully cloned ${repo}`, chatId)
     } catch (error) {
-      await createBotMessage(`[GIT] ✅ Failed to clone ${repo} , reason : ${error.message}`)
+      await createBotMessage(`[GIT] ✅ Failed to clone ${repo} , reason : ${error.message}`, chatId)
     }
   };
 

@@ -98,7 +98,7 @@ export default function Index(props: { apiKeyApp: string, socket: typeof SocketI
 			>
 				
 				<ModelChange model={model} setModel={setModel} outputCode={outputCode} />
-				<ChatHistory chatHistory={chatHistory} />
+				<ChatHistory chatHistory={chatHistory} chatId={chatId}/>
 				<ChatInput
 					inputCode={inputCode}
 					setInputCode={setInputCode}

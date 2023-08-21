@@ -44,7 +44,7 @@ const FileToChat: React.FC<RepoDetailsProps> = ({ repoName, onRemove , closeModa
 
   const handleRead = async () => { 
     try {
-      const data = await GitClient.getInstance().readFile(selectedFile!, repoName);
+      const data = await GitClient.getInstance().readFile(selectedFile!, repoName, chatId);
   
       if (data.success) {
         await createUserMessage("Provide me the code of " + selectedFile, chatId); 

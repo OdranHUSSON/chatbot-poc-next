@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Box, Text, Button, VStack, Flex, Spinner, HStack, useToast } from '@chakra-ui/react';
+import { Box, Text, Button, VStack, Flex, Spinner, HStack } from '@chakra-ui/react';
 import GitClient from '@/utils/gitClient';
 import ReactMarkdown from 'react-markdown';
 import { LightMarkdownComponents } from '@/styles/LightMarkdownComponent';
@@ -11,18 +11,18 @@ interface RepoDetailsProps {
   fileContent: string;
   closeModal: () => void;
   filePath?: string;
+  chatId: string;
 }
 
-const RepoDetails: React.FC<RepoDetailsProps> = ({ repoName, onRemove, fileContent , closeModal, filePath }) => {
+const RepoDetails: React.FC<RepoDetailsProps> = ({ repoName, onRemove, fileContent , closeModal, filePath, chatId }) => {
   const [contents, setContents] = useState<any[]>([]);
   const [currentDir, setCurrentDir] = useState('.');
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const toast = useToast();
 
   const fetchContents = useCallback(() => {
     setLoading(true);
-    GitClient.getInstance().list(currentDir, repoName)
+    GitClient.getInstance().list(currentDir, repoName, chatId)
       .then(data => {
         if (data.success) {
           setContents(data.data);
@@ -51,14 +51,14 @@ const RepoDetails: React.FC<RepoDetailsProps> = ({ repoName, onRemove, fileConte
   };
 
   const handleOverwrite = () => {
-    GitClient.getInstance().writeFile(selectedFile!, fileContent, repoName)
+    GitClient.getInstance().writeFile(selectedFile!, fileContent, repoName, chatId)
       .then(data => {
         if (!data.success) {
-          createBotMessage(`[GIT] Failed to overwrite file ${repoName}${selectedFile}`);
+          createBotMessage(`[GIT] Failed to overwrite file ${repoName}${selectedFile}`, chatId);
         }
       })
       .catch(error => {
-        createBotMessage(`[GIT] Failed to overwrite file ${repoName}${selectedFile}`);
+        createBotMessage(`[GIT] Failed to overwrite file ${repoName}${selectedFile}`, chatId);
       })
       .finally(() => {
         setSelectedFile(null);

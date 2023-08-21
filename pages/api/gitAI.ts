@@ -5,7 +5,7 @@ import { NextApiRequest } from 'next';
 import { NextApiResponseServerIO } from '@/types/io';
 import simpleGit, { SimpleGit } from 'simple-git';
 import fs from 'fs/promises';
-import { createMessage } from '@/controller/message';
+import { createMessage, updateMessage } from '@/controller/message';
 import { requestLLM } from './completionAPI';
 
 interface GitCommandBody {
@@ -16,22 +16,24 @@ interface GitCommandBody {
   filename?: string;
   content?: string;
   branch?: string;
+  chatId?: string;
 }
 
-const createBotMessage = async(message: string, res: NextApiResponseServerIO) => {
+const createBotMessage = async(message: string, res: NextApiResponseServerIO, chatId: string) => {
   const socketIO = res.socket.server.io;
   let prompt = { type : 'bot', message: message }
-  await createMessage(prompt, socketIO);
+  await createMessage(prompt, socketIO, chatId);
 }
 
-const suggestCommitByGitDiff = async(repo: string, res: NextApiResponseServerIO) => {
-    await createBotMessage('[GIT] Generating git diff', res)
+const suggestCommitByGitDiff = async(repo: string, res: NextApiResponseServerIO, chatId: string) => {
+    await createBotMessage('[GIT] Generating git diff', res, chatId)
     const git: SimpleGit = simpleGit(repo);
     const diff = await git.diff();
-    await createBotMessage('[GIT] Generating a commit message ...', res)
+    await createBotMessage('[GIT] Generating a commit message ...', res, chatId)
+    console.log(diff)
     const prompt = 'Generate an explicit commit message from the changes in this git diff, please use one emoji matching the type of changes at the beginning. Diff : ' + diff
     const commitMessage = await requestLLM(prompt, '', []);
-    await createBotMessage('[GIT] Commit message : ' + commitMessage, res)
+    await createBotMessage('[GIT] Commit message : ' + commitMessage, res, chatId)
 
     if(commitMessage) {
         git
@@ -39,57 +41,44 @@ const suggestCommitByGitDiff = async(repo: string, res: NextApiResponseServerIO)
         .addConfig('user.name', 'Odran HUSSON')
         .exec(() => console.log('Git config set successfully!'));
         await git.add('.');
-        const commit = await git.commit(commitMessage);
-        await createBotMessage('[GIT] Successfully commited',res)
+        try {
+          const commit = await git.commit(commitMessage as string, chatId);
+        } catch (error) {
+          await createBotMessage('[GIT] Failed to commit  \n Error : \n ```\n' + error.message + '\n```\n', res, chatId);
+          await createBotMessage('[GIT] Commit manually with  : \n ```\n git commit -m "' + commitMessage + '" \n```\n', res, chatId);
+        }
+        await createBotMessage('[GIT] Successfully commited',res, chatId)
     } else {
-        await createBotMessage('[GIT] No commit message found',res)
+        await createBotMessage('[GIT] No commit message found',res, chatId)
     }
 }
 
-export const writeFile = async (repoDir: string, directory: string, filename: string, content: string, res: NextApiResponseServerIO) => {
+export const writeFile = async (repoDir: string, directory: string, filename: string, content: string, res: NextApiResponseServerIO, chatId: string) => {
   if (!filename || !content) {
     res.status(400).json({ error: 'Filename and content are required' });
     return;
   }
   const filePath = path.join(repoDir, directory || '', filename);
   try {
-    await createBotMessage('[GIT] Attempting to write file at path ```' + filePath + '```',res)
+    await createBotMessage('[GIT] Attempting to write file at path ```' + filePath + '```',res, chatId)
     await fs.writeFile(filePath, content);
-    await createBotMessage('[GIT] Success, file updated at path  ```' + filePath + '```', res)
-    await suggestCommitByGitDiff(repoDir, res)
+    await createBotMessage('[GIT] Success, file updated at path  ```' + filePath + '```', res, chatId)
+    await suggestCommitByGitDiff(repoDir, res, chatId)
     res.json({ success: true, message: 'File written successfully' });
   } catch (error) {
-    await createBotMessage('[GIT] Failed to write file ```' + filePath + '\n``` \n Error : \n ```\n' + error.message + '\n```\n', res)
+    await createBotMessage('[GIT] Failed to write file \n```\n' + filePath + '\n``` \n Error : \n ```\n' + error.message + '\n```\n', res, chatId)
     res.status(500).json({ error: 'Failed to write file', details: error.message });
   }
 };
 
-export const readFile = async (repoDir: string, directory: string, filename: string, res: NextApiResponseServerIO) => {
-  if (!filename) {
-    res.status(400).json({ error: 'Filename is required' });
-    return;
-  }
-  try {
-    const fileContent = await fs.readFile(path.join(repoDir, directory || '', filename), 'utf-8');
-    res.json({ success: true, content: fileContent });
-  } catch (error) {
-    console.error('Error reading file:', error);
-    res.status(500).json({ error: 'Failed to read file', details: error.message });
-  }
-};
-
 export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {  
-  const { command, message, repo, directory, filename, content, branch } = req.body as GitCommandBody;
+  const { command, message, repo, directory, filename, content, chatId } = req.body as GitCommandBody;
   const repoDir = path.join(process.env.GIT_REPO_DIR || '', repo || '');
 
   try {
     switch (command) {
       case 'writeFile':
-        await writeFile(repoDir, directory, filename, content, res);
-        break;
-
-      case 'readFile':
-        await readFile(repoDir, directory, filename, res);
+        await writeFile(repoDir, directory, filename, content, res, chatId);
         break;
 
       default:
