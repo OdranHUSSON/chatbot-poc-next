@@ -24,6 +24,14 @@ const routes: IRoute[] = [
     collapse: false,
   },
   {
+    name: 'Chats',
+    path: '/chat/test',
+    icon: (
+      <Icon as={MdAutoAwesome} width="20px" height="20px" color="inherit" />
+    ),
+    collapse: false,
+  },
+  {
     name: 'All Repos',
     path: '/git',
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,

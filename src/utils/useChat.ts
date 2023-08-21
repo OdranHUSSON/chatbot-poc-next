@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ChatBody, OpenAIModel } from '@/types/types';
 import { handleCommands } from '@/utils/commands';
 import { createUserMessage, createBotMessage, getAllMessages, updateMessage, getMessageById } from './messages';
@@ -13,33 +13,44 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
     const [loading, setLoading] = useState<boolean>(false);
     const toast = useToast();
+    console.log("initialChatId", initialChatId)
     const [chatId, setChatId] = useState(initialChatId || uuidv4());
     console.log("chatId", chatId);
+    
 
-    const fetchChatHistory = async () => {
+    const fetchChatHistory = useCallback(async (overrideChatId?: string) => {
+        const idToUse = overrideChatId ?? chatId;
         try {
-            const messages = await getAllMessages(chatId);
-            console.log("getChatHistoryFromApi", chatId);
+            const messages = await getAllMessages(idToUse);
+            console.log("getChatHistoryFromApi", idToUse);
             if (Array.isArray(messages)) {
-                console.log("setChatHistoryFromApi", messages)
+                console.log("setChatHistoryFromApi", messages);
                 setChatHistory(messages);
             } else {
-                console.log("setChatHistoryFromApi", "ici wtf")
+                console.log("setChatHistoryFromApi", "No messages array returned");
                 setChatHistory([]);
             }
         } catch (error) {
             console.error("Failed to fetch chat history from API:", error);
-            setChatHistory([]); 
+            setChatHistory([]);
             toast({
                 title: "Failed to fetch chat history 😔",
                 description: error.message,
                 status: "error",
                 duration: 10000,
                 isClosable: false,
-                
             });
         }
-    };
+    }, [chatId]);
+    
+    // When initialChatId changes, update chatId.
+    useEffect(() => {
+        if (initialChatId && initialChatId !== chatId) {
+            console.log('Updating chat ID')
+            setChatId(initialChatId);
+            fetchChatHistory(initialChatId);
+        }
+    }, [initialChatId, chatId, setChatId]);
 
     const clearChatHistory = async () => {
         try {
@@ -79,13 +90,17 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
 
             // update chat on new message dispatched
             socket.on("messageCreated", (message) => {
-                console.log('WS:messageCreated', message)
-                getMessageFromDatabaseAddToState(message.id, message.chatId).catch(err => console.error(err));
+                if(message.id && message.chatId) {
+                    console.log('WS:messageCreated', message)
+                    getMessageFromDatabaseAddToState(message.id, message.chatId).catch(err => console.error(err));
+                }
             });
     
             socket.on("messageUpdated", (message) => {
-                console.log('WS:messageUpdated', message)
-                getMessageFromDatabaseUpdateState(message.id, message.chatId).catch(err => console.error(err));
+                if(message.id && message.chatId) {
+                    console.log('WS:messageUpdated', message)
+                    getMessageFromDatabaseUpdateState(message.id, message.chatId).catch(err => console.error(err));
+                }
             });
 
             socket.on("messagesTruncated", (message: string) => {

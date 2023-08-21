@@ -1,6 +1,7 @@
 'use client';
 /*eslint-disable*/
 
+import { useRouter } from 'next/router';
 import Link from '@/components/link/Link';
 import MessageBoxChat from '@/components/MessageBox';
 import ModelChange from '@/components/chat/ModelChange';
@@ -30,23 +31,20 @@ import Bg from '../public/img/chat/bg-image.png';
 import ReactMarkdown from 'react-markdown'
 import { useChat } from '@/utils/useChat';
 
-export default function Index(props: { apiKeyApp: string, socket: typeof SocketIOClient.Socket | null }) {
-	const { 
-		chatHistory,
-		setChatHistory, 
-		inputOnSubmit, 
-		setInputOnSubmit, 
-		inputCode, 
-		setInputCode, 
-		outputCode, 
-		setOutputCode, 
-		model, 
-		setModel, 
-		loading, 
-		setLoading, 
-		clearChatHistory, 
-		handleChat 
-	} = useChat(props.apiKeyApp, props.socket);
+export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIOClient.Socket | null }) {
+    const router = useRouter();
+    const { id } = router.query;
+    const [isLoading, setIsLoading] = useState(true);
+
+    const chat = useChat(props.apiKeyApp, props.socket, id as string);
+
+    useEffect(() => {
+        if (id) {
+            setIsLoading(false);
+        }
+    }, [id]);
+
+    const { chatHistory, model, setModel, outputCode, setOutputCode, inputCode, setInputCode, handleChat, loading } = chat;
 
 	const { apiKeyApp } = props;
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');

@@ -38,7 +38,7 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 break;
             case 'PUT':
                 const updatedMessageData = req.body;
-                await updateMessage(updatedMessageData, socketIO, chatId);
+                await updateMessage(updatedMessageData, socketIO);
                 res.json({ success: true });
                 break;
             case 'DELETE':

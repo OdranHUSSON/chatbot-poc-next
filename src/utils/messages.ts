@@ -52,10 +52,10 @@ export const getAllMessages = async (chatId: string) => {
 
 
 export const updateMessage = async (id: string, updatedContent: string, chatId: string) => {
-    const response = await fetch(`/api/messages?chatId=${chatId}`, {
+    const response = await fetch(`/api/messages`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, message: updatedContent })
+        body: JSON.stringify({ id, message: updatedContent, chatId })
     });
 
     const data = await response.json();

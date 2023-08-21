@@ -30,11 +30,11 @@ export const createMessage = async (messageData, socketIO: SocketIOServer, chatI
     return message;
 }
 
-export const updateMessage = async (updatedMessageData, socketIO: SocketIOServer, chatId) => {
+export const updateMessage = async (updatedMessageData, socketIO: SocketIOServer) => {
     await Message.update(updatedMessageData, {
         where: { id: updatedMessageData.id }
     });
-    socketIO.emit('messageUpdated', updatedMessageData.id, chatId);
+    socketIO.emit('messageUpdated', {id :updatedMessageData.id, chatId: updatedMessageData.chatId});
 }
 
 export const deleteMessage = async (id, truncate, socketIO: SocketIOServer, chatId) => {
