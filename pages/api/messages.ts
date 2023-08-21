@@ -4,13 +4,15 @@ import { getOneMessage, getMessages, createMessage, updateMessage, deleteMessage
 
 const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     const socketIO = res.socket.server.io;
+    const chatId = req.query.chatId;
+
     try {
         switch (req.method) {
             case 'GET':
                 try {
                     const messageId = req.query.id;
                     if (!req.query.id) {
-                        const message = await getMessages();
+                        const message = await getMessages(chatId);
                         if (message) {
                             res.json(message);
                         } else {
@@ -18,7 +20,7 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                         }
                     }
                     else {
-                        const message = await getOneMessage(messageId);
+                        const message = await getOneMessage(messageId, chatId);
                         if (message) {
                             res.json(message[0]);
                         } else {
@@ -30,7 +32,8 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 }
                 break;
             case 'POST':
-                const message = await createMessage(req.body, socketIO);
+                const message = await createMessage(req.body, socketIO, chatId);
+                console.log("createMessage", req.body)
                 res.json(message);
                 break;
             case 'PUT':
@@ -39,7 +42,7 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 res.json({ success: true });
                 break;
             case 'DELETE':
-                await deleteMessage(req.body.id, req.query.truncate, socketIO);
+                await deleteMessage(req.body.id, req.query.truncate, socketIO, chatId);
                 res.json({ success: true });
                 break;
             default:

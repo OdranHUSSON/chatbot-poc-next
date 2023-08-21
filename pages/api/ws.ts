@@ -17,6 +17,25 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
       path: "/api/ws",
       addTrailingSlash: false
     });
+
+    io.on('connection', (socket) => {
+      console.log('New client connected');
+
+      // When a user joins a chat
+      socket.on('joinRoom', (chatId) => {
+        socket.join(chatId);
+      });
+
+      // When a user leaves a chat
+      socket.on('leaveRoom', (chatId) => {
+        socket.leave(chatId);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Client disconnected');
+      });
+    });
+
     // append SocketIO server to Next.js socket server response
     res.socket.server.io = io;
   }

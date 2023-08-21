@@ -19,7 +19,7 @@ import GitClone from './GitClone';
 import { MdSave } from 'react-icons/md';
 import { useColorModeValue } from '@chakra-ui/react';
 
-export const GitModal = ({ isOpen, onClose, fileContent }) => {
+export const GitModal = ({ isOpen, onClose, fileContent, chatId }) => {
   const [repos, setRepos] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
@@ -78,7 +78,7 @@ export const GitModal = ({ isOpen, onClose, fileContent }) => {
           {loading ? (
             <Text>Loading...</Text>
           ) : selectedRepo ? (
-            <GitSave repoName={selectedRepo} fileContent={fileContent} closeModal={onClose} onRemove={handleRepoRemove} />
+            <GitSave repoName={selectedRepo} fileContent={fileContent} closeModal={onClose} onRemove={handleRepoRemove} chatId={chatId} />
           ) : (
             <Box>
               <RepoList repos={repos} onSelect={handleRepoSelect} />

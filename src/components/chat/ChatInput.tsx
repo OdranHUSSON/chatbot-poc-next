@@ -7,6 +7,7 @@ interface ChatInputProps {
   setInputCode: (value: string) => void;
   handleChat: () => void;
   loading: boolean;
+  chatId: string;
 }
 
 const ChatInput: FC<ChatInputProps> = ({
@@ -14,6 +15,7 @@ const ChatInput: FC<ChatInputProps> = ({
   setInputCode,
   handleChat,
   loading,
+  chatId
 }) => {
   const inputColor = useColorModeValue('navy.700', 'white');
   const placeholderColor = useColorModeValue(
@@ -49,7 +51,7 @@ const ChatInput: FC<ChatInputProps> = ({
       onSubmit={(e) => e.preventDefault()}
       align={"center"}
     >
-      <ChatActions />
+      <ChatActions chatId={chatId}/>
       <Input
         placeholder='Type your message here...'
         onKeyDown={handleKeyDown}

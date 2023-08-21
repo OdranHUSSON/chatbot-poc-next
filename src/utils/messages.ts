@@ -1,28 +1,26 @@
-// Utility function to add a message to the database
-export const createMessage = async (type: 'user' | 'bot', messageContent: string) => {
+export const createMessage = async (type: 'user' | 'bot', chatId: string, messageContent: string) => {
     let content = messageContent ?? '<Loading>';
-    const response = await fetch('/api/messages', {
+    const response = await fetch(`/api/messages?chatId=${chatId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, message: messageContent })
+        body: JSON.stringify({ type, message: messageContent, chatId })
     });
 
     const data = await response.json();
     return data;
 };
 
-export const createUserMessage = async (messageContent: string) => {
-    return await createMessage('user', messageContent);
+export const createUserMessage = async (messageContent: string, chatId: string) => {
+    return await createMessage('user', chatId, messageContent);
 };
 
-export const createBotMessage = async (messageContent: string) => {
-    return await createMessage('bot', messageContent);
+export const createBotMessage = async (messageContent: string, chatId: string) => {
+    return await createMessage('bot', chatId, messageContent);
 };
 
-
-export const getAllMessages = async () => {
+export const getAllMessages = async (chatId: string) => {
     try {
-        const response = await fetch('/api/messages', {
+        const response = await fetch(`/api/messages?chatId=${chatId}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
@@ -53,19 +51,19 @@ export const getAllMessages = async () => {
 
 
 
-export const updateMessage = async (id: string, updatedContent: string) => {
-    const response = await fetch('/api/messages', {
+export const updateMessage = async (id: string, updatedContent: string, chatId: string) => {
+    const response = await fetch(`/api/messages`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, message: updatedContent })
+        body: JSON.stringify({ id, message: updatedContent, chatId })
     });
 
     const data = await response.json();
     return data;
 };
 
-export const deleteMessage = async (id: string) => {
-    const response = await fetch(`/api/messages/${id}`, {
+export const deleteMessage = async (id: string, chatId: string) => {
+    const response = await fetch(`/api/messages/${id}?chatId=${chatId}`, {
         method: 'DELETE'
     });
 
@@ -73,9 +71,9 @@ export const deleteMessage = async (id: string) => {
     return data;
 };
 
-export const truncateMessages = async () => {
+export const truncateMessages = async (chatId: string) => {
     try {
-        const response = await fetch('/api/messages?truncate=true', {
+        const response = await fetch(`/api/messages?truncate=true&chatId=${chatId}`, {
             method: 'DELETE',
         });
 
@@ -101,9 +99,9 @@ export const truncateMessages = async () => {
     }
 };
 
-export const getMessageById = async (id: string) => {
+export const getMessageById = async (id: string, chatId: string) => {
     try {
-        const response = await fetch(`/api/messages?id=${id}`, {
+        const response = await fetch(`/api/messages?id=${id}&chatId=${chatId}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });

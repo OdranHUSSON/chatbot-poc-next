@@ -14,6 +14,7 @@ interface GitCommandBody {
   filename?: string;
   content?: string;
   branch?: string;
+  chatId?: string;
 }
 
 export const getStatus = async (git: SimpleGit, res: NextApiResponseServerIO) => {

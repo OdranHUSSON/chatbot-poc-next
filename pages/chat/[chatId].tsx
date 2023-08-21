@@ -1,6 +1,7 @@
 'use client';
 /*eslint-disable*/
 
+import { useRouter } from 'next/router';
 import Link from '@/components/link/Link';
 import MessageBoxChat from '@/components/MessageBox';
 import ModelChange from '@/components/chat/ModelChange';
@@ -26,28 +27,23 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } from 'react-icons/md'; 
-import Bg from '../public/img/chat/bg-image.png';
+import Bg from '../../public/img/chat/bg-image.png';
 import ReactMarkdown from 'react-markdown'
 import { useChat } from '@/utils/useChat';
 
-export default function Index(props: { apiKeyApp: string, socket: typeof SocketIOClient.Socket | null }) {
-	const { 
-		chatHistory,
-		setChatHistory, 
-		inputOnSubmit, 
-		setInputOnSubmit, 
-		inputCode, 
-		setInputCode, 
-		outputCode, 
-		setOutputCode, 
-		model, 
-		setModel, 
-		loading, 
-		setLoading, 
-		clearChatHistory, 
-		handleChat ,
-		chatId
-	} = useChat(props.apiKeyApp, props.socket);
+export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIOClient.Socket | null }) {
+    const router = useRouter();
+    const { chatId } = router.query;
+    const [isLoading, setIsLoading] = useState(true);
+
+    const chat = useChat(props.apiKeyApp, props.socket, chatId as string);
+    const { chatHistory, model, setModel, outputCode, setOutputCode, inputCode, setInputCode, handleChat, loading, fetchChatHistory } = chat;
+	useEffect(() => {
+        if (chatId) {
+            setIsLoading(false);
+			fetchChatHistory(chatId as string) 
+        }
+    }, [chatId]);
 
 	const { apiKeyApp } = props;
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
@@ -98,7 +94,7 @@ export default function Index(props: { apiKeyApp: string, socket: typeof SocketI
 			>
 				
 				<ModelChange model={model} setModel={setModel} outputCode={outputCode} />
-				<ChatHistory chatHistory={chatHistory} chatId={chatId}/>
+				<ChatHistory chatHistory={chatHistory} chatId={chatId} />
 				<ChatInput
 					inputCode={inputCode}
 					setInputCode={setInputCode}

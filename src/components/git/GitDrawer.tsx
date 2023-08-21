@@ -20,7 +20,7 @@ import GitCommit from './GitCommit';
 import { MdMemory } from 'react-icons/md';
 import { useColorModeValue } from '@chakra-ui/react';
 
-export const GitDrawer = ({ isOpen, onClose, component }) => {
+export const GitDrawer = ({ isOpen, onClose, component, chatId }) => {
   const [repos, setRepos] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
@@ -84,7 +84,7 @@ export const GitDrawer = ({ isOpen, onClose, component }) => {
               <GitCommit repo={selectedRepo} />
             )}
             {component === 'fileread' && (
-              <FileToChat repoName={selectedRepo} closeModal={onClose} onRemove={handleRepoRemove} />
+              <FileToChat repoName={selectedRepo} closeModal={onClose} onRemove={handleRepoRemove} chatId={chatId} />
             )}
           </Box>
         ) : (

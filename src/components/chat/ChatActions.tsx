@@ -22,7 +22,11 @@ import { GitDrawer } from '../git/GitDrawer';
 import { truncateMessages } from '@/utils/messages';
 import { useColorModeValue } from '@chakra-ui/react';
 
-const ChatActions: FC<ChatActionsProps> = () => {
+interface ChatActionsProps {
+  chatId: string;
+}
+
+const ChatActions: FC<ChatActionsProps> = ({ chatId }) => {
   const [isFileModalOpen, setisFileModalOpen] = useState(false);
   const [modalComponent, setModalComponent] = useState('fileread');
   const [truncating, setTruncating] = useState(false);
@@ -34,7 +38,7 @@ const ChatActions: FC<ChatActionsProps> = () => {
 
   const handleTruncateMessages = async () => {
     setTruncating(true);
-    await truncateMessages();
+    await truncateMessages(chatId);
     setTruncating(false);
     setIsDrawerOpen(false);
   };
@@ -65,6 +69,7 @@ const ChatActions: FC<ChatActionsProps> = () => {
         isOpen={isFileModalOpen}
         onClose={onFileModalClose}
         component={modalComponent}
+        chatId={chatId}
       />
       <Button
         transition='all 0.2s'

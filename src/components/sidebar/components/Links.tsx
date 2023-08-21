@@ -25,6 +25,7 @@ import NavLink from '@/components/link/NavLink';
 import { IRoute } from '@/types/navigation';
 import { PropsWithChildren, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
+import MenuButton from './MenuButton';
 
 interface SidebarLinksProps extends PropsWithChildren {
   routes: IRoute[];
@@ -203,98 +204,14 @@ export function SidebarLinks(props: SidebarLinksProps) {
                     activeRoute(route.path.toLowerCase()) ? '22px' : '26px'
                   }
                 >
-                  {route.name === 'Chat UI' | route.name === "All Repos" ? (
                     <NavLink
                       href={
                         route.layout ? route.layout + route.path : route.path
                       }
                       styles={{ width: '100%' }}
                     >
-                      <Flex
-                        w="100%"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <Box
-                          color={
-                            route.disabled
-                              ? gray
-                              : activeRoute(route.path.toLowerCase())
-                              ? activeIcon
-                              : inactiveColor
-                          }
-                          me="12px"
-                          mt="6px"
-                        >
-                          {route.icon}
-                        </Box>
-                        <Text
-                          me="auto"
-                          color={
-                            route.disabled
-                              ? gray
-                              : activeRoute(route.path.toLowerCase())
-                              ? activeColor
-                              : 'gray.500'
-                          }
-                          fontWeight="500"
-                          letterSpacing="0px"
-                          fontSize="sm"
-                        >
-                          {route.name}
-                        </Text>
-                      </Flex>
+                      <MenuButton route={route} activeRoute={activeRoute} gray={gray} activeIcon={activeIcon} inactiveColor={inactiveColor} activeColor={activeColor} />
                     </NavLink>
-                  ) : (
-                    <Flex
-                      w="100%"
-                      alignItems="center"
-                      justifyContent="center"
-                      cursor="click"
-                    >
-                      <Box
-                        opacity="0.4"
-                        color={
-                          route.disabled
-                            ? gray
-                            : activeRoute(route.path.toLowerCase())
-                            ? activeIcon
-                            : inactiveColor
-                        }
-                        me="12px"
-                        mt="6px"
-                      >
-                        {route.icon}
-                      </Box>
-                      <Text
-                        opacity="0.4"
-                        me="auto"
-                        color={
-                          route.disabled
-                            ? gray
-                            : activeRoute(route.path.toLowerCase())
-                            ? activeColor
-                            : 'gray.500'
-                        }
-                        fontWeight="500"
-                        letterSpacing="0px"
-                        fontSize="sm"
-                      >
-                        {route.name}
-                      </Text>
-                      <Badge
-                        display={{ base: 'flex', lg: 'none', xl: 'flex' }}
-                        colorScheme="brand"
-                        borderRadius="25px"
-                        color="brand.500"
-                        textTransform={'none'}
-                        letterSpacing="0px"
-                        px="8px"
-                      >
-                        BADGE
-                      </Badge>
-                    </Flex>
-                  )}
                 </HStack>
               </Flex>
             ) : (
