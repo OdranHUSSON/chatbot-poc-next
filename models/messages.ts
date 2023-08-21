@@ -2,7 +2,7 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
 export class Message extends Model {
-    public id!: string; 
+    public id!: string;
     public type!: 'user' | 'bot';
     public message!: string;
     public chatId!: string;
@@ -15,29 +15,31 @@ export class Message extends Model {
         return super.update(body, options);
     }
 
-    static async findAll(): Promise<Message[]> {
+    static async findAll(chatId: string): Promise<Message[]> {
         return super.findAll({
+            where: { 'chatId': chatId },
             order: [['createdAt', 'ASC']]
         });
     }
 
-    static async truncate(): Promise<void> {
+    static async truncate(chatId: string): Promise<void> {
         return super.destroy({
+            where: { 'chatId': chatId },
             truncate: true
         });
     }
 
-    static async findOneById(id: string): Promise<Message | null> {
+    static async findOneById(id: string, chatId: string): Promise<Message | null> {
         return super.findAll({
-            where: { 'id': id }
+            where: { 'id': id, 'chatId': chatId }
         });
     }
-    
-    static async destroyById(id: string): Promise<number> {
+
+    static async destroyById(id: string, chatId: string): Promise<number> {
         return super.destroy({
-            where: { id }
+            where: { id, chatId }
         });
-    }    
+    }
 }
 
 export function initialize(sequelize: Sequelize) {

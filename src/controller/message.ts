@@ -14,37 +14,37 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 initialize(sequelize);
 
-export const getOneMessage = async (messageId) => {
+export const getOneMessage = async (messageId, chatId) => {
     if (messageId) {
-        return await Message.findOneById(messageId);
+        return await Message.findOneById(messageId, chatId);
     }
 }
 
-export const getMessages = async () => {
-    return await Message.findAll();
+export const getMessages = async (chatId) => {
+    return await Message.findAll(chatId);
 }
 
-export const createMessage = async (messageData, socketIO: SocketIOServer) => {
-    const message = await Message.create(messageData);
-    socketIO.emit('messageCreated', message.id);
+export const createMessage = async (messageData, socketIO: SocketIOServer, chatId) => {
+    const message = await Message.create({ ...messageData, chatId });
+    socketIO.emit('messageCreated', {id :message.id, chatId});
     return message;
 }
 
-export const updateMessage = async (updatedMessageData, socketIO: SocketIOServer) => {
+export const updateMessage = async (updatedMessageData, socketIO: SocketIOServer, chatId) => {
     await Message.update(updatedMessageData, {
         where: { id: updatedMessageData.id }
     });
-    socketIO.emit('messageUpdated', updatedMessageData.id);
+    socketIO.emit('messageUpdated', updatedMessageData.id, chatId);
 }
 
-export const deleteMessage = async (id, truncate, socketIO: SocketIOServer) => {
+export const deleteMessage = async (id, truncate, socketIO: SocketIOServer, chatId) => {
     if (truncate === 'true') {
-        await Message.truncate();
-        socketIO.emit('messagesTruncated');
+        await Message.truncate(chatId);
+        socketIO.emit('messagesTruncated', chatId);
     } else {
         await Message.destroy({
-            where: { id: id }
+            where: { id: id, chatId }
         });
-        socketIO.emit('messageDeleted', id);
+        socketIO.emit('messageDeleted', id, chatId);
     }
 }
