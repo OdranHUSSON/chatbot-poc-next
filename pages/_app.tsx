@@ -14,6 +14,7 @@ import '@/styles/Contact.css';
 import '@/styles/Plugins.css';
 import '@/styles/MiniCalendar.css';
 import SocketIOClient from 'socket.io-client';
+import { SessionProvider } from 'next-auth/react';
 
 function App({ Component, pageProps }: AppProps<{}>) {
   const [apiKey, setApiKey] = useState('');
@@ -42,48 +43,50 @@ function App({ Component, pageProps }: AppProps<{}>) {
   }, []);
 
   return (
-    <ChakraProvider theme={theme}>
-      <Box>
-        <Sidebar setApiKey={setApiKey} routes={routes} />
-        <Box
-          pt={{ base: '60px', md: '100px' }}
-          float="right"
-          minHeight="100vh"
-          height="100%"
-          overflow="auto"
-          position="relative"
-          maxHeight="100%"
-          w={{ base: '100%', xl: 'calc( 100% - 290px )' }}
-          maxWidth={{ base: '100%', xl: 'calc( 100% - 290px )' }}
-          transition="all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
-          transitionDuration=".2s, .2s, .35s"
-          transitionProperty="top, bottom, width"
-          transitionTimingFunction="linear, linear, ease"
-        >
-          <Portal>
-            <Box>
-              <Navbar
-                setApiKey={setApiKey}
-                onOpen={onOpen}
-                logoText={'Horizon UI Dashboard PRO'}
-                brandText={getActiveRoute(routes, pathname)}
-                secondary={getActiveNavbar(routes, pathname)}
-                socket={socket}
-              />
-            </Box>
-          </Portal>
+    <SessionProvider session={pageProps.session}>
+      <ChakraProvider theme={theme}>
+        <Box>
+          <Sidebar setApiKey={setApiKey} routes={routes} />
           <Box
-            mx="auto"
-            p={{ base: '20px', md: '30px' }}
-            pe="20px"
-            minH="100vh"
-            pt="50px"
+            pt={{ base: '60px', md: '100px' }}
+            float="right"
+            minHeight="100vh"
+            height="100%"
+            overflow="auto"
+            position="relative"
+            maxHeight="100%"
+            w={{ base: '100%', xl: 'calc( 100% - 290px )' }}
+            maxWidth={{ base: '100%', xl: 'calc( 100% - 290px )' }}
+            transition="all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
+            transitionDuration=".2s, .2s, .35s"
+            transitionProperty="top, bottom, width"
+            transitionTimingFunction="linear, linear, ease"
           >
-            <Component apiKeyApp={apiKey} socket={socket} {...pageProps} />
+            <Portal>
+              <Box>
+                <Navbar
+                  setApiKey={setApiKey}
+                  onOpen={onOpen}
+                  logoText={'Chatbot beta'}
+                  brandText={getActiveRoute(routes, pathname)}
+                  secondary={getActiveNavbar(routes, pathname)}
+                  socket={socket}
+                />
+              </Box>
+            </Portal>
+            <Box
+              mx="auto"
+              p={{ base: '20px', md: '30px' }}
+              pe="20px"
+              minH="100vh"
+              pt="50px"
+            >
+              <Component apiKeyApp={apiKey} socket={socket} {...pageProps} />
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </ChakraProvider>
+      </ChakraProvider>
+    </SessionProvider>
   );
 }
 
