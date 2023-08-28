@@ -57,7 +57,7 @@ const routes: IRoute[] = [
       {
         name: 'Sign In',
         layout: '/others',
-        path: '/sign-in',
+        path: '/Login',
       },
     ],
   },

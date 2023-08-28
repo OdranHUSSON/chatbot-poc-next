@@ -4,8 +4,7 @@ import { signIn } from "next-auth/react";
 
 const providers = [
   { name: 'Google', icon: <GoogleIcon /> },
-  // Add more providers here if needed
-  // { name: 'GitHub', icon: <GitHubIcon /> },
+  { name: 'GitHub', icon: <GitHubIcon /> },
   // { name: 'Twitter', icon: <TwitterIcon /> },
 ];
 
