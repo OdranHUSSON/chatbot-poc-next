@@ -120,12 +120,13 @@ const ChatHistory = ({ chatHistory, chatId }: any) => {
 					{
 						(() => {
 							let cleanedMessage = chat.message.trim().replace(/\n/g, '');
-							const datasetMatch = cleanedMessage.match(/<Linechart dataset='([^']+)'\/?>/i);
+							/**const datasetMatch = cleanedMessage.match(/<Linechart dataset='([^']+)'\/?>/i);
 							const jsonString = datasetMatch ? datasetMatch[1] : null;
 						
 							if (jsonString) {
 								return <LineChart dataJSON={jsonString} />;
 							}
+							**/
 
 							if (chat.message === '<Loading>') return <Spinner size="sm" />;
 							return <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>;
