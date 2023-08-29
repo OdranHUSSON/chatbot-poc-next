@@ -3,26 +3,33 @@ import { OpenAIStream } from '@/utils/chatStream';
 import { encode } from 'gpt-tokenizer';
 
 const filterMessages = (historyMessages, tokenLimit) => {
-  let filteredMessages = historyMessages.slice(0, 2);
-  let restOfMessages = historyMessages.slice(2).reverse();
-  let totalTokens = 0;
-  let lastMessageId = null;
-
-  for (let message of restOfMessages) {
-    let messageTokens = encode(message.message).length;
-    if (totalTokens + messageTokens <= tokenLimit) {
+    let filteredMessages = historyMessages.slice(0, 2);
+    let restOfMessages = historyMessages.slice(2).reverse();
+    let totalTokens = 0;
+    let lastMessageId = null;
+  
+    for (let message of filteredMessages) {
+      let messageTokens = encode(message.message).length;
       totalTokens += messageTokens;
-      filteredMessages.unshift(message);
-    } else {
-      lastMessageId = message.id;
-      console.log("lastMessage", message)
-      break;
     }
-  }
-  console.log("totalTokens", totalTokens)
-
-  return { filteredMessages, lastMessageId };
-};
+  
+    for (let message of restOfMessages) {
+      let messageTokens = encode(message.message).length;
+      if (totalTokens + messageTokens <= tokenLimit) {
+        totalTokens += messageTokens;
+        filteredMessages.unshift(message);
+      } else {
+        lastMessageId = message.id;
+        console.log("lastMessage", message);
+        break;
+      }
+    }
+  
+    console.log("totalTokens", totalTokens);
+  
+    return { filteredMessages, lastMessageId };
+  };
+  
 
 export const config = {
   runtime: 'edge',
