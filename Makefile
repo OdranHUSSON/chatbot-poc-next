@@ -22,6 +22,10 @@ build:
 migrate-db:
 	docker compose exec nextjs npx sequelize-cli db:migrate
 
+# Run test in docker
+test:
+	docker compose exec nextjs npm run test
+
 # Restart and Build Docker Compose services
 fresh: down build up migrate-db
 
