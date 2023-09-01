@@ -15,6 +15,29 @@ const createPrompt = (inputCode: string) => {
   }
 };
 
+const filterMessages = (historyMessages, tokenLimit) => {
+  // Keep the first 2 messages
+  let filteredMessages = historyMessages.slice(0, 2);
+
+  // Reverse the rest of the messages to start checking from the latest
+  let restOfMessages = historyMessages.slice(2).reverse();
+
+  // Initialize a variable to keep track of the total tokens
+  let totalTokens = 0;
+
+  for (let message of restOfMessages) {
+    let messageTokens = encode(message.content).length;
+    if (totalTokens + messageTokens <= tokenLimit) {
+      totalTokens += messageTokens;
+      filteredMessages.unshift(message);
+    } else {
+      break;
+    }
+  }
+
+  return filteredMessages;
+};
+
 export const OpenAIStream = async (
   inputCode: string,
   model: string,
