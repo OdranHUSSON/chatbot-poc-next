@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input, useToast } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Input, useToast, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -7,9 +7,10 @@ interface ChatFormProps {
 }
 
 const ChatAdmin: React.FC<ChatFormProps> = ({ id }) => {
-  console.log("ChatAdmin", id)
+  console.log("ChatAdmin", id);
   const [chat, setChat] = useState({ id: id, name: "", description: "", isPrivate: false, additionalContext: {} });
   const toast = useToast();
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     const fetchChat = async () => {
@@ -82,19 +83,37 @@ const ChatAdmin: React.FC<ChatFormProps> = ({ id }) => {
     }
   };
 
+  const inputColor = useColorModeValue('navy.700', 'white');
+  const placeholderColor = useColorModeValue(
+    { color: 'gray.500' },
+    { color: 'whiteAlpha.600' }
+  );
+  const borderColor = useColorModeValue('#E6ECFA', 'rgba(135, 140, 189, 0.3)');
+
   return (
     <form onSubmit={handleSubmit}>
       <FormControl>
         <FormLabel>Name</FormLabel>
-        <Input value={chat.name} onChange={(e) => setChat({ ...chat, name: e.target.value })} />
+        <Input
+          value={chat.name}
+          onChange={(e) => setChat({ ...chat, name: e.target.value })}
+          colorScheme={colorMode === "dark" ? "teal" : undefined}
+          color={inputColor}
+          _placeholder={placeholderColor}
+        />
       </FormControl>
       <FormControl>
         <FormLabel>Description</FormLabel>
-        <Input value={chat.description} onChange={(e) => setChat({ ...chat, description: e.target.value })} />
+        <Input
+          value={chat.description}
+          onChange={(e) => setChat({ ...chat, description: e.target.value })}
+          colorScheme={colorMode === "dark" ? "teal" : undefined}
+          color={inputColor}
+          _placeholder={placeholderColor}
+        />
       </FormControl>
-      <Button type="submit">Update</Button>
-      <Button colorScheme="red" onClick={handleDelete}>
-        Delete
+      <Button type="submit" colorScheme={colorMode === "dark" ? "teal" : undefined}>
+        Update
       </Button>
     </form>
   );
