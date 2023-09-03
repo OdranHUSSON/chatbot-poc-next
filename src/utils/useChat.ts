@@ -161,8 +161,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     const handleChat = async () => {
         setInputOnSubmit(inputCode);
         const apiKey = apiKeyApp;
-        setInputOnSubmit(inputCode);
-
         const maxCodeLength = model === 'gpt-3.5-turbo' ? 60000 : 60000;
 
         if (!apiKeyApp?.includes('sk-') && !apiKey?.includes('sk-')) {

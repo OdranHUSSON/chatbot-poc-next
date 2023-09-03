@@ -7,6 +7,7 @@ import MessageBoxChat from '@/components/MessageBox';
 import ModelChange from '@/components/chat/ModelChange';
 import ChatInput from '@/components/chat/ChatInput';
 import ChatHistory from '@/components/chat/ChatHistory';
+import ChatAdmin from '@/components/chat/ChatAdmin';
 
 import { ChatBody, OpenAIModel } from '@/types/types';
 import {
@@ -91,8 +92,7 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
 				minH={{ base: '75vh', '2xl': '85vh' }}
 				maxW="1000px"
 				paddingTop={{ base: '44px', md: '16px', xl: '18px' }}
-			>
-				
+			>				
 				<ModelChange model={model} setModel={setModel} outputCode={outputCode} />
 				<ChatHistory chatHistory={chatHistory} chatId={chatId} />
 				<ChatInput
