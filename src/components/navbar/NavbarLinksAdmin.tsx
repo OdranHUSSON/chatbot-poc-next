@@ -1,4 +1,4 @@
-import { Box, Button, Center, Flex, Icon, Link, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Icon, Link, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode, useColorModeValue, Img } from '@chakra-ui/react';
 import { SearchBar } from '@/components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from '@/components/sidebar/Sidebar';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
@@ -8,10 +8,12 @@ import NavLink from '../link/NavLink';
 import routes from '@/routes';
 import StatusComponent from '../statusIcon';
 import { useState, useEffect } from 'react';
+import { useSession } from "next-auth/react";
 
 export default function HeaderLinks(props: { secondary: boolean; setApiKey: any; socket: typeof SocketIOClient.Socket | null }) {
   const { secondary, setApiKey, socket } = props;
   const { colorMode, toggleColorMode } = useColorMode();
+  const { data: session } = useSession();
 
   // Chakra Color Mode
   const navbarIcon = useColorModeValue('gray.500', 'white');
@@ -199,9 +201,7 @@ export default function HeaderLinks(props: { secondary: boolean; setApiKey: any;
             borderRadius={'50%'}
           />
           <Center top={0} left={0} position={'absolute'} w={'100%'} h={'100%'}>
-            <Text fontSize={'xs'} fontWeight="bold" color={'white'}> 
-              LF
-            </Text>
+            <Img src={session?.user.image ?? ''} alt={session?.user.name ?? 'unknown'} w="100%" h="100%" borderRadius={'50%'}/>
           </Center>
         </MenuButton>
         <MenuList

@@ -13,9 +13,10 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  Center
+  Center,
+  Img
 } from '@chakra-ui/react';
-import NavLink from '@/components/link/NavLink';
+import { signOut } from 'next-auth/react';
 //   Custom components
 import avatar4 from '/public/img/avatars/avatar4.png';
 import { NextAvatar } from '@/components/image/Avatar';
@@ -29,6 +30,7 @@ import { IoMdPerson } from 'react-icons/io';
 import { FiLogOut } from 'react-icons/fi';
 import { LuHistory } from 'react-icons/lu';
 import { MdOutlineManageAccounts, MdOutlineSettings } from 'react-icons/md';
+import { useSession } from "next-auth/react";
 
 // FUNCTIONS
 
@@ -39,6 +41,8 @@ interface SidebarContent extends PropsWithChildren {
 
 function SidebarContent(props: SidebarContent) {
   const { routes, setApiKey } = props;
+  const { data: session } = useSession();
+
   const textColor = useColorModeValue('navy.700', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.300');
   const bgColor = useColorModeValue('white', 'navy.700');
@@ -88,13 +92,11 @@ function SidebarContent(props: SidebarContent) {
             borderRadius={'50%'}
           />
           <Center top={0} left={0} position={'absolute'} w={'100%'} h={'100%'}>
-            <Text fontSize={'xs'} fontWeight="bold" color={'white'}> 
-              LF
-            </Text>
+            <Img src={session?.user.image ?? ''} alt={session?.user.name ?? 'unknown'} w="100%" h="100%" borderRadius={'50%'}/>
           </Center>
         </Box>
         <Text color={textColor} fontSize="xs" fontWeight="600" me="10px">
-          Firstname
+          {session?.user.name ?? 'Logged out'}
         </Text>
         <Menu>
           <MenuButton
@@ -281,6 +283,7 @@ function SidebarContent(props: SidebarContent) {
           minW="34px"
           justifyContent={'center'}
           alignItems="center"
+          onClick={() => signOut()}
         >
           <Icon as={FiLogOut} width="16px" height="16px" color="inherit" />
         </Button>
