@@ -31,7 +31,7 @@ fresh: down build up migrate-db
 
 # Undo migration
 migrate-db-undo:
-	docker compose exec nextjs npx sequelize-cli db:migrate
+	docker compose exec nextjs npx sequelize-cli db:migrate:undo
 
 # Simplified command to restart, rebuild, and migrate
 all: rebuild migrate-db

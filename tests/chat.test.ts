@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../src/app';
+import app from '../pages/_app';
 
 describe('Chats API', () => {
   it('should list all chats', async () => {
