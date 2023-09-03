@@ -50,7 +50,8 @@ const handler = async (req: Request): Promise<Response> => {
       return new Response('API key not found', { status: 500 });
     }
 
-    const tokenLimit = 4096-1024;
+    const inputCodeTokens = encode(inputCode).length;
+    const tokenLimit = 4096-inputCodeTokens-100;
     const { filteredMessages, lastMessageId } = filterMessages(chatHistory, tokenLimit);
 
     const mappedHistory = filteredMessages.map(item => ({

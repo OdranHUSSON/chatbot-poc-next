@@ -1,4 +1,4 @@
-import React, { FC, KeyboardEvent, ChangeEvent } from 'react';
+import React, { FC, KeyboardEvent, ChangeEvent, useState } from 'react';
 import { Button, Flex, Input, useColorModeValue } from '@chakra-ui/react';
 import ChatActions from './ChatActions';
 
@@ -17,6 +17,7 @@ const ChatInput: FC<ChatInputProps> = ({
   loading,
   chatId
 }) => {
+  const [localInputCode, setLocalInputCode] = useState(inputCode);
   const inputColor = useColorModeValue('navy.700', 'white');
   const placeholderColor = useColorModeValue(
     { color: 'gray.500' },
@@ -24,16 +25,27 @@ const ChatInput: FC<ChatInputProps> = ({
   );
   const borderColor = useColorModeValue('#E6ECFA', 'rgba(135, 140, 189, 0.3)');
 
+  let timeoutId;
+
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      setInputCode(localInputCode);
       handleChat();
     }
-  };
+  };  
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setInputCode(value);
+    setLocalInputCode(value);
+
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      setInputCode(value);
+    }, 350);
   };
 
   return (
@@ -68,7 +80,7 @@ const ChatInput: FC<ChatInputProps> = ({
         color={inputColor}
         _placeholder={placeholderColor}
         onChange={handleChange}
-        value={inputCode}
+        value={localInputCode}
       />
       <Button
         variant="primary"
@@ -88,7 +100,10 @@ const ChatInput: FC<ChatInputProps> = ({
             bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
           },
         }}
-        onClick={handleChat}
+        onClick={() => {
+          setInputCode(localInputCode);
+          handleChat();
+        }}
         isLoading={loading ? true : false}
       >
         Submit
