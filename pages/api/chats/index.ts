@@ -1,5 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import Chat from '../../../models/chat';
+import { Sequelize } from 'sequelize';
+import Chat, { initialize } from '../../../models/chat';
+import Config from '../../../config/config.json';
+
+const env = process.env.NODE_ENV || 'development';
+const config = Config[env];
+
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+  host: config.host,
+  dialect: config.dialect,
+  logging: console.log,
+});
+
+// Initialize Chat model
+initialize(sequelize);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;

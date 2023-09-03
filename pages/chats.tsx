@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Text, Flex, Badge, Button } from '@chakra-ui/react';
-import ReactMarkdown from 'react-markdown';
+import { Box, Text, Flex, Badge, Avatar, Skeleton, useColorModeValue } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 
 const ChatsComponent = () => {
   const router = useRouter();
   const [chats, setChats] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const hoverBgColor = useColorModeValue('gray.200', 'brand.700');
 
   useEffect(() => {
     fetch('/api/chats')
       .then((response) => response.json())
-      .then((data) => setChats(data))
+      .then((data) => {
+        setChats(data);
+        setIsLoading(false);
+      })
       .catch((error) => console.error('Error fetching chats:', error));
   }, []);
 
   const handleSelectChat = (chatId) => {
     router.push(`/chat/${chatId}`);
   };
+
+  if (isLoading) {
+    return <Skeleton height="20px" my="10px" />;
+  }
 
   if (chats.length === 0) {
     return (
@@ -31,21 +40,39 @@ const ChatsComponent = () => {
   return (
     <div>
       {chats.map((chat) => (
-        <Box key={chat.chatId} p={5} mb={8} shadow="md" borderWidth="1px" borderRadius="lg">
-          <Flex w="100%" alignItems="center" justifyContent="left">
-            <Text fontSize="xl" fontWeight="bold">
-              {chat.chatId}
-            </Text>
-            {/* You can add more info like a badge here, similar to the branch in your example */}
+        <Box 
+          key={chat.id} 
+          p={5} 
+          mb={8} 
+          shadow="md" 
+          borderWidth="1px" 
+          borderRadius="lg" 
+          _hover={{ backgroundColor: hoverBgColor }}
+          transition="background-color 0.2s"
+          onClick={() => handleSelectChat(chat.id)}
+          cursor="pointer"
+        >
+          <Flex w="100%" alignItems="center" justifyContent="space-between">
+            <Flex alignItems="center">
+              <Avatar name={chat.name || chat.id} />
+              <Text fontSize="xl" fontWeight="bold" ml={4}>
+                {chat.name || chat.id}
+              </Text>
+            </Flex>
+            <Badge
+              display={{ base: 'flex', lg: 'none', xl: 'flex' }}
+              colorScheme="brand"
+              borderRadius="25px"
+              color="brand.500"
+              textTransform="none"
+              letterSpacing="0px"
+              px="8px"
+            >
+              {chat.id}
+            </Badge>
           </Flex>
           <Box p={2}>
-            {/* Add more info like README or chat description */}
-          </Box>
-          <Box mt={4} display="flex" justifyContent="space-between">
-            {/* Add any actions like Delete or Select here */}
-            <Button colorScheme="teal" variant="outline" onClick={() => handleSelectChat(chat.chatId)}>
-              Select
-            </Button>
+            {chat.description}
           </Box>
         </Box>
       ))}
