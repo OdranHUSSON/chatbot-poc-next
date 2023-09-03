@@ -21,6 +21,7 @@ import { MdDelete, MdDrafts, MdFileDownload, MdLightbulbCircle, MdLightbulbOutli
 import { GitDrawer } from '../git/GitDrawer';
 import { truncateMessages } from '@/utils/messages';
 import { useColorModeValue } from '@chakra-ui/react';
+import ChatAdmin from './ChatAdmin';
 
 interface ChatActionsProps {
   chatId: string;
@@ -111,6 +112,7 @@ const ChatActions: FC<ChatActionsProps> = ({ chatId }) => {
             <DrawerHeader>                            
               <Flex alignItems="center" flexDirection="column">
                 <Text m={4}>Chat actions</Text>
+                <ChatAdmin id={chatId} />
                 <HSeparator mb="20px" w="284px" />
               </Flex>
             </DrawerHeader>
@@ -175,7 +177,7 @@ const ChatActions: FC<ChatActionsProps> = ({ chatId }) => {
                     WIP
                     </Badge>
                 </Flex>
-              </Button>
+              </Button>              
             </DrawerBody>
           </DrawerContent>
         </DrawerOverlay>
