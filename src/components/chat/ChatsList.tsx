@@ -3,11 +3,12 @@ import { Box, Text, Flex, Badge, Avatar, Skeleton, useColorModeValue } from '@ch
 import { useRouter } from 'next/router';
 import { useClipboard } from '@/utils/copy';
 
-const ChatsList = () => {
+const ChatsList = ({ selectedChat }) => {
   const router = useRouter();
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const hoverBgColor = useColorModeValue('gray.200', 'brand.700');
+  const selectedChatColor = useColorModeValue('brand.500', 'brand.700');
   const { handleCopy } = useClipboard();
 
   useEffect(() => {
@@ -21,7 +22,9 @@ const ChatsList = () => {
   }, []);
 
   const handleSelectChat = (chatId) => {
-    router.push(`/chat/${chatId}`);
+    if (chatId !== selectedChat) {
+      router.push(`/chat/${chatId}`);
+    }
   };
 
   if (isLoading) {
@@ -48,10 +51,11 @@ const ChatsList = () => {
           shadow="md"
           borderWidth="1px"
           borderRadius="lg"
-          _hover={{ backgroundColor: hoverBgColor }}
+          backgroundColor={chat.id === selectedChat ? selectedChatColor : 'transparent'}
+          _hover={{ backgroundColor: chat.id === selectedChat ? selectedChatColor : hoverBgColor }}
           transition="background-color 0.2s"
           onClick={() => handleSelectChat(chat.id)}
-          cursor="pointer"
+          cursor={chat.id === selectedChat ? 'default' : 'pointer'}
         >
           <Flex w="100%" alignItems="center" justifyContent="space-between">
             <Flex alignItems="center">

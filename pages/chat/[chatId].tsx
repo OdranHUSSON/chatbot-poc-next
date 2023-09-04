@@ -73,7 +73,7 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
 			
 			<Flex direction="row" height={"100%"}>
 			<Flex flex="1" marginRight="10px" position={"sticky"} height={"100%"}>
-				<ChatsList />
+				<ChatsList selectedChat={chatId} />
 			</Flex>
 			<Flex flex="3" direction="column">
 				<ModelChange model={model} setModel={setModel} outputCode={outputCode} />
