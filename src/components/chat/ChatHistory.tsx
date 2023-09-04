@@ -98,8 +98,9 @@ const ChatHistory = ({ chatHistory, chatId }: any) => {
   };
 
   return (
-    <Box width={"100%"} position={"relative"}>
+    <Box width={"100%"} position={"relative"} overflowY={"scroll"} height={"100%"}>
       <GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} chatId={chatId} />
+      
       {chatHistory.slice(0, lastMessage).map((chat: ChatType, index: number) => (
         <Flex 
         key={index} 

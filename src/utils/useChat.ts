@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChatBody, OpenAIModel } from '@/types/types';
-import { handleCommands } from '@/utils/commands';
 import { createUserMessage, createBotMessage, getAllMessages, updateMessage, getMessageById } from './messages';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@chakra-ui/react';
@@ -183,12 +182,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
 
         setLoading(true);
         await addUserMessageToChatHistory(inputCode, chatId); 
-
-        if (inputCode.startsWith('/')) {
-            handleCommands(inputCode, setLoading, addBotMessageToChatHistory, clearChatHistory, updateMessageById, chatHistory);
-            setInputCode('');
-            return; 
-        }
 
         const controller = new AbortController();
         const body: ChatBody & { chatHistory: typeof chatHistory } = {

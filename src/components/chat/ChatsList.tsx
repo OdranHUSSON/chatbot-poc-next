@@ -42,7 +42,7 @@ const ChatsList = ({ selectedChat }) => {
   }
 
   return (
-    <div>
+    <Box height={"100%"}>
       {chats.map((chat) => (
         <Box
           key={chat.id}
@@ -81,7 +81,7 @@ const ChatsList = ({ selectedChat }) => {
           <Box p={2}>{chat.description}</Box>
         </Box>
       ))}
-    </div>
+    </Box>
   );
 };
 

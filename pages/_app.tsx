@@ -78,6 +78,8 @@ function App({ Component, pageProps }: AppProps<{}>) {
             pe="20px"
             minH="100vh"
             pt="50px"
+            height="100%"
+            overflow={"hidden"}
           >
             <Component apiKeyApp={apiKey} socket={socket} {...pageProps} />
           </Box>
