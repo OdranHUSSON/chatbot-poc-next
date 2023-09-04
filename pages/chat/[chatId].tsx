@@ -52,16 +52,16 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
     );
 
     return (
-        <Flex direction="row" height={"100%"}>
-            <Flex flex="1" marginRight="10px" position={"relative"} overflowY={"scroll"} height={"100%"} maxHeight="calc(100vh - 74px - 130px)">
+        <Flex direction="row" height="100%">
+            <Flex flex="1" marginRight="10px" position="relative" overflowY="scroll" height="100%" maxHeight="calc(100vh - 20px - 100px)">
                 <ChatsList selectedChat={chatId} />
             </Flex>
-            <Flex flex="3" direction="column" position={"relative"} height={"100%"} padding={"0 30px"}>
-                <Box flex="1" overflowY="auto" maxHeight="calc(100vh - 74px - 140px)">
+            <Flex flex="3" direction="column" position="relative" height="100%" padding="0 30px">
+                <Box flex="1" overflowY="auto" maxHeight="calc(100vh - 74px - 100px)">
                     <ModelChange model={model} setModel={setModel} outputCode={outputCode} />
                     <ChatHistory chatHistory={chatHistory} chatId={chatId} />
                 </Box>
-                <Box position={"sticky"} bottom={0} zIndex={1}>
+                <Box position="sticky" bottom={0} zIndex={1}>
                     <ChatInput
                         inputCode={inputCode}
                         setInputCode={setInputCode}

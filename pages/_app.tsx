@@ -46,7 +46,6 @@ function App({ Component, pageProps }: AppProps<{}>) {
       <Box>
         <Sidebar setApiKey={setApiKey} routes={routes} />
         <Box
-          pt={{ base: '60px', md: '100px' }}
           float="right"
           minHeight="100vh"
           height="100%"
@@ -74,12 +73,12 @@ function App({ Component, pageProps }: AppProps<{}>) {
           </Portal>
           <Box
             mx="auto"
-            p={{ base: '20px', md: '30px' }}
+            p={{ base: '0 20px', md: '0 30px' }}
             pe="20px"
             minH="100vh"
-            pt="50px"
             height="100%"
             overflow={"hidden"}
+            pt={{ base: '60px', md: '100px' }}
           >
             <Component apiKeyApp={apiKey} socket={socket} {...pageProps} />
           </Box>
