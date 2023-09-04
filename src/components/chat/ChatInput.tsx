@@ -56,7 +56,6 @@ const ChatInput: FC<ChatInputProps> = ({
       left="0"
       right="0"
       zIndex={1000}
-      ms={{ base: '0px', xl: '60px' }}
       mt="20px"
       justifySelf={'flex-end'}
       as="form"

@@ -31,6 +31,7 @@ import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy } fr
 import Bg from '../../public/img/chat/bg-image.png';
 import ReactMarkdown from 'react-markdown'
 import { useChat } from '@/utils/useChat';
+import ChatsList from '@/components/chat/ChatsList';
 
 export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIOClient.Socket | null }) {
     const router = useRouter();
@@ -70,37 +71,19 @@ export default function Chat(props: { apiKeyApp: string, socket: typeof SocketIO
 	// @ts-ignore
 		return (
 			
-		<Flex
-			w="100%"
-			pt={{ base: '70px', md: '0px' }}
-			direction="column"
-			position="relative"
-			overflow={"hidden"}
-		>
-			<Img
-				src={Bg.src}
-				position={'absolute'}
-				w="350px"
-				left="50%"
-				top="50%"
-				transform={'translate(-50%, -50%)'}
-			/>
-			<Flex
-				direction="column"
-				mx="auto"
-				w={{ base: '100%', md: '100%', xl: '100%' }}
-				minH={{ base: '75vh', '2xl': '85vh' }}
-				maxW="1000px"
-				paddingTop={{ base: '44px', md: '16px', xl: '18px' }}
-			>				
+			<Flex direction="row" height={"100%"}>
+			<Flex flex="1" marginRight="10px" position={"sticky"} height={"100%"}>
+				<ChatsList />
+			</Flex>
+			<Flex flex="3" direction="column">
 				<ModelChange model={model} setModel={setModel} outputCode={outputCode} />
 				<ChatHistory chatHistory={chatHistory} chatId={chatId} />
-				<ChatInput
-					inputCode={inputCode}
-					setInputCode={setInputCode}
-					handleChat={handleChat}
-					loading={loading}
-					chatId={chatId as string}
+				<ChatInput 
+					inputCode={inputCode} 
+					setInputCode={setInputCode} 
+					handleChat={handleChat} 
+					loading={loading} 
+					chatId={chatId as string} 
 				/>
 			</Flex>
 		</Flex>
