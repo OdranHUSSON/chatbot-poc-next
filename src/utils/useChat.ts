@@ -85,14 +85,14 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
             });
 
             socket.on("messageCreated", (message) => {
-                if(message.id && message.chatId) {
+                if(message.id && message.chatId && message.chatId === chatId) {
                     console.log('WS:messageCreated', message)
                     getMessageFromDatabaseAddToState(message.id, message.chatId).catch(err => console.error(err));
                 }
             });
     
             socket.on("messageUpdated", (message) => {
-                if(message.id && message.chatId) {
+                if(message.id && message.chatId && message.chatId === chatId) {
                     console.log('WS:messageUpdated', message)
                     getMessageFromDatabaseUpdateState(message.id, message.chatId).catch(err => console.error(err));
                 }
