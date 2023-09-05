@@ -8,7 +8,7 @@ const ChatsList = ({ selectedChat }) => {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const hoverBgColor = useColorModeValue('gray.200', 'brand.700');
-  const selectedChatColor = useColorModeValue('brand.500', 'brand.700');
+  const selectedChatColor = useColorModeValue('gray.200', 'brand.700');
   const { handleCopy } = useClipboard();
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const ChatsList = ({ selectedChat }) => {
   }
 
   return (
-    <div>
+    <Box height={"100%"} pt={"54px"}>
       {chats.map((chat) => (
         <Box
           key={chat.id}
@@ -81,7 +81,7 @@ const ChatsList = ({ selectedChat }) => {
           <Box p={2}>{chat.description}</Box>
         </Box>
       ))}
-    </div>
+    </Box>
   );
 };
 

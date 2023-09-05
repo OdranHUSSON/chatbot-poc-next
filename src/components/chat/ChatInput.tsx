@@ -56,11 +56,11 @@ const ChatInput: FC<ChatInputProps> = ({
       left="0"
       right="0"
       zIndex={1000}
-      mt="20px"
       justifySelf={'flex-end'}
       as="form"
       onSubmit={(e) => e.preventDefault()}
       align={"center"}
+      m={"20px 0"}
     >
       <ChatActions chatId={chatId}/>
       <Input

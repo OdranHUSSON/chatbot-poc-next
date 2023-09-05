@@ -32,13 +32,13 @@ const handleMessages = async (req: NextApiRequest, res: NextApiResponseServerIO)
                 }
                 break;
             case 'POST':
-                const message = await createMessage(req.body, socketIO, chatId);
+                const message = await createMessage(req.body, socketIO, req.body.chatId);
                 console.log("createMessage", req.body)
                 res.json(message);
                 break;
             case 'PUT':
                 const updatedMessageData = req.body;
-                await updateMessage(updatedMessageData, socketIO);
+                await updateMessage(updatedMessageData, socketIO, req.body.chatId);
                 res.json({ success: true });
                 break;
             case 'DELETE':

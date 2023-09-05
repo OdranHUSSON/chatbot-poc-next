@@ -26,13 +26,12 @@ const ModelChange: FC<ModelChangeProps> = ({ outputCode, model, setModel }) => {
         <Flex
             direction={'column'}
             w="100%"
-            mb={outputCode ? '20px' : 'auto'}
+            mb={outputCode ? '20px' : '20px'}
         >
             <Flex
                 mx="auto"
                 zIndex="2"
                 w="max-content"
-                mb="20px"
                 borderRadius="60px"
             >
                 <Flex
@@ -80,7 +79,7 @@ const ModelChange: FC<ModelChangeProps> = ({ outputCode, model, setModel }) => {
                     borderRadius="14px"
                     color={textColor}
                     fontSize="18px"
-                    fontWeight={'700'}
+                    fontWeight={'700'}                    
                     onClick={() => setModel('gpt-4')}
                 >
                     <Flex

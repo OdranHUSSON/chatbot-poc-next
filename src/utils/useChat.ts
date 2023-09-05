@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChatBody, OpenAIModel } from '@/types/types';
-import { handleCommands } from '@/utils/commands';
 import { createUserMessage, createBotMessage, getAllMessages, updateMessage, getMessageById } from './messages';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@chakra-ui/react';
@@ -86,18 +85,20 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
             });
 
             socket.on("messageCreated", (message) => {
-                if(message.id && message.chatId) {
-                    console.log('WS:messageCreated', message)
+                console.log('WS:messageCreated', message)
+                if(message.id && message.chatId) {                    
                     getMessageFromDatabaseAddToState(message.id, message.chatId).catch(err => console.error(err));
                 }
             });
     
             socket.on("messageUpdated", (message) => {
+                console.log('WS:messageUpdated', message)
                 if(message.id && message.chatId) {
-                    console.log('WS:messageUpdated', message)
+                  setTimeout(() => {
                     getMessageFromDatabaseUpdateState(message.id, message.chatId).catch(err => console.error(err));
+                  }, 1000); 
                 }
-            });
+              });              
 
             socket.on("messagesTruncated", (message: string) => {
                 console.log("WS:truncateMessages:", message);
@@ -125,8 +126,8 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
     
 
     const updateMessageById = async (id: string, updatedMessage: string) => {
-        await stateUpdateMessageById(id, updatedMessage); // Await this function
-        await updateMessage(id, updatedMessage); // Await this function
+        await stateUpdateMessageById(id, updatedMessage);
+        await updateMessage(id, updatedMessage, chatId);
     };
       
       const stateUpdateMessageById = (id: string, updatedMessage: string) => {
@@ -183,12 +184,6 @@ export const useChat = (apiKeyApp: string, socket: typeof SocketIOClient.Socket 
 
         setLoading(true);
         await addUserMessageToChatHistory(inputCode, chatId); 
-
-        if (inputCode.startsWith('/')) {
-            handleCommands(inputCode, setLoading, addBotMessageToChatHistory, clearChatHistory, updateMessageById, chatHistory);
-            setInputCode('');
-            return; 
-        }
 
         const controller = new AbortController();
         const body: ChatBody & { chatHistory: typeof chatHistory } = {

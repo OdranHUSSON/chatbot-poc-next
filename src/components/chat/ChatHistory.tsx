@@ -1,5 +1,5 @@
 import { useToast, Box, Flex, Icon, Text, useColorModeValue, Table, Td, Th, Tr, Spinner, Badge, Button } from '@chakra-ui/react';
-import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy, MdShare, MdSave } from 'react-icons/md';
+import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdContentCopy, MdFileCopy, MdShare, MdSave, MdArrowDownward } from 'react-icons/md';
 import ReactMarkdown from "react-markdown";
 import { useClipboard } from '@/utils/copy';
 import React, { useState, useRef, useEffect } from 'react';
@@ -7,6 +7,7 @@ import LineChart from '../charts/LineChart';
 import { GitModal } from '../git/GitSaveDrawer';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import reactMarkdown from 'react-markdown';
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -48,8 +49,12 @@ const ChatHistory = ({ chatHistory, chatId }: any) => {
     setLastMessage((prevLastMessage) => prevLastMessage + 20);
   };
 
-  useEffect(() => {
+  const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
   }, [chatHistory]);
 
   const onClose = () => {
@@ -81,7 +86,7 @@ const ChatHistory = ({ chatHistory, chatId }: any) => {
     
       // Handle block code
       return (
-          <Box maxW="300px" minW="100%" overflowX="auto" my={4} {...props}>
+          <Box maxW="300px" minW="100%" overflowX="auto" my={4} {...props}> 
               <Flex justifyContent="space-between" alignItems="center" borderBottom="1px solid" borderColor="gray.300" pb={1}>
                   <Icon as={MdFileCopy} onClick={() => handleCopy(content)} cursor="pointer" />	
                   <Icon as={MdSave} onClick={() => {
@@ -98,8 +103,9 @@ const ChatHistory = ({ chatHistory, chatId }: any) => {
   };
 
   return (
-    <Box width={"100%"} position={"relative"}>
+    <Box width={"100%"} position={"relative"} overflowY={"scroll"} height={"100%"}>
       <GitModal isOpen={isOpen} fileContent={fileContentForModal} onClose={onClose} chatId={chatId} />
+      
       {chatHistory.slice(0, lastMessage).map((chat: ChatType, index: number) => (
         <Flex 
         key={index} 
@@ -108,8 +114,8 @@ const ChatHistory = ({ chatHistory, chatId }: any) => {
         align="center" 
         mb="10px"
         direction={{ base: 'column', md: 'row' }}
-    >
-        <Flex 
+        >
+          <Flex         
             direction="row"
             align="center"
             borderRadius="full" 
@@ -121,37 +127,77 @@ const ChatHistory = ({ chatHistory, chatId }: any) => {
             minW="40px"
             justifyContent={{ base: 'flex-start', md: 'center' }}
             p={{ base: '10px', md: '0' }}
-        >
-    <Icon as={chat.type === 'user' ? MdPerson : MdAutoAwesome} w="20px" h="20px" color={chat.type === 'user' ? brandColor : 'white'} />
-        </Flex>
-        <Flex 
-            p="22px" 
-            border="1px solid" 
-            borderColor={borderColor} 
-            borderRadius="14px" 
-            flex="1" 
-            zIndex={2} 
-            color={textColor} 
-            fontWeight="600" 
-            fontSize={{ base: 'sm', md: 'md' }} 
-            lineHeight={{ base: '24px', md: '26px' }}
-            w="100%"
-            mt={{ base: '10px', md: '0' }}
-        >
-            <Box position="relative" width={"100%"} minW={"320px"}>
-            {
-                (() => {
-                    let cleanedMessage = chat.message.trim().replace(/\n/g, '');
+          >
+            <Icon as={chat.type === 'user' ? MdPerson : MdAutoAwesome} w="20px" h="20px" color={chat.type === 'user' ? brandColor : 'white'} />
+          </Flex>
+          <Flex 
+              p="22px" 
+              border="1px solid" 
+              borderColor={borderColor} 
+              borderRadius="14px" 
+              flex="1" 
+              zIndex={2} 
+              color={textColor} 
+              fontWeight="600" 
+              fontSize={{ base: 'sm', md: 'md' }} 
+              lineHeight={{ base: '24px', md: '26px' }}
+              maxW="300px" minW="100%" overflowX="auto"
+              mt={{ base: '10px', md: '0' }}
+          >
+              <Box position="relative" width={"100%"} minW={"320px"}>
+              {
+                  (() => {
+                      let cleanedMessage = chat.message.trim().replace(/\n/g, '');
 
-                    if (chat.message === '<Loading>') return <Spinner size="sm" />;
-                    return <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>;
-                })()
-            }
-            </Box>
-        </Flex>
-    </Flex>
+                      if (chat.message === '<Loading>') return <Spinner size="sm" />;
+                      if (cleanedMessage.startsWith('@agent')) {
+                        try {
+                          // Parse the command
+                          const command = JSON.parse(cleanedMessage.replace('@agent ', ''));
+                    
+                          // Display the command as a badge
+                          return <Box>
+                                  <Badge
+                                  colorScheme="brand"
+                                  borderRadius="25px"
+                                  color="brand.500"
+                                  textTransform="none"
+                                  letterSpacing="0px"
+                                  width={"auto"}
+                                  px="8px"
+                                  _hover={{ cursor: 'pointer' }}
+                                >
+                                  @{command.command}
+                                </Badge>
+                          </Box>
+                        } catch (error) {
+                          console.error('Error parsing command:', error);
+                        }
+                      }
+                      return <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>;
+                  })()
+              }
+              </Box>
+            </Flex>
+          </Flex>
       ))}
-      <div ref={loadMoreRef} /> {/* This empty div will be our scrolling target */}
+      <div ref={loadMoreRef} /> 
+      <div ref={chatEndRef} /> 
+
+      <Button
+        position="fixed"
+        bottom="10px"
+        right="1rem"
+        variant="secondary"
+        py="4px"
+        px="8px"
+        fontSize="sm"
+        borderRadius="45px"
+        ms="auto"
+        zIndex={"1000"}
+        onClick={scrollToBottom}
+        leftIcon={<MdArrowDownward />}
+      />
     </Box>
   );
 };
