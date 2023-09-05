@@ -7,6 +7,7 @@ import LineChart from '../charts/LineChart';
 import { GitModal } from '../git/GitSaveDrawer';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import reactMarkdown from 'react-markdown';
 
 type ChatType = {
   type: 'user' | 'bot';
@@ -85,7 +86,7 @@ const ChatHistory = ({ chatHistory, chatId }: any) => {
     
       // Handle block code
       return (
-          <Box maxW="300px" minW="100%" overflowX="auto" my={4} {...props}>
+          <Box maxW="300px" minW="100%" overflowX="auto" my={4} {...props}> 
               <Flex justifyContent="space-between" alignItems="center" borderBottom="1px solid" borderColor="gray.300" pb={1}>
                   <Icon as={MdFileCopy} onClick={() => handleCopy(content)} cursor="pointer" />	
                   <Icon as={MdSave} onClick={() => {
@@ -149,6 +150,30 @@ const ChatHistory = ({ chatHistory, chatId }: any) => {
                       let cleanedMessage = chat.message.trim().replace(/\n/g, '');
 
                       if (chat.message === '<Loading>') return <Spinner size="sm" />;
+                      if (cleanedMessage.startsWith('@agent')) {
+                        try {
+                          // Parse the command
+                          const command = JSON.parse(cleanedMessage.replace('@agent ', ''));
+                    
+                          // Display the command as a badge
+                          return <Box>
+                                  <Badge
+                                  colorScheme="brand"
+                                  borderRadius="25px"
+                                  color="brand.500"
+                                  textTransform="none"
+                                  letterSpacing="0px"
+                                  width={"auto"}
+                                  px="8px"
+                                  _hover={{ cursor: 'pointer' }}
+                                >
+                                  @{command.command}
+                                </Badge>
+                          </Box>
+                        } catch (error) {
+                          console.error('Error parsing command:', error);
+                        }
+                      }
                       return <ReactMarkdown components={MarkdownComponents}>{chat.message}</ReactMarkdown>;
                   })()
               }
